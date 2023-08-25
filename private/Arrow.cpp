@@ -14,10 +14,12 @@ AArrow::AArrow()
 	//
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	SetRootComponent(BoxComponent);
+	BoxComponent->SetBoxExtent(FVector(5));
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(BoxComponent);
 	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	StaticMesh->SetRelativeLocationAndRotation(FVector(-50, 0, 0), FRotator(0, 90, 0));
 
 	Projectile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	Projectile->InitialSpeed = 6500.0f;
