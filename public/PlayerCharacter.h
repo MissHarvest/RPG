@@ -25,11 +25,17 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY()
 	class AArrow* Arrow;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	class UAnimMontage* FireAnimMontage;
+
 public:
 	APlayerCharacter();
 
 protected:
+	//UFUNCTION(BlueprintCallable)//, BlueprintReadOnly, Category = "Attack" , meta = (AllowPrivateAccess = "true")
 	void Attack(const FInputActionValue& Value);
+
+	FVector GetFocalPoint();
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
