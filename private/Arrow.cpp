@@ -32,6 +32,7 @@ void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnCollisionEnter);	
 }
 
 // Called every frame
@@ -41,3 +42,8 @@ void AArrow::Tick(float DeltaTime)
 
 }
 
+void AArrow::OnCollisionEnter(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// tag
+	UE_LOG(LogTemp, Warning, TEXT("On Collision Enter"));
+}

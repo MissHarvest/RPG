@@ -5,10 +5,13 @@
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
+#include <GameFramework/PlayerController.h>
 
 #include "Arrow.h"
+#include "DefaultScreenWidget.h"
 
 #include "EnhancedInputComponent.h"
+#include <Blueprint/UserWidget.h>
 
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
@@ -24,6 +27,17 @@ APlayerCharacter::APlayerCharacter()
 	GetCameraBoom()->TargetArmLength = 700.0f;
 }
 
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (IsValid(DefaultScreenClass))
+	{
+		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);
+		DefaultScreen->AddToViewport();
+	}
+}
+
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -32,24 +46,22 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 
 		//Jumping
-		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Attack);
+		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::ReceivedAttackInput);
 	}
 }
 
-void APlayerCharacter::Attack(const FInputActionValue& Value)
+void APlayerCharacter::ReceivedAttackInput(const FInputActionValue& Value)
 {
-	if (IsValid(ArrowClass))
-	{
-		if(IsValid(FireAnimMontage))
-			PlayAnimMontage(FireAnimMontage, 1.0f, FName("Play"));
-		auto FocalPoint = GetFocalPoint();
-		auto SpawnLocation = GetMesh()->GetSocketLocation("bow_SpawnSocket");
-		auto SpawnRotation = UKismetMathLibrary::MakeRotFromX(FocalPoint - SpawnLocation);
-		GetWorld()->SpawnActor<AArrow>(ArrowClass, SpawnLocation, SpawnRotation);
-	}
+	if (IsValid(FireAnimMontage))
+		PlayAnimMontage(FireAnimMontage, 1.0f, FName("Play"));
+	
+	FocalLocation = GetFocalPoint();
+	FVector lookDirection = FocalLocation - GetActorLocation();
+	lookDirection.Z = 0;
+	SetActorRotation(UKismetMathLibrary::MakeRotFromX(lookDirection));
 }
 
-FVector APlayerCharacter::GetFocalPoint() // name..
+FVector APlayerCharacter::GetFocalPoint()
 {
 	FHitResult HitResult;
 	auto Camera = GetFollowCamera();
@@ -62,4 +74,14 @@ FVector APlayerCharacter::GetFocalPoint() // name..
 		return HitResult.ImpactPoint; 
 	}
 	return FocalPoint;
+}
+
+void APlayerCharacter::SpawnArrow()
+{
+	if (IsValid(ArrowClass))
+	{
+		auto SpawnLocation = GetMesh()->GetSocketLocation("bow_SpawnSocket");
+		auto SpawnRotation = UKismetMathLibrary::MakeRotFromX(FocalLocation - SpawnLocation);
+		GetWorld()->SpawnActor<AArrow>(ArrowClass, SpawnLocation, SpawnRotation);
+	}
 }

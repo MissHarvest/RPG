@@ -28,15 +28,29 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* FireAnimMontage;
 
+	FVector FocalLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UDefaultScreenWidget> DefaultScreenClass;
+
+	UPROPERTY()
+	class UDefaultScreenWidget* DefaultScreen;
+
 public:
 	APlayerCharacter();
 
 protected:
-	//UFUNCTION(BlueprintCallable)//, BlueprintReadOnly, Category = "Attack" , meta = (AllowPrivateAccess = "true")
-	void Attack(const FInputActionValue& Value);
+	void ReceivedAttackInput(const FInputActionValue& Value);
 
 	FVector GetFocalPoint();
 
 protected:
+
+	virtual void BeginPlay() override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+	UFUNCTION(BlueprintCallable)
+	void SpawnArrow();
 };
