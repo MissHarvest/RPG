@@ -4,25 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Dummy.generated.h"
+#include "DamageIndicator.generated.h"
 
 UCLASS()
-class RPG_API ADummy : public AActor
+class RPG_API ADamageIndicator : public AActor
 {
 	GENERATED_BODY()
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	class UBoxComponent* BoxComponent;
+	class UWidgetComponent* WidgetComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* StaticMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class ADamageIndicator> DamageIndicatorClass;
+	class UProjectileMovementComponent* ProjectileComponent;
 
 public:	
 	// Sets default values for this actor's properties
-	ADummy();
+	ADamageIndicator();
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,6 +29,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	
 };

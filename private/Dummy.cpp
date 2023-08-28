@@ -14,10 +14,12 @@ ADummy::ADummy()
 	// 컴포넌트 생성
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	SetRootComponent(BoxComponent);
+	BoxComponent->SetBoxExtent(FVector(50));
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(BoxComponent);
 	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	StaticMesh->SetRelativeLocation(FVector(0, 0, -50));
 }
 
 // Called when the game starts or when spawned
