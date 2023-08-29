@@ -17,6 +17,9 @@ class RPG_API ADamageIndicator : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UProjectileMovementComponent* ProjectileComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* StaticMesh;
+
 public:	
 	// Sets default values for this actor's properties
 	ADamageIndicator();

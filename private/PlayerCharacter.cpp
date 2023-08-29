@@ -82,6 +82,8 @@ void APlayerCharacter::SpawnArrow()
 	{
 		auto SpawnLocation = GetMesh()->GetSocketLocation("bow_SpawnSocket");
 		auto SpawnRotation = UKismetMathLibrary::MakeRotFromX(FocalLocation - SpawnLocation);
-		GetWorld()->SpawnActor<AArrow>(ArrowClass, SpawnLocation, SpawnRotation);
+		FActorSpawnParameters params;
+		params.Owner = this;
+		GetWorld()->SpawnActor<AArrow>(ArrowClass, SpawnLocation, SpawnRotation, params);
 	}
 }

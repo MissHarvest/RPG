@@ -33,5 +33,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	
+	UFUNCTION()
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

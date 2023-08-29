@@ -5,6 +5,8 @@
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/StaticMeshComponent.h>
 #include <Components/BoxComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include "PlayerCharacter.h"
 // Sets default values
 AArrow::AArrow()
 {
@@ -32,7 +34,7 @@ void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnCollisionEnter);	
+	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnCollisionEnter);	
 }
 
 // Called every frame
@@ -46,4 +48,9 @@ void AArrow::OnCollisionEnter(UPrimitiveComponent* OverlappedComponent, AActor* 
 {
 	// tag
 	UE_LOG(LogTemp, Warning, TEXT("On Collision Enter"));
+	auto OwningPlayer = Cast<APlayerCharacter>(GetOwner());
+	auto Controller = OwningPlayer->GetController();
+	TSubclassOf<UDamageType> DefaultDamageClass;
+	UGameplayStatics::ApplyDamage(OtherActor, 10, Controller, this, DefaultDamageClass);
+	Destroy();
 }

@@ -4,7 +4,7 @@
 #include "Dummy.h"
 #include <Components/BoxComponent.h>
 #include <Components/StaticMeshComponent.h>
-
+#include "DamageIndicator.h"
 // Sets default values
 ADummy::ADummy()
 {
@@ -26,7 +26,7 @@ ADummy::ADummy()
 void ADummy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnTakeAnyDamage.AddDynamic(this, &ADummy::ReceiveDamage);
 }
 
 // Called every frame
@@ -36,3 +36,8 @@ void ADummy::Tick(float DeltaTime)
 
 }
 
+void ADummy::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Warning, TEXT("HITTED"));
+	GetWorld()->SpawnActor<ADamageIndicator>(DamageIndicatorClass, GetActorTransform());
+}

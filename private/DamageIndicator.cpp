@@ -5,6 +5,8 @@
 #include "Components/Widget.h"
 #include "Components/WidgetComponent.h"
 #include <GameFramework/ProjectileMovementComponent.h>
+#include <Components/StaticMeshComponent.h>
+
 // Sets default values
 ADamageIndicator::ADamageIndicator()
 {
@@ -12,10 +14,18 @@ ADamageIndicator::ADamageIndicator()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	SetRootComponent(StaticMesh);
+	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
+
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	WidgetComponent->SetupAttachment(RootComponent);
 
 	ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
+	ProjectileComponent->InitialSpeed = 10.0f;
+	ProjectileComponent->MaxSpeed = 10.0f;
+	ProjectileComponent->ProjectileGravityScale = 0.0f;
+	ProjectileComponent->Velocity = FVector(0, 0, 1);
 }
 
 // Called when the game starts or when spawned
