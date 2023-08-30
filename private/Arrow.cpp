@@ -12,7 +12,7 @@ AArrow::AArrow()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	//
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	SetRootComponent(BoxComponent);
@@ -33,7 +33,7 @@ AArrow::AArrow()
 void AArrow::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	PrimaryActorTick.bCanEverTick = true;
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AArrow::OnCollisionEnter);	
 }
 

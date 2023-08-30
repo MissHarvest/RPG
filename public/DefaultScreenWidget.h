@@ -25,4 +25,11 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UImage* AimImage;
+
+private:
+	UFUNCTION()
+	void SetHpPercent(float Percent);
+
+public:
+	void LinkStatController(class UStatComponent* StatComponent);
 };

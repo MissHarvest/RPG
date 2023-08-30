@@ -1,30 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+// Player
 #include "PlayerCharacter.h"
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Camera/CameraComponent.h>
 #include <GameFramework/PlayerController.h>
+#include "StatComponent.h"
 
+// Other Class
 #include "Arrow.h"
 #include "DefaultScreenWidget.h"
 
+// Unreal System
 #include "EnhancedInputComponent.h"
 #include <Blueprint/UserWidget.h>
 
+// Kismet System
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
-//#include "EnhancedInputSubsystems.h"
 
 APlayerCharacter::APlayerCharacter()
 {
+	// Components Init Settting
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0, 0, -96.0f), FRotator(0, -90, 0));
 
 	GetCharacterMovement()->GravityScale = 1.75f;
 
 	GetCameraBoom()->SetRelativeLocation(FVector(0, 0, 125));
 	GetCameraBoom()->TargetArmLength = 700.0f;
+
+	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -34,6 +40,7 @@ void APlayerCharacter::BeginPlay()
 	if (IsValid(DefaultScreenClass))
 	{
 		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);
+		DefaultScreen->LinkStatController(Stat);
 		DefaultScreen->AddToViewport();
 	}
 }
@@ -47,11 +54,17 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 		//Jumping
 		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::ReceivedAttackInput);
+
+		// Quick Slot
+		EnhancedInputComponent->BindAction(QuickAction, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryHp);
 	}
 }
 
 void APlayerCharacter::ReceivedAttackInput(const FInputActionValue& Value)
 {
+	if (bIsAttacking) return;
+	bIsAttacking = true;
+
 	if (IsValid(FireAnimMontage))
 		PlayAnimMontage(FireAnimMontage, 1.0f, FName("Play"));
 	
@@ -86,4 +99,9 @@ void APlayerCharacter::SpawnArrow()
 		params.Owner = this;
 		GetWorld()->SpawnActor<AArrow>(ArrowClass, SpawnLocation, SpawnRotation, params);
 	}
+}
+
+void APlayerCharacter::RecoveryHp()
+{
+	Stat->RecoveryHp(10);
 }

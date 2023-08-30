@@ -16,4 +16,8 @@ class RPG_API UDamageWidget : public UUserWidget
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UTextBlock* DamageText;
+
+public:
+	void SetTextOfDamage(FText Damage);
+
 };

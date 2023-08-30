@@ -2,4 +2,9 @@
 
 
 #include "DamageWidget.h"
+#include <Components/TextBlock.h>
 
+void UDamageWidget::SetTextOfDamage(FText Damage)
+{
+	DamageText->SetText(Damage);
+}

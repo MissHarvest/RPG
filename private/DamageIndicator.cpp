@@ -2,18 +2,23 @@
 
 
 #include "DamageIndicator.h"
-#include "Components/Widget.h"
 #include "Components/WidgetComponent.h"
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Components/StaticMeshComponent.h>
-
+#include "DamageWidget.h"
+#include <Kismet/GameplayStatics.h>
+#include <GameFramework/Character.h>
+#include <Kismet/KismetMathLibrary.h>
 // Sets default values
 ADamageIndicator::ADamageIndicator()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//
+	// Actor Init Setting
+	InitialLifeSpan = 0.3f;
+
+	// Components Init Setting
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	SetRootComponent(StaticMesh);
 	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
@@ -33,6 +38,17 @@ void ADamageIndicator::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	auto Widget = Cast<UDamageWidget>(WidgetComponent->GetUserWidgetObject());
+	if (IsValid(Widget))
+	{
+		FText DamageText = FText::FromString(FString::FromInt(DamageSave));
+		Widget->SetTextOfDamage(DamageText);
+		auto Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		FVector PlayerDirection = Player->GetActorLocation() - GetActorLocation();
+		//PlayerDirection.Z = 0;
+		auto LookAtPlayer = UKismetMathLibrary::MakeRotFromX(PlayerDirection);
+		SetActorRotation(LookAtPlayer);
+	}
 }
 
 // Called every frame
@@ -42,3 +58,7 @@ void ADamageIndicator::Tick(float DeltaTime)
 
 }
 
+void ADamageIndicator::SetDamage(float Damage)
+{
+	DamageSave = Damage;
+}

@@ -38,6 +38,11 @@ void ADummy::Tick(float DeltaTime)
 
 void ADummy::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HITTED"));
-	GetWorld()->SpawnActor<ADamageIndicator>(DamageIndicatorClass, GetActorTransform());
+	UE_LOG(LogTemp, Warning, TEXT("Damaged"));	
+	auto DamageIndicator = GetWorld()->SpawnActorDeferred<ADamageIndicator>(DamageIndicatorClass, GetActorTransform());
+	if (DamageIndicator)
+	{
+		DamageIndicator->SetDamage(Damage);
+		DamageIndicator->FinishSpawning(GetActorTransform());
+	}
 }

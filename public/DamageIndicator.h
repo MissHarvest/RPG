@@ -20,6 +20,7 @@ class RPG_API ADamageIndicator : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* StaticMesh;
 
+	int32 DamageSave;
 public:	
 	// Sets default values for this actor's properties
 	ADamageIndicator();
@@ -32,4 +33,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetDamage(float Damage);
 };
