@@ -2,7 +2,7 @@
 
 
 #include "StatComponent.h"
-
+#include "Recovery.h"
 // Sets default values for this component's properties
 UStatComponent::UStatComponent()
 	: Super()
@@ -26,10 +26,14 @@ void UStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	// 
+	Normal = NewObject<UNormalRecovery>(this, TEXT("Normal Recovery"));
+	Tick = NewObject<UTickRecovery>(this, TEXT("Tick Recovery"));
+	
 	// 여기서 BroadCast 를 호출해도 될까?
 	CurrentHp = 50;
 	
+
 }
 
 
@@ -52,15 +56,17 @@ void UStatComponent::BroadCastHpChange()
 	OnHpChanged.Broadcast(GetHpPercent());
 }
 
-
 void UStatComponent::RecoveryHp(int32 Amount)
 {
-	CurrentHp += Amount;
-	if (CurrentHp > MaxHp) CurrentHp = MaxHp;
-	BroadCastHpChange();
+	Normal->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
 }
 
 void UStatComponent::RecoveryHp(int32 Amount, int32 Sec)
 {
+	Tick->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), Sec);
+}
 
+void UStatComponent::RecoveryHp(int32 Amount, TScriptInterface<class IRecovery> RecoveryStrategy)
+{
+	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
 }

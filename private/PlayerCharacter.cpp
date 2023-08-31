@@ -11,6 +11,7 @@
 // Other Class
 #include "Arrow.h"
 #include "DefaultScreenWidget.h"
+#include "Recovery.h"
 
 // Unreal System
 #include "EnhancedInputComponent.h"
@@ -103,5 +104,6 @@ void APlayerCharacter::SpawnArrow()
 
 void APlayerCharacter::RecoveryHp()
 {
-	Stat->RecoveryHp(10);
+	//Stat->RecoveryHp(10, 3);// NewObejct<NormalRecovery>();
+	Stat->RecoveryHp(10, NewObject<UNormalRecovery>());
 }

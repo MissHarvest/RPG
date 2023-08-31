@@ -31,6 +31,12 @@ class RPG_API UStatComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = "true"))
 	int32 MaxXp;
 
+	UPROPERTY()
+	TScriptInterface<class IRecovery> Normal;
+
+	UPROPERTY()
+	TScriptInterface<class IRecovery> Tick;
+
 private:
 	void BroadCastHpChange();
 
@@ -54,4 +60,6 @@ public:
 	void RecoveryHp(int32 Amount);
 
 	void RecoveryHp(int32 Amount, int32 Sec);
+
+	void RecoveryHp(int32 Amount, TScriptInterface<class IRecovery> RecoveryStrategy);
 };
