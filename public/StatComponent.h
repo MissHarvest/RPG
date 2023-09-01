@@ -7,6 +7,8 @@
 #include "StatComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHpChangedSignature, UStatComponent, OnHpChanged, float, Percent);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FMpChangedSignature, UStatComponent, OnMpChanged, float, Percent);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FXpChangedSignature, UStatComponent, OnXpChanged, float, Percent);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UStatComponent : public UActorComponent
@@ -31,16 +33,18 @@ class RPG_API UStatComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = "true"))
 	int32 MaxXp;
 
-	UPROPERTY()
-	TScriptInterface<class IRecovery> Normal;
-
-	UPROPERTY()
-	TScriptInterface<class IRecovery> Tick;
-
 private:
 	void BroadCastHpChange();
 
+	void BroadCastMpChange();
+
+	void BroadCastXpChange();
+
 	float GetHpPercent();
+
+	float GetMpPercent();
+
+	float GetXpPercent();
 
 public:	
 	// Sets default values for this component's properties
@@ -48,6 +52,12 @@ public:
 
 	UPROPERTY()
 	FHpChangedSignature OnHpChanged;
+
+	UPROPERTY()
+	FMpChangedSignature OnMpChanged;
+
+	UPROPERTY()
+	FXpChangedSignature OnXpChanged;
 
 protected:
 	// Called when the game starts
@@ -61,5 +71,7 @@ public:
 
 	void RecoveryHp(int32 Amount, int32 Sec);
 
-	void RecoveryHp(int32 Amount, TScriptInterface<class IRecovery> RecoveryStrategy);
+	void RecoveryMp(int32 Amount);
+
+	void GainXp(int32 Amount);
 };

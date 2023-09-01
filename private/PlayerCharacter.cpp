@@ -37,12 +37,15 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UE_LOG(LogTemp, Warning, TEXT("Player BeginPlay"));
 	if (IsValid(DefaultScreenClass))
 	{
 		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);
-		DefaultScreen->LinkStatController(Stat);
-		DefaultScreen->AddToViewport();
+		if (IsValid(DefaultScreen))
+		{
+			DefaultScreen->LinkStatController(Stat);
+			DefaultScreen->AddToViewport();			
+		}
 	}
 }
 
@@ -57,7 +60,8 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::ReceivedAttackInput);
 
 		// Quick Slot
-		EnhancedInputComponent->BindAction(QuickAction, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryHp);
+		EnhancedInputComponent->BindAction(QuickAction1, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryHp);
+		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryMp);
 	}
 }
 
@@ -104,6 +108,17 @@ void APlayerCharacter::SpawnArrow()
 
 void APlayerCharacter::RecoveryHp()
 {
-	//Stat->RecoveryHp(10, 3);// NewObejct<NormalRecovery>();
-	Stat->RecoveryHp(10, NewObject<UNormalRecovery>());
+	Stat->RecoveryHp(10);
+	// Stat->RecoveryHp(10, 3);
+}
+
+void APlayerCharacter::RecoveryMp()
+{
+	UE_LOG(LogTemp, Warning, TEXT("MP. %s"), *(this->GetName()));
+	Stat->RecoveryMp(10);
+}
+
+void APlayerCharacter::GainXp()
+{
+	Stat->GainXp(10);
 }

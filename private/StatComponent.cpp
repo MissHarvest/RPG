@@ -27,9 +27,6 @@ void UStatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// 
-	Normal = NewObject<UNormalRecovery>(this, TEXT("Normal Recovery"));
-	Tick = NewObject<UTickRecovery>(this, TEXT("Tick Recovery"));
-	
 	// 여기서 BroadCast 를 호출해도 될까?
 	CurrentHp = 50;
 	
@@ -51,22 +48,53 @@ float UStatComponent::GetHpPercent()
 	return Percent;
 }
 
+float UStatComponent::GetMpPercent()
+{
+	float Percent = (float)CurrentMp / (float)MaxMp;
+	return Percent;
+}
+
+float UStatComponent::GetXpPercent()
+{
+	float Percent = (float)CurrentXp / (float)MaxXp;
+	return Percent;
+}
+
 void UStatComponent::BroadCastHpChange()
 {
 	OnHpChanged.Broadcast(GetHpPercent());
 }
 
+void UStatComponent::BroadCastMpChange()
+{
+	OnMpChanged.Broadcast(GetMpPercent());
+}
+
+void UStatComponent::BroadCastXpChange()
+{
+	OnXpChanged.Broadcast(GetXpPercent());
+}
+
 void UStatComponent::RecoveryHp(int32 Amount)
 {
-	Normal->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
+	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
+	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
 }
 
 void UStatComponent::RecoveryHp(int32 Amount, int32 Sec)
 {
-	Tick->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), Sec);
+	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UTickRecovery>();
+	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), Sec);
 }
 
-void UStatComponent::RecoveryHp(int32 Amount, TScriptInterface<class IRecovery> RecoveryStrategy)
+void UStatComponent::RecoveryMp(int32 Amount)
 {
-	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
+	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
+	RecoveryStrategy->Recovery(CurrentMp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastMpChange), 0);
+}
+
+void UStatComponent::GainXp(int32 Amount)
+{
+	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
+	RecoveryStrategy->Recovery(CurrentXp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastXpChange), 0);
 }

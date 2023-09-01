@@ -21,14 +21,24 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 	class UProgressBar* MpBar;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	class UProgressBar* XpBar;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UTextBlock* LvText;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UImage* AimImage;
 
-private:
+//private:
+public:
 	UFUNCTION()
 	void SetHpPercent(float Percent);
+
+	UFUNCTION()
+	void SetMpPercent(float Percent);
+
+	UFUNCTION()
+	void SetXpPercent(float Percent);
 
 public:
 	void LinkStatController(class UStatComponent* StatComponent);

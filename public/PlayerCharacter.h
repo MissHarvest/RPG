@@ -19,7 +19,10 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	class UInputAction* DefaultAttackAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* QuickAction;
+	class UInputAction* QuickAction1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction2;
 
 	// Character Spawn Arrow with this Variable
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
@@ -36,7 +39,7 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UDefaultScreenWidget> DefaultScreenClass;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	class UDefaultScreenWidget* DefaultScreen;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
@@ -50,6 +53,10 @@ public:
 
 public:
 	void RecoveryHp();
+
+	void RecoveryMp();
+
+	void GainXp();
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);
