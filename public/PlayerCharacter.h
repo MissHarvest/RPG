@@ -48,6 +48,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStatComponent* Stat;
 
+	UPROPERTY()
+	FHitResult HitResult;
+
 public:
 	APlayerCharacter();
 
@@ -64,12 +67,18 @@ protected:
 	FVector GetFocalPoint();
 
 protected:
-
 	virtual void BeginPlay() override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	virtual void Tick(float DeltaTime) override;
+
 private:
 	UFUNCTION(BlueprintCallable)
 	void SpawnArrow();
+
+	void LineTraceForward();
+
+	void SetTargetInfo();
 };

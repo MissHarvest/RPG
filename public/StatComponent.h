@@ -40,12 +40,6 @@ private:
 
 	void BroadCastXpChange();
 
-	float GetHpPercent();
-
-	float GetMpPercent();
-
-	float GetXpPercent();
-
 public:	
 	// Sets default values for this component's properties
 	UStatComponent();
@@ -74,4 +68,11 @@ public:
 	void RecoveryMp(int32 Amount);
 
 	void GainXp(int32 Amount);
+
+	float GetHpPercent();
+
+	float GetMpPercent();
+
+	float GetXpPercent();
+
 };

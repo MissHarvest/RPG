@@ -1,10 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+// Self
 #include "Dummy.h"
+
+// Components
 #include <Components/BoxComponent.h>
 #include <Components/StaticMeshComponent.h>
+#include <Components/WidgetComponent.h>
+
+// Other
 #include "DamageIndicator.h"
+
 // Sets default values
 ADummy::ADummy()
 {
@@ -20,6 +26,7 @@ ADummy::ADummy()
 	StaticMesh->SetupAttachment(BoxComponent);
 	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	StaticMesh->SetRelativeLocation(FVector(0, 0, -50));
+
 }
 
 // Called when the game starts or when spawned

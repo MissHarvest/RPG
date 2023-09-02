@@ -7,6 +7,7 @@
 #include <Components/ProgressBar.h>
 #include <Components/TextBlock.h>
 #include <Components/Image.h>
+#include "TargetInfoWidget.h"
 
 // Other Class
 #include "StatComponent.h"
@@ -16,6 +17,10 @@ void UDefaultScreenWidget::LinkStatController(class UStatComponent* StatComponen
 	StatComponent->OnHpChanged.AddDynamic(this, &UDefaultScreenWidget::SetHpPercent);
 	StatComponent->OnMpChanged.AddDynamic(this, &UDefaultScreenWidget::SetMpPercent);
 	StatComponent->OnXpChanged.AddDynamic(this, &UDefaultScreenWidget::SetXpPercent);
+
+	SetHpPercent(StatComponent->GetHpPercent());
+	SetMpPercent(StatComponent->GetMpPercent());
+	SetXpPercent(StatComponent->GetXpPercent());
 }
 
 void UDefaultScreenWidget::SetHpPercent(float Percent)
@@ -31,4 +36,15 @@ void UDefaultScreenWidget::SetMpPercent(float Percent)
 void UDefaultScreenWidget::SetXpPercent(float Percent)
 {
 	XpBar->SetPercent(Percent);
+}
+
+void UDefaultScreenWidget::ActivateTargetInfo()
+{
+	//TargetInfo->Set();
+	TargetInfo->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UDefaultScreenWidget::DeactivateTargetInfo()
+{
+	TargetInfo->SetVisibility(ESlateVisibility::Hidden);
 }

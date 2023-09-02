@@ -65,6 +65,15 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	}
 }
 
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	LineTraceForward();
+
+	SetTargetInfo();
+}
+
 void APlayerCharacter::ReceivedAttackInput(const FInputActionValue& Value)
 {
 	if (bIsAttacking) return;
@@ -79,19 +88,34 @@ void APlayerCharacter::ReceivedAttackInput(const FInputActionValue& Value)
 	SetActorRotation(UKismetMathLibrary::MakeRotFromX(lookDirection));
 }
 
-FVector APlayerCharacter::GetFocalPoint()
+void APlayerCharacter::LineTraceForward()
 {
-	FHitResult HitResult;
 	auto Camera = GetFollowCamera();
 	FVector StartPoint = Camera->K2_GetComponentLocation();
 	FVector FocalPoint = StartPoint + Camera->GetForwardVector() * 15000.0f;
 	bool IsHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, FocalPoint, ECollisionChannel::ECC_Visibility);
-	if (IsHit)
+}
+
+FVector APlayerCharacter::GetFocalPoint()
+{
+	if (HitResult.bBlockingHit)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit : %s"), *(HitResult.GetActor()->GetName()));
 		return HitResult.ImpactPoint; 
 	}
-	return FocalPoint;
+	return HitResult.TraceEnd;
+}
+
+void APlayerCharacter::SetTargetInfo()
+{
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Enemy"))))
+	{
+		DefaultScreen->ActivateTargetInfo();
+	}
+	else
+	{
+		DefaultScreen->DeactivateTargetInfo();
+	}
 }
 
 void APlayerCharacter::SpawnArrow()

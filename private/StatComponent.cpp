@@ -27,7 +27,6 @@ void UStatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// 
-	// 여기서 BroadCast 를 호출해도 될까?
 	CurrentHp = 50;
 	
 
@@ -79,22 +78,26 @@ void UStatComponent::RecoveryHp(int32 Amount)
 {
 	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
 	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), 0);
+	if (CurrentHp > MaxHp) CurrentHp = MaxHp;
 }
 
 void UStatComponent::RecoveryHp(int32 Amount, int32 Sec)
 {
 	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UTickRecovery>();
 	RecoveryStrategy->Recovery(CurrentHp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastHpChange), Sec);
+	if (CurrentHp > MaxHp) CurrentHp = MaxHp;
 }
 
 void UStatComponent::RecoveryMp(int32 Amount)
 {
 	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
 	RecoveryStrategy->Recovery(CurrentMp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastMpChange), 0);
+	if (CurrentMp > MaxMp) CurrentMp = MaxMp;
 }
 
 void UStatComponent::GainXp(int32 Amount)
 {
 	TScriptInterface<IRecovery> RecoveryStrategy = NewObject<UNormalRecovery>();
 	RecoveryStrategy->Recovery(CurrentXp, Amount, FBroadCastSingature::CreateUObject(this, &UStatComponent::BroadCastXpChange), 0);
+	if (CurrentXp > MaxXp) CurrentXp = MaxXp;
 }

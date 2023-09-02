@@ -29,6 +29,9 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UImage* AimImage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	class UTargetInfoWidget* TargetInfo;
+
 //private:
 public:
 	UFUNCTION()
@@ -42,4 +45,8 @@ public:
 
 public:
 	void LinkStatController(class UStatComponent* StatComponent);
+
+	void ActivateTargetInfo();
+
+	void DeactivateTargetInfo();
 };
