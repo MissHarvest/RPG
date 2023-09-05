@@ -7,11 +7,13 @@
 #include <Camera/CameraComponent.h>
 #include <GameFramework/PlayerController.h>
 #include "StatComponent.h"
+#include "InventorySystem.h"
 
 // Other Class
 #include "Arrow.h"
 #include "DefaultScreenWidget.h"
 #include "Recovery.h"
+#include "ItemBase.h"
 
 // Unreal System
 #include "EnhancedInputComponent.h"
@@ -32,6 +34,7 @@ APlayerCharacter::APlayerCharacter()
 	GetCameraBoom()->TargetArmLength = 700.0f;
 
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
+	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -62,6 +65,9 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		// Quick Slot
 		EnhancedInputComponent->BindAction(QuickAction1, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryHp);
 		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryMp);
+
+		// Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::LootItem);
 	}
 }
 
@@ -145,4 +151,16 @@ void APlayerCharacter::RecoveryMp()
 void APlayerCharacter::GainXp()
 {
 	Stat->GainXp(10);
+}
+
+void APlayerCharacter::LootItem()
+{
+	TArray<AActor*> OverlapActors;
+	GetOverlappingActors(OverlapActors, AItemBase::StaticClass());
+	if (OverlapActors.Num() > 0)
+	{
+		auto Item = Cast<AItemBase>(OverlapActors[0]);
+		Inventory->AddItem(Item->GetItemSlot());
+		Item->Destroy();
+	}
 }

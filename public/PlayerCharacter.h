@@ -24,6 +24,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* QuickAction2;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InteractAction;
+
 	// Character Spawn Arrow with this Variable
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AArrow> ArrowClass;
@@ -48,6 +51,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStatComponent* Stat;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UInventorySystem* Inventory;
+	
 	UPROPERTY()
 	FHitResult HitResult;
 
@@ -60,6 +66,8 @@ public:
 	void RecoveryMp();
 
 	void GainXp();
+
+	void LootItem();
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);
