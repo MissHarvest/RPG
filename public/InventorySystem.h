@@ -7,6 +7,7 @@
 #include "CustomStruct.h"
 #include "InventorySystem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FSlotChangedSignature, UInventorySystem, OnSlotChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UInventorySystem : public UActorComponent
@@ -22,6 +23,10 @@ public:
 	// Sets default values for this component's properties
 	UInventorySystem();
 
+public:
+	UPROPERTY()
+	FSlotChangedSignature OnSlotChanged;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -30,6 +35,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AddItem(const FItemSlot Item); // 주의
+	int32 GetSize() const { return Size; }
 
+	FItemSlot GetContent(int32 Index) const { return Contents[Index]; }
+
+	bool AddItem(const FItemSlot Item); // 주의
+
+	void SwapItem(int32 SourceIndex, int32 DestinationIndex);
+
+private:
+	void BrodCastSlotChanged();
 };

@@ -47,6 +47,7 @@ void APlayerCharacter::BeginPlay()
 		if (IsValid(DefaultScreen))
 		{
 			DefaultScreen->LinkStatController(Stat);
+			DefaultScreen->LinkInventory(Inventory);
 			DefaultScreen->AddToViewport();			
 		}
 	}
@@ -160,7 +161,7 @@ void APlayerCharacter::LootItem()
 	if (OverlapActors.Num() > 0)
 	{
 		auto Item = Cast<AItemBase>(OverlapActors[0]);
-		Inventory->AddItem(Item->GetItemSlot());
-		Item->Destroy();
+		if(Inventory->AddItem(Item->GetItemSlot()))
+			Item->Destroy();
 	}
 }

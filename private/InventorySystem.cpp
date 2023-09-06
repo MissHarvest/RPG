@@ -11,6 +11,7 @@ UInventorySystem::UInventorySystem()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	Size = 20;
 }
 
 
@@ -20,7 +21,7 @@ void UInventorySystem::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	Contents.SetNum(Size);
 }
 
 
@@ -32,7 +33,30 @@ void UInventorySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UInventorySystem::AddItem(const FItemSlot ItemSlot)
+bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 {
-	Contents.Add(ItemSlot);
+	int emptyIdx = -1;
+	for (int i = 0; i < Contents.Num(); ++i)
+	{
+		if (Contents[i].Item.IsNull())
+		{
+			emptyIdx = i;
+			break;
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Empty Index : %d"), emptyIdx);
+	if (-1 == emptyIdx) return false;
+	Contents[emptyIdx] = ItemSlot;
+	BrodCastSlotChanged();
+	return true;
+}
+
+void UInventorySystem::SwapItem(int32 SourceIndex, int32 DestinationIndex)
+{
+
+}
+
+void UInventorySystem::BrodCastSlotChanged()
+{
+	OnSlotChanged.Broadcast();
 }

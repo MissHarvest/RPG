@@ -32,8 +32,10 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UTargetInfoWidget* TargetInfo;
 
-//private:
-public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	class UInventoryWidget* Inventory;
+
+public: // public? private?
 	UFUNCTION()
 	void SetHpPercent(float Percent);
 
@@ -49,4 +51,10 @@ public:
 	void ActivateTargetInfo();
 
 	void DeactivateTargetInfo();
+
+	void LinkInventory(class UInventorySystem* PlayerInventory);
+
+	void ShowInventory();
+
+	void HideInventory();
 };

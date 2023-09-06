@@ -14,4 +14,22 @@ class RPG_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess))
+	TSubclassOf<class UItemSlotWidget> ItemSlotClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess))
+	class UWrapBox* GridBox;
+
+	UPROPERTY()
+	TArray<class UItemSlotWidget*> ItemSlots;
+
+	UPROPERTY()
+	class UInventorySystem* InventoryModel;
+
+public:
+	void LinkInventory(class UInventorySystem* PlayerInventory);
+
+private:
+	UFUNCTION()
+	void UpdatedInventory();
 };

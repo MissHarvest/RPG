@@ -8,6 +8,7 @@
 #include <Components/TextBlock.h>
 #include <Components/Image.h>
 #include "TargetInfoWidget.h"
+#include "InventoryWidget.h"
 
 // Other Class
 #include "StatComponent.h"
@@ -40,11 +41,25 @@ void UDefaultScreenWidget::SetXpPercent(float Percent)
 
 void UDefaultScreenWidget::ActivateTargetInfo()
 {
-	//TargetInfo->Set();
 	TargetInfo->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UDefaultScreenWidget::DeactivateTargetInfo()
 {
 	TargetInfo->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UDefaultScreenWidget::LinkInventory(class UInventorySystem* PlayerInventory)
+{
+	Inventory->LinkInventory(PlayerInventory);
+}
+
+void UDefaultScreenWidget::ShowInventory()
+{
+	Inventory->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UDefaultScreenWidget::HideInventory()
+{
+	Inventory->SetVisibility(ESlateVisibility::Hidden);
 }

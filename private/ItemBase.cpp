@@ -16,6 +16,12 @@ AItemBase::AItemBase()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(SphereComponent);
+
+	if (ItemSlot.Item.IsNull())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not Exist"));
+	}
+	else UE_LOG(LogTemp, Warning, TEXT("Exist"));
 }
 
 // Called when the game starts or when spawned
