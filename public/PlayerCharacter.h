@@ -27,6 +27,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InventoryAction;
+
 	// Character Spawn Arrow with this Variable
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AArrow> ArrowClass;
@@ -89,4 +92,6 @@ private:
 	void LineTraceForward();
 
 	void SetTargetInfo();
+
+	void ToggleInventory();
 };

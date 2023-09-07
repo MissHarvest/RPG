@@ -57,4 +57,6 @@ public:
 	void ShowInventory();
 
 	void HideInventory();
+
+	void ToggleInventory();
 };

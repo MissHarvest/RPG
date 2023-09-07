@@ -22,6 +22,8 @@ void UInventoryWidget::LinkInventory(class UInventorySystem* PlayerInventory)
 	for (int i = 0; i < Size; ++i)
 	{
 		auto ItemSlot = CreateWidget<UItemSlotWidget>(GetOwningPlayer(), ItemSlotClass);
+		ItemSlot->SetInventoryModel(PlayerInventory);
+		ItemSlot->SetIndex(i);
 		GridBox->AddChild(ItemSlot);
 		ItemSlots.Add(ItemSlot);
 	}

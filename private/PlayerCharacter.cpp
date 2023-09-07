@@ -69,6 +69,9 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 		// Interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::LootItem);
+
+		// On Off Inventory
+		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventory);
 	}
 }
 
@@ -164,4 +167,9 @@ void APlayerCharacter::LootItem()
 		if(Inventory->AddItem(Item->GetItemSlot()))
 			Item->Destroy();
 	}
+}
+
+void APlayerCharacter::ToggleInventory()
+{
+	DefaultScreen->ToggleInventory();
 }

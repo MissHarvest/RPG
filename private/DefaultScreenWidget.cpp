@@ -13,6 +13,9 @@
 // Other Class
 #include "StatComponent.h"
 
+//
+#include <Blueprint/WidgetBlueprintLibrary.h>
+
 void UDefaultScreenWidget::LinkStatController(class UStatComponent* StatComponent)
 {
 	StatComponent->OnHpChanged.AddDynamic(this, &UDefaultScreenWidget::SetHpPercent);
@@ -57,9 +60,27 @@ void UDefaultScreenWidget::LinkInventory(class UInventorySystem* PlayerInventory
 void UDefaultScreenWidget::ShowInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Visible);
+	GetOwningPlayer()->SetShowMouseCursor(true);
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(GetOwningPlayer(), Inventory);
 }
 
 void UDefaultScreenWidget::HideInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Hidden);
+	GetOwningPlayer()->SetShowMouseCursor(false);
+	UWidgetBlueprintLibrary::SetInputMode_GameOnly(GetOwningPlayer());
+}
+
+void UDefaultScreenWidget::ToggleInventory()
+{
+	auto InvenVisible = Inventory->GetVisibility();
+	switch (InvenVisible)
+	{
+	case ESlateVisibility::Visible:
+		HideInventory();
+		break;
+	case ESlateVisibility::Hidden:
+		ShowInventory();
+		break;
+	}
 }

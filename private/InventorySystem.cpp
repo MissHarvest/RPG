@@ -3,6 +3,7 @@
 
 #include "InventorySystem.h"
 #include "ItemBase.h"
+
 // Sets default values for this component's properties
 UInventorySystem::UInventorySystem()
 {
@@ -47,16 +48,19 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 	UE_LOG(LogTemp, Warning, TEXT("Empty Index : %d"), emptyIdx);
 	if (-1 == emptyIdx) return false;
 	Contents[emptyIdx] = ItemSlot;
-	BrodCastSlotChanged();
+	BroadCastSlotChanged();
 	return true;
 }
 
 void UInventorySystem::SwapItem(int32 SourceIndex, int32 DestinationIndex)
 {
-
+	auto TempItemSlot = Contents[DestinationIndex];
+	Contents[DestinationIndex] = Contents[SourceIndex];
+	Contents[SourceIndex] = TempItemSlot;
+	BroadCastSlotChanged();
 }
 
-void UInventorySystem::BrodCastSlotChanged()
+void UInventorySystem::BroadCastSlotChanged()
 {
 	OnSlotChanged.Broadcast();
 }

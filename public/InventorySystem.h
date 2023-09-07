@@ -44,5 +44,5 @@ public:
 	void SwapItem(int32 SourceIndex, int32 DestinationIndex);
 
 private:
-	void BrodCastSlotChanged();
+	void BroadCastSlotChanged();
 };
