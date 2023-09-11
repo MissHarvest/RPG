@@ -72,6 +72,8 @@ public:
 
 	void LootItem();
 
+	UDefaultScreenWidget* GetPlayerWidget() const { return DefaultScreen; }
+
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);
 
@@ -94,4 +96,6 @@ private:
 	void SetTargetInfo();
 
 	void ToggleInventory();
+
+	
 };

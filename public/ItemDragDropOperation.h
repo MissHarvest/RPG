@@ -24,4 +24,5 @@ class RPG_API UItemDragDropOperation : public UDragDropOperation
 public:
 	void SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet);
 	int32 GetIndex() const { return Index; }
+	UInventorySystem* GetSourceInventory() const { return SourceInventory; }
 };

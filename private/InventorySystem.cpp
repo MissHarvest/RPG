@@ -52,12 +52,13 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 	return true;
 }
 
-void UInventorySystem::SwapItem(int32 SourceIndex, int32 DestinationIndex)
+void UInventorySystem::SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex)
 {
 	auto TempItemSlot = Contents[DestinationIndex];
-	Contents[DestinationIndex] = Contents[SourceIndex];
-	Contents[SourceIndex] = TempItemSlot;
+	Contents[DestinationIndex] = SourceInventory->Contents[SourceIndex];
+	SourceInventory->Contents[SourceIndex] = TempItemSlot;
 	BroadCastSlotChanged();
+	SourceInventory->BroadCastSlotChanged();
 }
 
 void UInventorySystem::BroadCastSlotChanged()

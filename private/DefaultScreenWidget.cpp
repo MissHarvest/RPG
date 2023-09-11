@@ -57,6 +57,11 @@ void UDefaultScreenWidget::LinkInventory(class UInventorySystem* PlayerInventory
 	Inventory->LinkInventory(PlayerInventory);
 }
 
+void UDefaultScreenWidget::LinkStorage(class UInventorySystem* StorageInventory)
+{
+	Storage->LinkInventory(StorageInventory);
+}
+
 void UDefaultScreenWidget::ShowInventory()
 {
 	Inventory->SetVisibility(ESlateVisibility::Visible);

@@ -41,7 +41,7 @@ public:
 
 	bool AddItem(const FItemSlot Item); // ¡÷¿«
 
-	void SwapItem(int32 SourceIndex, int32 DestinationIndex);
+	void SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex);
 
 private:
 	void BroadCastSlotChanged();

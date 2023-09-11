@@ -17,7 +17,6 @@
 #include <Blueprint/WidgetBlueprintLibrary.h>
 #include <Input/Reply.h>
 
-
 FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
@@ -50,7 +49,7 @@ bool UItemSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropE
 	auto Operation = Cast<UItemDragDropOperation>(InOperation);
 	if (IsValid(Operation))
 	{
-		InventoryModel->SwapItem(Operation->GetIndex(), Index);
+		InventoryModel->SwapItem(Operation->GetSourceInventory(), Operation->GetIndex(), Index);
 		UE_LOG(LogTemp, Warning, TEXT("%d -> %d"), Operation->GetIndex(), Index);
 	}
 	return false;
