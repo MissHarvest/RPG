@@ -12,8 +12,10 @@
 // Other Class
 #include "Arrow.h"
 #include "DefaultScreenWidget.h"
+#include "InventoryWidget.h"
 #include "Recovery.h"
 #include "ItemBase.h"
+#include "InteractionInterface.h"
 
 // Unreal System
 #include "EnhancedInputComponent.h"
@@ -22,6 +24,7 @@
 // Kismet System
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Kismet/KismetSystemLibrary.h>
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -68,7 +71,7 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryMp);
 
 		// Interact
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::LootItem);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::TryInteraction);
 
 		// On Off Inventory
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventory);
@@ -157,14 +160,22 @@ void APlayerCharacter::GainXp()
 	Stat->GainXp(10);
 }
 
-void APlayerCharacter::LootItem()
+void APlayerCharacter::TryInteraction()
 {
 	TArray<AActor*> OverlapActors;
-	GetOverlappingActors(OverlapActors, AItemBase::StaticClass());
-	if (OverlapActors.Num() > 0)
+	GetOverlappingActors(OverlapActors, AActor::StaticClass());
+	if (OverlapActors.Num() <= 0) return;
+	if (!UKismetSystemLibrary::DoesImplementInterface(OverlapActors[0], UInteractionInterface::StaticClass())) return;
+
+	if (OverlapActors[0]->ActorHasTag(TEXT("Interaction")))
+	{
+		auto Interaction = Cast<IInteractionInterface>(OverlapActors[0]);
+		Interaction->Interact();
+	}
+	else if (OverlapActors[0]->ActorHasTag(TEXT("Item")))
 	{
 		auto Item = Cast<AItemBase>(OverlapActors[0]);
-		if(Inventory->AddItem(Item->GetItemSlot()))
+		if (Inventory->AddItem(Item->GetItem()))
 			Item->Destroy();
 	}
 }

@@ -7,25 +7,26 @@
 #include "InventorySystem.h"
 
 // OnInit : Set Padding?
+void UInventoryWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	Size = 20;
+	CreateItemSlots();
+}
 
 void UInventoryWidget::LinkInventory(class UInventorySystem* PlayerInventory)
 {
+	if (IsValid(InventoryModel)) return;
+	
 	// Bind
 	PlayerInventory->OnSlotChanged.AddDynamic(this, &UInventoryWidget::UpdatedInventory);
 
 	//
 	InventoryModel = PlayerInventory;
 
-	//
-	int32 Size = PlayerInventory->GetSize();
-	UE_LOG(LogTemp, Warning, TEXT("Size : %d"), Size);
 	for (int i = 0; i < Size; ++i)
 	{
-		auto ItemSlot = CreateWidget<UItemSlotWidget>(GetOwningPlayer(), ItemSlotClass);
-		ItemSlot->SetInventoryModel(PlayerInventory);
-		ItemSlot->SetIndex(i);
-		GridBox->AddChild(ItemSlot);
-		ItemSlots.Add(ItemSlot);
+		ItemSlots[i]->SetInventoryModel(PlayerInventory);
 	}
 }
 
@@ -34,5 +35,16 @@ void UInventoryWidget::UpdatedInventory()
 	for (int i = 0; i < InventoryModel->GetSize(); ++i)
 	{
 		ItemSlots[i]->SetItem(InventoryModel->GetContent(i));
+	}
+}
+
+void UInventoryWidget::CreateItemSlots()
+{
+	for (int i = 0; i < Size; ++i)
+	{
+		auto ItemSlot = CreateWidget<UItemSlotWidget>(GetOwningPlayer(), ItemSlotClass);
+		ItemSlot->SetIndex(i);
+		GridBox->AddChild(ItemSlot);
+		ItemSlots.Add(ItemSlot);
 	}
 }

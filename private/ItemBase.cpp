@@ -41,3 +41,8 @@ void AItemBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+FItemSlot AItemBase::GetItem()
+{
+	return ItemSlot;
+}

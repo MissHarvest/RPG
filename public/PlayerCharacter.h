@@ -70,7 +70,7 @@ public:
 
 	void GainXp();
 
-	void LootItem();
+	void TryInteraction();
 
 	UDefaultScreenWidget* GetPlayerWidget() const { return DefaultScreen; }
 

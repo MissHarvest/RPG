@@ -26,10 +26,17 @@ class RPG_API UInventoryWidget : public UUserWidget
 	UPROPERTY()
 	class UInventorySystem* InventoryModel;
 
+	int32 Size;
+
 public:
 	void LinkInventory(class UInventorySystem* PlayerInventory);
+
+protected:
+	virtual void NativeOnInitialized() override;
 
 private:
 	UFUNCTION()
 	void UpdatedInventory();
+
+	void CreateItemSlots();
 };

@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CustomStruct.h"
+#include "InteractionInterface.h"
 #include "ItemBase.generated.h"
 
 UCLASS()
-class RPG_API AItemBase : public AActor
+class RPG_API AItemBase : public AActor, public IInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -34,4 +35,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	FItemSlot GetItemSlot() const { return ItemSlot; }
+
+	virtual FItemSlot GetItem() override;
 };

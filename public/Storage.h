@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InteractionInterface.h"
 #include "Storage.generated.h"
 
 UCLASS()
-class RPG_API AStorage : public AActor
+class RPG_API AStorage : public AActor, public IInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -23,6 +24,8 @@ class RPG_API AStorage : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UInventorySystem* Inventory;
 
+	bool bIsOpened;
+
 public:	
 	// Sets default values for this actor's properties
 	AStorage();
@@ -35,4 +38,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void Interact() override;
+
+private:
+	UFUNCTION()
+	void OnCollisionExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void OpenStorageAnimation();
 };

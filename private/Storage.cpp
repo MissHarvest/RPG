@@ -32,9 +32,7 @@ AStorage::AStorage()
 void AStorage::BeginPlay()
 {
 	Super::BeginPlay();
-	auto Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	Cast<APlayerCharacter>(Player)->GetPlayerWidget()->LinkStorage(Inventory);
-	
+	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &AStorage::OnCollisionExit);
 }
 
 // Called every frame
@@ -44,3 +42,24 @@ void AStorage::Tick(float DeltaTime)
 
 }
 
+void AStorage::Interact()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Storage _ Interact"));
+	OpenStorageAnimation();
+	bIsOpened = true;
+	auto Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	auto PlayerWidget = Cast<APlayerCharacter>(Player)->GetPlayerWidget();
+	PlayerWidget->LinkStorage(Inventory);
+	PlayerWidget->ShowStorage();
+}
+
+void AStorage::OnCollisionExit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (bIsOpened)
+	{
+		OpenStorageAnimation();
+		auto Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		auto PlayerWidget = Cast<APlayerCharacter>(Player)->GetPlayerWidget();
+		PlayerWidget->HideStorage();
+	}
+}

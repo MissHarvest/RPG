@@ -64,4 +64,10 @@ public:
 	void HideInventory();
 
 	void ToggleInventory();
+
+	void ShowStorage();
+
+	void HideStorage();
+
+	void ToggleStorage();// 필요 없을듯
 };

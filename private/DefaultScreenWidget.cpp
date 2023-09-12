@@ -89,3 +89,29 @@ void UDefaultScreenWidget::ToggleInventory()
 		break;
 	}
 }
+
+void UDefaultScreenWidget::ShowStorage()
+{
+	Storage->SetVisibility(ESlateVisibility::Visible);
+	ShowInventory();
+}
+
+void UDefaultScreenWidget::HideStorage()
+{
+	Storage->SetVisibility(ESlateVisibility::Hidden);
+	HideInventory();
+}
+
+void UDefaultScreenWidget::ToggleStorage()
+{
+	auto StorageVisible = Storage->GetVisibility();
+	switch (StorageVisible)
+	{
+	case ESlateVisibility::Visible:
+		HideStorage();
+		break;
+	case ESlateVisibility::Hidden:
+		ShowStorage();
+		break;
+	}
+}
