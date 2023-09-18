@@ -3,6 +3,8 @@
 
 #include "EnemyCharacter.h"
 
+#include <Kismet/KismetSystemLibrary.h>
+
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -32,3 +34,14 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
+float AEnemyCharacter::Attack()
+{	
+	UE_LOG(LogTemp, Warning, TEXT("Attack!!"));
+	return PlayAnimMontage(AttackMontage);	
+}
+
+void AEnemyCharacter::BroadCastAttackEnd()
+{
+	if(OnAttackEnd.IsBound())
+		OnAttackEnd.Broadcast();
+}

@@ -23,6 +23,7 @@ public:
 	static const FName HomePosKey;
 	static const FName PatrolPosKey;
 	static const FName TargetActor;
+	static const FName CanAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BehaviorTree")
 	class UBlackboardData* BBD;

@@ -4,16 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AttackInterface.h"
 #include "EnemyCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FAttackEndSignature, AEnemyCharacter, OnAttackEnd);
+
 UCLASS()
-class RPG_API AEnemyCharacter : public ACharacter
+class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	class UAnimMontage* AttackMontage;
 
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
+
+	UPROPERTY()
+	FAttackEndSignature OnAttackEnd;
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,4 +35,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual float Attack() override;
+	
+	UFUNCTION(BlueprintCallable)
+	void BroadCastAttackEnd();
 };
