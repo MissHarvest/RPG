@@ -10,14 +10,15 @@ AEnemyCharacter::AEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Constructor"));
+	CurrentHp = 2;
 }
 
 // Called when the game starts or when spawned
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UE_LOG(LogTemp, Warning, TEXT("Enemy BeginPlay"));
 }
 
 // Called every frame
@@ -36,8 +37,20 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 float AEnemyCharacter::Attack()
 {	
-	UE_LOG(LogTemp, Warning, TEXT("Attack!!"));
+	UE_LOG(LogTemp, Warning, TEXT("BT_AI_ENEMY_Attack!!"));
 	return PlayAnimMontage(AttackMontage);	
+}
+
+float AEnemyCharacter::Damaged()
+{
+	return PlayAnimMontage(DamagedMontage);
+}
+
+float AEnemyCharacter::Death()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Death"));
+	GetMesh()->SetSimulatePhysics(true);
+	return 0;
 }
 
 void AEnemyCharacter::BroadCastAttackEnd()

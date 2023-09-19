@@ -26,7 +26,6 @@ ADummy::ADummy()
 	StaticMesh->SetupAttachment(BoxComponent);
 	StaticMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	StaticMesh->SetRelativeLocation(FVector(0, 0, -50));
-
 }
 
 // Called when the game starts or when spawned

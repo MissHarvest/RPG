@@ -5,11 +5,11 @@
 #include "EnemyAIController.h"
 #include "EnemyCharacter.h"
 #include <Kismet/KismetSystemLibrary.h>
-
+#include <BehaviorTree/BlackboardComponent.h>
 UBTTask_Attack::UBTTask_Attack()
 {
 	NodeName = TEXT("Attack");
-	//bNotifyTick = true;
+	INIT_TASK_NODE_NOTIFY_FLAGS();
 	Duration = 0;
 	num = 0;
 }
@@ -20,42 +20,33 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	if (nullptr == ControllingPawn) return EBTNodeResult::Failed;
 
 	Duration = ControllingPawn->Attack();
-	/*if (!ControllingPawn->OnAttackEnd.IsBound())
-	{
-		ControllingPawn->OnAttackEnd.AddDynamic(this, &UBTTask_Attack::Temp);
-	}*/
-	FTimerDelegate TimeCallBack;
-	TimeCallBack.BindLambda([&] {
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-		});
-	FTimerHandle TimeHandle;		
-	GetWorld()->GetTimerManager().SetTimer(TimeHandle, TimeCallBack, Duration, false);
 	bPlayAnimation = true;
+	FAttackTaskMemory* MyMemory = reinterpret_cast<FAttackTaskMemory*>(NodeMemory);
+	MyMemory->Timer = Duration;
+	UE_LOG(LogTemp, Warning, TEXT("BT_AI_Attack_Task_Execute"));
 	return EBTNodeResult::InProgress;
-	// Succeeded, Failed 무한 반복
 }
 
 void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	
-	if (!bPlayAnimation)
+	FAttackTaskMemory* MyMemory = reinterpret_cast<FAttackTaskMemory*>(NodeMemory);
+	MyMemory->Timer -= DeltaSeconds;
+	UE_LOG(LogTemp, Warning, TEXT("BT_AI_Attack_Task_Tick(%f)"), MyMemory->Timer);
+	if (MyMemory->Timer <= 0)
 	{
-		/*Timer += DeltaSeconds;
-		if (Timer > Duration)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("EBT _ Attack"));
-			
-			Timer = 0;
-			Duration = 0;
-		}*/
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		UE_LOG(LogTemp, Warning, TEXT("BT_AI_Attack_Task_Finish"));
+		bPlayAnimation = false;
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);		
 	}
 }
 
-void UBTTask_Attack::Temp()
+EBTNodeResult::Type UBTTask_Attack::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	//FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-	UE_LOG(LogTemp, Warning, TEXT("Temp"));
-	bPlayAnimation = false;
+	if (bPlayAnimation)
+	{
+		return EBTNodeResult::InProgress;
+	}
+	return EBTNodeResult::Aborted;	
 }

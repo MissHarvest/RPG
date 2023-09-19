@@ -24,6 +24,8 @@ public:
 	static const FName PatrolPosKey;
 	static const FName TargetActor;
 	static const FName CanAttack;
+	static const FName Damaged;
+	static const FName Death;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BehaviorTree")
 	class UBlackboardData* BBD;
@@ -35,4 +37,6 @@ protected:
 	//virtual void BeginPlay() override;
 
 	virtual void OnPossess(APawn* InPawn) override;
+	UFUNCTION()
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

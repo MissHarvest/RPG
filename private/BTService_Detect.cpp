@@ -15,7 +15,7 @@ UBTService_Detect::UBTService_Detect()
 void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
-
+	UE_LOG(LogTemp, Warning, TEXT("BT_AI_Detect_Tick"));
 	auto ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
 
 	auto Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::TargetActor));

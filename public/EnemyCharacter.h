@@ -17,6 +17,13 @@ class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	class UAnimMontage* DamagedMontage;
+
+public:
+	UPROPERTY()
+	int32 CurrentHp;
+
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
@@ -28,7 +35,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -36,7 +43,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual float Attack() override;
-	
+
+	float Damaged();
+
+	float Death();
+
 	UFUNCTION(BlueprintCallable)
 	void BroadCastAttackEnd();
+
+	int32 GetHP() const { return CurrentHp; }
 };
