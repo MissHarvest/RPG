@@ -49,6 +49,7 @@ void AArrow::OnCollisionEnter(UPrimitiveComponent* OverlappedComponent, AActor* 
 	// tag
 	UE_LOG(LogTemp, Warning, TEXT("On Collision Enter"));
 	auto OwningPlayer = Cast<APlayerCharacter>(GetOwner());
+	OwningPlayer->StartCombat(OtherActor);
 	auto Controller = OwningPlayer->GetController();
 	TSubclassOf<UDamageType> DefaultDamageClass;
 	UGameplayStatics::ApplyDamage(OtherActor, 10, Controller, this, DefaultDamageClass);

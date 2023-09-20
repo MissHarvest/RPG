@@ -20,6 +20,9 @@ class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* DamagedMontage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UStatComponent* Stat;
+
 public:
 	UPROPERTY()
 	int32 CurrentHp;
@@ -52,4 +55,6 @@ public:
 	void BroadCastAttackEnd();
 
 	int32 GetHP() const { return CurrentHp; }
+
+	UStatComponent* GetStat() const { return Stat; }
 };

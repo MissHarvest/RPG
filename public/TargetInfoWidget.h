@@ -23,6 +23,12 @@ class RPG_API UTargetInfoWidget : public UUserWidget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "", meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UProgressBar* HpBar;
 
+	UPROPERTY()
+	class AEnemyCharacter* Enemy;
+
 public:
-	void SetInfo(FText Lv, FText FText, float Percent);
+	void SetInfo(class AActor* EnemyActor);
+
+	UFUNCTION()
+	void SetHpPercent(float Percent);
 };

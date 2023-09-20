@@ -19,7 +19,12 @@ void UBTService_Detect::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	auto ControllingPawn = OwnerComp.GetAIOwner()->GetPawn();
 
 	auto Target = Cast<AActor>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::TargetActor));
-	auto Distance = ControllingPawn->GetDistanceTo(Target);
+	if (nullptr == Target) return;
 
+	auto Distance = ControllingPawn->GetDistanceTo(Target);
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::CanAttack, Distance > AttackRange ? false : true);
+	if (Distance >= 2000)
+	{
+		OwnerComp.GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::TargetActor, nullptr);
+	}
 }

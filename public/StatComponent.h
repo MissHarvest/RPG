@@ -15,6 +15,9 @@ class RPG_API UStatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = "true"))
+	int32 Level;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat" , meta = (AllowPrivateAccess = "true"))
 	int32 CurrentHp; // unsinged?
 
@@ -75,4 +78,8 @@ public:
 
 	float GetXpPercent();
 
+	int32 GetLevel() const { return Level; }
+
+	UFUNCTION()
+	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

@@ -33,10 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "BehaviorTree")
 	class UBehaviorTree* BehaviorTree;
 
-protected:
-	//virtual void BeginPlay() override;
+public:
+	void ReceiveDamage(class AActor* Attacker);
 
+protected:
 	virtual void OnPossess(APawn* InPawn) override;
-	UFUNCTION()
-	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 };

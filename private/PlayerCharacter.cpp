@@ -63,7 +63,7 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 
-		//Jumping
+		// Attack
 		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::ReceivedAttackInput);
 
 		// Quick Slot
@@ -121,9 +121,9 @@ FVector APlayerCharacter::GetFocalPoint()
 
 void APlayerCharacter::SetTargetInfo()
 {
-	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Enemy"))))
+	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Enemy"))) || bCombatting)
 	{
-		DefaultScreen->ActivateTargetInfo();
+		DefaultScreen->ActivateTargetInfo(HitResult.GetActor());
 	}
 	else
 	{
@@ -183,4 +183,10 @@ void APlayerCharacter::TryInteraction()
 void APlayerCharacter::ToggleInventory()
 {
 	DefaultScreen->ToggleInventory();
+}
+
+void APlayerCharacter::StartCombat(class AActor* Opponent)
+{
+	bCombatting = true;
+	DefaultScreen->ActivateTargetInfo(Opponent);
 }

@@ -6,6 +6,8 @@
 #include <NavigationSystem.h>
 #include <BehaviorTree/BlackboardComponent.h>
 #include "EnemyAIController.h"
+#include <GameFramework/CharacterMovementComponent.h>
+#include <GameFramework/Character.h>
 
 UBTTask_Patrol::UBTTask_Patrol()
 {
@@ -28,6 +30,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	if (NavSystem->GetRandomReachablePointInRadius(Origin, 1000.0f, NextPos))
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(AEnemyAIController::PatrolPosKey, NextPos.Location);
+		Cast<ACharacter>(ControllingPawn)->GetCharacterMovement()->MaxWalkSpeed = 100.0f;
 		return EBTNodeResult::Succeeded;
 	}
 

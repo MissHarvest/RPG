@@ -3,9 +3,14 @@
 
 #include "StatComponent.h"
 #include "Recovery.h"
+
+#include "EnemyCharacter.h"
+#include "EnemyAIController.h"
+
 // Sets default values for this component's properties
 UStatComponent::UStatComponent()
 	: Super()
+	, Level(1)
 	, CurrentHp(0)
 	, MaxHp(100)
 	, CurrentMp(0)
@@ -27,9 +32,8 @@ void UStatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// 
-	CurrentHp = 50;
-	
-
+	CurrentHp = MaxHp;
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UStatComponent::ReceiveDamage);
 }
 
 
@@ -41,9 +45,27 @@ void UStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+void UStatComponent::ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	CurrentHp -= Damage;
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Damaged / Stat"));
+	auto Enemy = Cast<AEnemyCharacter>(GetOwner());
+	if (nullptr == Enemy) return;
+
+	auto Controller = Cast<AEnemyAIController>(Enemy->GetController());
+	if (nullptr == Controller) return;
+	
+	UE_LOG(LogTemp, Warning, TEXT("Enemy Stat : nullptr is not exist => Do ReveiveDamage"));
+	auto Player = InstigatedBy->GetPawn();
+	Controller->ReceiveDamage(Player);
+
+	BroadCastHpChange();
+}
+
 float UStatComponent::GetHpPercent()
 {
 	float Percent = (float)CurrentHp / (float)MaxHp;
+	UE_LOG(LogTemp, Warning, TEXT("CurrentHP(%d), MaxHP(%d), Percent(%f)"), CurrentHp, MaxHp, Percent);
 	return Percent;
 }
 

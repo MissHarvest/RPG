@@ -51,7 +51,7 @@ public: // public? private?
 public:
 	void LinkStatController(class UStatComponent* StatComponent);
 
-	void ActivateTargetInfo();
+	void ActivateTargetInfo(class AActor* Opponent);
 
 	void DeactivateTargetInfo();
 

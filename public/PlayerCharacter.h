@@ -51,6 +51,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
 	bool bIsAttacking;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
+	bool bCombatting;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStatComponent* Stat;
 
@@ -73,6 +76,8 @@ public:
 	void TryInteraction();
 
 	UDefaultScreenWidget* GetPlayerWidget() const { return DefaultScreen; }
+
+	void StartCombat(class AActor* Opponent);
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);

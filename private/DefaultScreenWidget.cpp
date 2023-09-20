@@ -42,9 +42,10 @@ void UDefaultScreenWidget::SetXpPercent(float Percent)
 	XpBar->SetPercent(Percent);
 }
 
-void UDefaultScreenWidget::ActivateTargetInfo()
+void UDefaultScreenWidget::ActivateTargetInfo(class AActor* Opponent)
 {
-	TargetInfo->SetVisibility(ESlateVisibility::Visible);
+	if (TargetInfo->GetVisibility() != ESlateVisibility::Visible) TargetInfo->SetVisibility(ESlateVisibility::Visible);
+	TargetInfo->SetInfo(Opponent);
 }
 
 void UDefaultScreenWidget::DeactivateTargetInfo()
