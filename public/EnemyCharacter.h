@@ -23,6 +23,9 @@ class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStatComponent* Stat;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UDamageIndicatorComponent* DamageIndicatorComp;
+
 public:
 	UPROPERTY()
 	int32 CurrentHp;

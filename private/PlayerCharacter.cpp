@@ -8,6 +8,7 @@
 #include <GameFramework/PlayerController.h>
 #include "StatComponent.h"
 #include "InventorySystem.h"
+#include "PlayerCameraComponent.h"
 
 // Other Class
 #include "Arrow.h"
@@ -75,6 +76,9 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 		// On Off Inventory
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &APlayerCharacter::ToggleInventory);
+
+		// Target Lock
+		EnhancedInputComponent->BindAction(TargetLockAction, ETriggerEvent::Started, this, &APlayerCharacter::TargetLock);
 	}
 }
 
@@ -189,4 +193,9 @@ void APlayerCharacter::StartCombat(class AActor* Opponent)
 {
 	bCombatting = true;
 	DefaultScreen->ActivateTargetInfo(Opponent);
+}
+
+void APlayerCharacter::TargetLock()
+{
+	Cast<UPlayerCameraComponent>(GetFollowCamera())->SetTargetToChase();
 }

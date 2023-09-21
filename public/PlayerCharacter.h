@@ -30,6 +30,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InventoryAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* TargetLockAction;
+
 	// Character Spawn Arrow with this Variable
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AArrow> ArrowClass;
@@ -53,6 +56,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
 	bool bCombatting;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
+	class AActor* TargetActor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UStatComponent* Stat;
@@ -102,5 +108,5 @@ private:
 
 	void ToggleInventory();
 
-	
+	void TargetLock();
 };
