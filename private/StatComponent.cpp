@@ -62,6 +62,12 @@ void UStatComponent::ReceiveDamage(AActor* DamagedActor, float Damage, const cla
 	BroadCastHpChange();
 }
 
+void UStatComponent::DecreaseHP(int32 Amount)
+{
+	CurrentHp -= Amount;
+	BroadCastHpChange();
+}
+
 float UStatComponent::GetHpPercent()
 {
 	float Percent = (float)CurrentHp / (float)MaxHp;

@@ -9,6 +9,7 @@
 #include "StatComponent.h"
 #include "InventorySystem.h"
 #include "PlayerCameraComponent.h"
+#include "QuickSlotSystem.h"
 
 // Other Class
 #include "Arrow.h"
@@ -39,6 +40,7 @@ APlayerCharacter::APlayerCharacter()
 
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
 	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
+	//QuickSlot = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -52,9 +54,12 @@ void APlayerCharacter::BeginPlay()
 		{
 			DefaultScreen->LinkStatController(Stat);
 			DefaultScreen->LinkInventory(Inventory);
+			//DefaultScreen->LinkQuickSlot(QuickSlot);
 			DefaultScreen->AddToViewport();			
 		}
 	}
+
+	Stat->DecreaseHP(50);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -68,7 +73,7 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::ReceivedAttackInput);
 
 		// Quick Slot
-		EnhancedInputComponent->BindAction(QuickAction1, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryHp);
+		EnhancedInputComponent->BindAction(QuickAction1, ETriggerEvent::Started, this, &APlayerCharacter::PressKey1);
 		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryMp);
 
 		// Interact
@@ -198,4 +203,9 @@ void APlayerCharacter::StartCombat(class AActor* Opponent)
 void APlayerCharacter::TargetLock()
 {
 	Cast<UPlayerCameraComponent>(GetFollowCamera())->SetTargetToChase();
+}
+
+void APlayerCharacter::PressKey1()
+{
+	//QuickSlot->DoAction(1);
 }

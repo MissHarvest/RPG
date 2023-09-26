@@ -56,6 +56,8 @@ public:
 	UPROPERTY()
 	FXpChangedSignature OnXpChanged;
 
+	void DecreaseHP(int32 Amount);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

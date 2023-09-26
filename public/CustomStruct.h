@@ -20,6 +20,9 @@ struct RPG_API FItem : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -27,6 +30,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UTexture2D> Texture;
+
+	bool UseItem(class APawn* OwingPawn);
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -45,4 +50,20 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FQuickSlot
+{
+	GENERATED_BODY()
+
+public:
+	FQuickSlot() {}
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDataTableRowHandle Item;*/
 };

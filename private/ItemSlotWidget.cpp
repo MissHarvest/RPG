@@ -28,6 +28,21 @@ FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 		return ReturnValue.NativeReply;
 	}
 	
+	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
+	{
+		if (ItemModel.Item.IsNull()) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
+		bool used = ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->UseItem(GetOwningPlayerPawn());
+		if (used)
+		{
+			// To Function
+			--ItemModel.Quentity;
+			if (0 == ItemModel.Quentity)
+			{
+				FItemSlot tempSlot;
+				SetItem(tempSlot);
+			}
+		}
+	}
 	return UWidgetBlueprintLibrary::Unhandled().NativeReply;	
 }
 
@@ -40,7 +55,7 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 	Preview->SetThumbnail(Texture);
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index);
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->ID);
 	OutOperation = DragDrop;
 }
 

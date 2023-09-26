@@ -66,6 +66,9 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UInventorySystem* Inventory;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class UQuickSlotSystem* QuickSlot;
+
 	UPROPERTY()
 	FHitResult HitResult;
 
@@ -84,6 +87,8 @@ public:
 	UDefaultScreenWidget* GetPlayerWidget() const { return DefaultScreen; }
 
 	void StartCombat(class AActor* Opponent);
+
+	FORCEINLINE class UStatComponent* GetStatComponent() const { return Stat; }
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);
@@ -109,4 +114,6 @@ private:
 	void ToggleInventory();
 
 	void TargetLock();
+
+	void PressKey1();
 };

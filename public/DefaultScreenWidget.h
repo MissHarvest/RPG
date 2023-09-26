@@ -38,6 +38,9 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UInventoryWidget* Storage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	class UQuickSlotCollectionWidget* QuickSlot;
+
 public: // public? private?
 	UFUNCTION()
 	void SetHpPercent(float Percent);
@@ -70,4 +73,6 @@ public:
 	void HideStorage();
 
 	void ToggleStorage();// 필요 없을듯
+
+	void LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot);
 };

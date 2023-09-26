@@ -10,11 +10,13 @@
 
 void UPlayerCameraComponent::BeginPlay()
 {
+	Super::BeginPlay();
 	this->SetTickGroup(ETickingGroup::TG_PostUpdateWork);
 }
 
 void UPlayerCameraComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	ChaseTarget();
 }
 

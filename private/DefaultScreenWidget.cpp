@@ -9,6 +9,7 @@
 #include <Components/Image.h>
 #include "TargetInfoWidget.h"
 #include "InventoryWidget.h"
+#include "QuickSlotCollectionWidget.h"
 
 // Other Class
 #include "StatComponent.h"
@@ -115,4 +116,9 @@ void UDefaultScreenWidget::ToggleStorage()
 		ShowStorage();
 		break;
 	}
+}
+
+void UDefaultScreenWidget::LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot)
+{
+	QuickSlot->LinkQuickSlot(PlayerQuickSlot);
 }
