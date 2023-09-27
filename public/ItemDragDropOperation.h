@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/DragDropOperation.h"
 #include "CustomStruct.h"
+#include "CustomEnum.h"
 #include "ItemDragDropOperation.generated.h"
 
 /**
@@ -22,10 +23,14 @@ class RPG_API UItemDragDropOperation : public UDragDropOperation
 	int32 Index;
 
 	UPROPERTY()
+	ESlotType Type;
+
+	UPROPERTY()
 	int32 ID;
 
 public:
-	void SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet, int32 ID);
+	//void SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet, int32 ID);
+	void SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet);
 	int32 GetIndex() const { return Index; }
 	int32 GetID() const { return ID; }
 	UInventorySystem* GetSourceInventory() const { return SourceInventory; }

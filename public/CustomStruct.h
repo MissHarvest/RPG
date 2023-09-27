@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include <Engine/DataTable.h>
+#include "CustomEnum.h"
 #include "CustomStruct.generated.h"
 
 UCLASS()
@@ -31,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UTexture2D> Texture;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ESlotType SlotType;
+
 	bool UseItem(class APawn* OwingPawn);
 };
 
@@ -50,6 +54,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
+
+	TObjectPtr<class UTexture2D> GetTexture();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -58,12 +64,21 @@ struct RPG_API FQuickSlot
 	GENERATED_BODY()
 
 public:
-	FQuickSlot() {}
+	FQuickSlot()
+	: Index(-1)
+	{};
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ID;
+	int32 Index;
 
-	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FDataTableRowHandle Item;*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UInventorySystem* SourceInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UQuickSlotSystem* SourceQuickSlot;
+
+	// Type
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ESlotType SlotType;
 };

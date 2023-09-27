@@ -18,10 +18,15 @@ class RPG_API UQuickSlotCollectionWidget : public UUserWidget
 	TSubclassOf<class UQuickSlotWidget> QuickSlotClass;
 
 	UPROPERTY()
-	TArray<class UQuickSlotWidget*> QuickSlots;
+	TArray<class UQuickSlotWidget*> QuickSlotWidgets;
 
 	UPROPERTY()
 	class UQuickSlotSystem* QuickSlotModel;
+
+	int32 Size;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess = "true"))
+	class UWrapBox* GridBox;
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -29,6 +34,10 @@ protected:
 public:
 	void LinkQuickSlot(class UQuickSlotSystem* QuickSlot);
 
+	UFUNCTION()
 	void UpdateQuickSlots();
+
+private:
+	void CreateQuickSlots();
 
 };

@@ -40,7 +40,7 @@ APlayerCharacter::APlayerCharacter()
 
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
 	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
-	//QuickSlot = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
+	//QuickSlotSystem = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("QuickSlot"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -58,7 +58,6 @@ void APlayerCharacter::BeginPlay()
 			DefaultScreen->AddToViewport();			
 		}
 	}
-
 	Stat->DecreaseHP(50);
 }
 
@@ -207,5 +206,5 @@ void APlayerCharacter::TargetLock()
 
 void APlayerCharacter::PressKey1()
 {
-	//QuickSlot->DoAction(1);
+	// QuickSlot->Press(1);
 }

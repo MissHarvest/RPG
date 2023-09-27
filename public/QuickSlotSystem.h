@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FQuickSlot> QuickSlots;
 
 	void Press(int32 index);
@@ -35,4 +35,6 @@ public:
 	FQuickChangedSignature OnQuickSlotChanged;
 
 	void UpdateQuickSlot();
+
+	void SetQuickSlot(class UInventorySystem* InventoryToSoucre, int32 IndexToSoucre, int32 IndexToSet);
 };
