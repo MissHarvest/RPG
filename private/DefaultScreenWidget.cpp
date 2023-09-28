@@ -120,13 +120,5 @@ void UDefaultScreenWidget::ToggleStorage()
 
 void UDefaultScreenWidget::LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot)
 {
-	if (nullptr == PlayerQuickSlot)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DefaultScreenWidget - PlayerQuick Slot is null"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DefaultScreenWidget - PlayerQuick Slot is not null"));
-		//QuickSlotCollection->LinkQuickSlot(PlayerQuickSlot);
-	}	
+	QuickSlot->LinkQuickSlot(PlayerQuickSlot);
 }

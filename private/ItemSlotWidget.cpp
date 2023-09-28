@@ -30,7 +30,18 @@ FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 	
 	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 	{
-		InventoryModel->ConsumeItem(Index);
+		if (ItemModel.Item.IsNull()) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
+		bool used = ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->UseItem(GetOwningPlayerPawn());
+		if (used)
+		{
+			// To Function
+			--ItemModel.Quentity;
+			if (0 == ItemModel.Quentity)
+			{
+				FItemSlot tempSlot;
+				SetItem(tempSlot);
+			}
+		}
 	}
 	return UWidgetBlueprintLibrary::Unhandled().NativeReply;	
 }
@@ -39,19 +50,12 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 {
 	if (ItemModel.Item.IsNull()) return;
 
-	// Create Drag Widget
 	auto Preview = CreateWidget<UDragItemPreviewWidget>(GetOwningPlayer(), DragItemPreviewClass);
-	
-	// Set Thumbnail in Drag Widget
-	auto Texture = ItemModel.GetTexture();
+	auto Texture = ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "failed")->Texture;
 	Preview->SetThumbnail(Texture);
-
-	// Create Operation
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-
-	// Set Operation
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index);
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->ID);
 	OutOperation = DragDrop;
 }
 
@@ -76,7 +80,7 @@ void UItemSlotWidget::SetItem(FItemSlot ItemSlot)
 	else
 	{
 		ItemModel = ItemSlot;
-		auto ItemTexture = ItemModel.GetTexture();
+		auto ItemTexture = ItemModel.Item.DataTable->FindRow<FItem>(ItemSlot.Item.RowName, "Failed")->Texture;
 		Thumbnail->SetBrushFromTexture(ItemTexture);
 	}
 }

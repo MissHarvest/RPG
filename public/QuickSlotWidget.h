@@ -18,22 +18,12 @@ class RPG_API UQuickSlotWidget : public UUserWidget
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess = "true"))
 	class UImage* Thumbnail;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess = "true"))
-	class UTextBlock* KeyName;
-
 	UPROPERTY()
 	int32 ID;
-
-	UPROPERTY()
-	int32 SlotIndex;
-
-	UPROPERTY()
-	class UQuickSlotSystem* QuickSlotModel;
 
 public:
 	void SetQuickSlot(FQuickSlot QuickSlot);
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
-	void SetIndex(int32 IndexToSet);
 
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

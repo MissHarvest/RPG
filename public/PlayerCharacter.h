@@ -67,7 +67,7 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	class UInventorySystem* Inventory;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	class UQuickSlotSystem* QuickSlotSystem;
+	class UQuickSlotSystem* QuickSlot;
 
 	UPROPERTY()
 	FHitResult HitResult;

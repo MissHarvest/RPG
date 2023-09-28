@@ -8,8 +8,6 @@
 #include "CustomStruct.h"
 #include <Engine/Texture2D.h>
 #include <Components/Image.h>
-#include "QuickSlotSystem.h"
-#include <Components/TextBlock.h>
 
 FReply UQuickSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -25,31 +23,26 @@ bool UQuickSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	auto Operation = Cast<UItemDragDropOperation>(InOperation);
 	if (nullptr == Operation) return false;
-	if (nullptr == QuickSlotModel) return false;
 
-	// Type, Model, Index
-	QuickSlotModel->SetQuickSlot(Operation->GetSourceInventory(), Operation->GetIndex(), SlotIndex);
+	// Target Quick Slot System need . . .
+	// TargetQuickSlot->UpdateQuickSlot();
+	
+	// 
+
+	//Operation->GetSourceInventory()->GetContent(Operation->GetIndex()).Item.DataTable->FindRow<FItem>()
+	//this->ID = Operation->GetID();
+	//auto ItemModel = Operation->GetSourceInventory()->GetContent(Operation->GetIndex());
+	//auto Texture = ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->Texture;
+	//Thumbnail->SetBrushFromTexture(Texture);
 	return true;
 }
 
 void UQuickSlotWidget::SetQuickSlot(FQuickSlot QuickSlot)
 {
-	// ID = QuickSlot.ID;
-	KeyName->SetText(FText::FromString(FString::FromInt(QuickSlot.Index)));
 
-	//if (QuickSlot.SourceInventory->GetContent(QuickSlot.Index).Item.IsNull())
-	//{
-	//	// if item count == 0 
-	//	// SourceInventory == nullptr
-	//}
 }
 
 void UQuickSlotWidget::SetQuickSlotModel(class UQuickSlotSystem* QuickSlot)
 {
-	QuickSlotModel = QuickSlot;
-}
 
-void UQuickSlotWidget::SetIndex(int32 IndexToSet)
-{
-	SlotIndex = IndexToSet;
 }

@@ -14,13 +14,3 @@ bool FItem::UseItem(class APawn* OwingPawn)
 	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
 	return EffectManager->PrintID(ID, OwingPawn);
 }
-
-
-TObjectPtr<class UTexture2D> FItemSlot::GetTexture()
-{
-	if (Item.IsNull()) return nullptr;
-
-	// GetRow()
-	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed To Find Item/Texture")->Texture;
-	//return nullptr;
-}

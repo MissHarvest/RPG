@@ -39,7 +39,7 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 	class UInventoryWidget* Storage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
-	class UQuickSlotCollectionWidget* QuickSlotCollection;
+	class UQuickSlotCollectionWidget* QuickSlot;
 
 public: // public? private?
 	UFUNCTION()

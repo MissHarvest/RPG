@@ -65,31 +65,3 @@ void UInventorySystem::BroadCastSlotChanged()
 {
 	OnSlotChanged.Broadcast();
 }
-
-bool UInventorySystem::ConsumeItem(int32 IndexToUse)
-{
-	// Index Item Is Exist?
-	if (Contents[IndexToUse].Item.IsNull()) return false;
-	
-	// Index Item Is Consumable?
-	//if (Contents[IndexToUse].Item.DataTable->FindRow<FItem>(Contents[IndexToUse].Item.RowName, "Failed")->ID)
-	//{
-
-	//}
-
-	// Use
-	auto OwingPawn = Cast<APawn>(GetOwner());
-	if (nullptr == OwingPawn) return false;
-	bool Used = Contents[IndexToUse].Item.DataTable->FindRow<FItem>(Contents[IndexToUse].Item.RowName, "Failed")->UseItem(OwingPawn);
-	if (Used)
-	{
-		--Contents[IndexToUse].Quentity;
-		if (0 == Contents[IndexToUse].Quentity)
-		{
-			FItemSlot tempSlot;
-			Contents[IndexToUse] = tempSlot;
-		}
-		BroadCastSlotChanged();
-	}
-	return Used;
-}

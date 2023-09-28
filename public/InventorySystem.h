@@ -43,8 +43,6 @@ public:
 
 	void SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex);
 
-	bool ConsumeItem(int32 IndexToUse);
-
 private:
 	void BroadCastSlotChanged();
 };

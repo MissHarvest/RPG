@@ -2,12 +2,10 @@
 
 
 #include "ItemDragDropOperation.h"
-#include "CustomEnum.h"
 
-void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet)
+void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet, int32 IDToSet)
 {
 	this->SourceInventory = SourceInventoryToSet;
 	this->Index = IndexToSet;
-	//this->ID = IDToSet;
-	Type = ESlotType::Item;
+	this->ID = IDToSet;
 }
