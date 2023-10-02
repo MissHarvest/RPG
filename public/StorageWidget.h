@@ -4,40 +4,41 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "QuickSlotCollectionWidget.generated.h"
+#include "StorageWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RPG_API UQuickSlotCollectionWidget : public UUserWidget
+class RPG_API UStorageWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class UQuickSlotWidget> QuickSlotClass;
+	TSubclassOf<class UItemSlotWidget> ItemSlotClass;
 
 	UPROPERTY()
-	TArray<FString> QuickSlotKeyNameCollection;
+	TArray<class UItemSlotWidget*> ItemSlots;
 
 	UPROPERTY()
-	TArray<class UQuickSlotWidget*> QuickSlotWidgets;
+	class UInventorySystem* InventoryModel;
 
 	UPROPERTY()
-	class UQuickSlotSystem* QuickSlotModel;
+	int32 Size;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UWrapBox* QuickSlotGridBox;
+	class UWrapBox* GridBox;
+
+public:
+	void LinkInventory(class UInventorySystem* PlayerInventory);
 
 protected:
 	virtual void NativeOnInitialized() override;
 
-public:
-	UFUNCTION()
-	void UpdateQuickSlots();
-
 private:
-	void CreateQuickSlots();
+	UFUNCTION()
+	void UpdatedInventory();
 
+	void CreateItemSlots();
 };

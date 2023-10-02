@@ -10,12 +10,25 @@
 #include "TargetInfoWidget.h"
 #include "InventoryWidget.h"
 #include "QuickSlotCollectionWidget.h"
+#include "StorageWidget.h"
+
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/SizeBox.h"
 
 // Other Class
 #include "StatComponent.h"
 
+#include "PlayerCharacter.h"
 //
 #include <Blueprint/WidgetBlueprintLibrary.h>
+#include <Blueprint/WidgetLayoutLibrary.h>
+
+void UDefaultScreenWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	UE_LOG(LogTemp, Warning, TEXT("Default Screen Widget _ Native On Init"));
+}
 
 void UDefaultScreenWidget::LinkStatController(class UStatComponent* StatComponent)
 {
@@ -56,7 +69,7 @@ void UDefaultScreenWidget::DeactivateTargetInfo()
 
 void UDefaultScreenWidget::LinkInventory(class UInventorySystem* PlayerInventory)
 {
-	Inventory->LinkInventory(PlayerInventory);
+	//InventoryWidget->LinkInventory(PlayerInventory);
 }
 
 void UDefaultScreenWidget::LinkStorage(class UInventorySystem* StorageInventory)
@@ -66,21 +79,21 @@ void UDefaultScreenWidget::LinkStorage(class UInventorySystem* StorageInventory)
 
 void UDefaultScreenWidget::ShowInventory()
 {
-	Inventory->SetVisibility(ESlateVisibility::Visible);
+	InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 	GetOwningPlayer()->SetShowMouseCursor(true);
-	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(GetOwningPlayer(), Inventory);
+	UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(GetOwningPlayer(), InventoryWidget);
 }
 
 void UDefaultScreenWidget::HideInventory()
 {
-	Inventory->SetVisibility(ESlateVisibility::Hidden);
+	InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
 	GetOwningPlayer()->SetShowMouseCursor(false);
 	UWidgetBlueprintLibrary::SetInputMode_GameOnly(GetOwningPlayer());
 }
 
 void UDefaultScreenWidget::ToggleInventory()
 {
-	auto InvenVisible = Inventory->GetVisibility();
+	auto InvenVisible = InventoryWidget->GetVisibility();
 	switch (InvenVisible)
 	{
 	case ESlateVisibility::Visible:
@@ -120,5 +133,5 @@ void UDefaultScreenWidget::ToggleStorage()
 
 void UDefaultScreenWidget::LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot)
 {
-	QuickSlot->LinkQuickSlot(PlayerQuickSlot);
+	//QuickSlot->LinkQuickSlot(PlayerQuickSlot);
 }

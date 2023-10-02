@@ -6,6 +6,7 @@
 #include "DamageIndicatorComponent.h"
 
 #include <Kismet/KismetSystemLibrary.h>
+#include "InventorySystem.h"
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -16,6 +17,8 @@ AEnemyCharacter::AEnemyCharacter()
 
 	DamageIndicatorComp = CreateDefaultSubobject<UDamageIndicatorComponent>(TEXT("Damage Indicator"));
 	UE_LOG(LogTemp, Warning, TEXT("Enemy Constructor"));
+
+	TestInven = CreateDefaultSubobject<UInventorySystem>(TEXT("TEST"));
 }
 
 // Called when the game starts or when spawned

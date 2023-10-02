@@ -14,7 +14,8 @@ class RPG_API UDragItemPreviewWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item", meta = (BindWidget, AllowPrivateAccess = "true"))
+protected:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Thumbnail;
 
 public:

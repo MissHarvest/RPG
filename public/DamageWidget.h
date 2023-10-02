@@ -14,7 +14,8 @@ class RPG_API UDamageWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+protected:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* DamageText;
 
 public:

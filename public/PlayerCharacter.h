@@ -67,7 +67,7 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	class UInventorySystem* Inventory;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	class UQuickSlotSystem* QuickSlot;
+	class UQuickSlotSystem* QuickSlotSystem;
 
 	UPROPERTY()
 	FHitResult HitResult;
@@ -89,6 +89,10 @@ public:
 	void StartCombat(class AActor* Opponent);
 
 	FORCEINLINE class UStatComponent* GetStatComponent() const { return Stat; }
+
+	FORCEINLINE class UInventorySystem* GetInventory() const { return Inventory; }
+
+	FORCEINLINE class UQuickSlotSystem* GetQuickSlotSystem() const { return QuickSlotSystem; }
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);

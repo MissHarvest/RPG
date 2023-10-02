@@ -14,31 +14,35 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UInventoryWidget> InventoryWidgetClass;
+
+protected:
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* HpBar;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* MpBar;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* XpBar;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* LvText;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* AimImage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTargetInfoWidget* TargetInfo;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
-	class UInventoryWidget* Inventory;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UInventoryWidget* InventoryWidget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
-	class UInventoryWidget* Storage;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UStorageWidget* Storage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UQuickSlotCollectionWidget* QuickSlot;
 
 public: // public? private?
@@ -50,6 +54,9 @@ public: // public? private?
 
 	UFUNCTION()
 	void SetXpPercent(float Percent);
+
+protected:
+	virtual void NativeOnInitialized() override;
 
 public:
 	void LinkStatController(class UStatComponent* StatComponent);

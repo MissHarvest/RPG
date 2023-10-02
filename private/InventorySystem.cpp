@@ -10,7 +10,6 @@ UInventorySystem::UInventorySystem()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	// ...
 	Size = 20;
 }
@@ -64,4 +63,24 @@ void UInventorySystem::SwapItem(UInventorySystem* SourceInventory, int32 SourceI
 void UInventorySystem::BroadCastSlotChanged()
 {
 	OnSlotChanged.Broadcast();
+}
+
+bool UInventorySystem::ConsumeItem(int32 IndexToUse)
+{
+	if (Contents[IndexToUse].Item.IsNull()) return false;
+
+	auto OwnigPawn = Cast<APawn>(GetOwner());
+	
+	bool bUsed = Contents[IndexToUse].Use(OwnigPawn);
+	if (bUsed)
+	{
+		--Contents[IndexToUse].Quentity;
+		if (0 == Contents[IndexToUse].Quentity)
+		{
+			FItemSlot tempSlot;
+			Contents[IndexToUse] = tempSlot;
+		}
+		BroadCastSlotChanged();
+	}
+	return bUsed;
 }

@@ -40,7 +40,7 @@ APlayerCharacter::APlayerCharacter()
 
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
 	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
-	//QuickSlot = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
+	QuickSlotSystem = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -49,16 +49,15 @@ void APlayerCharacter::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Player BeginPlay"));
 	if (IsValid(DefaultScreenClass))
 	{
-		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);
+		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);		
 		if (IsValid(DefaultScreen))
 		{
 			DefaultScreen->LinkStatController(Stat);
-			DefaultScreen->LinkInventory(Inventory);
-			//DefaultScreen->LinkQuickSlot(QuickSlot);
+			//DefaultScreen->LinkInventory(Inventory);
+			//DefaultScreen->LinkQuickSlot(QuickSlotSystem);
 			DefaultScreen->AddToViewport();			
 		}
 	}
-
 	Stat->DecreaseHP(50);
 }
 
@@ -207,5 +206,5 @@ void APlayerCharacter::TargetLock()
 
 void APlayerCharacter::PressKey1()
 {
-	//QuickSlot->DoAction(1);
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey1);
 }

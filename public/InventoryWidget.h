@@ -14,22 +14,18 @@ class RPG_API UInventoryWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UItemSlotWidget> ItemSlotClass;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess))
-	class UWrapBox* GridBox;
-
 	UPROPERTY()
-	TArray<class UItemSlotWidget*> ItemSlots;
+	TArray<class UItemSlotWidget*> ItemSlots; // smart pointer 를 사용해야 할까?
 
 	UPROPERTY()
 	class UInventorySystem* InventoryModel;
 
-	int32 Size;
-
-public:
-	void LinkInventory(class UInventorySystem* PlayerInventory);
+protected:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UWrapBox* GridBox;
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -38,5 +34,5 @@ private:
 	UFUNCTION()
 	void UpdatedInventory();
 
-	void CreateItemSlots();
+	void CreateItemSlots();	
 };

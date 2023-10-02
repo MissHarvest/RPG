@@ -14,6 +14,8 @@ class RPG_API UQuickSlotSystem : public UActorComponent
 {
 	GENERATED_BODY()
 
+	int32 Size;
+
 public:	
 	// Sets default values for this component's properties
 	UQuickSlotSystem();
@@ -26,13 +28,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FQuickSlot> QuickSlots;
 
-	void Press(int32 index);
+	void Press(EQuickSlotKey QuickSlotKey);
 
 	UPROPERTY()
 	FQuickChangedSignature OnQuickSlotChanged;
 
 	void UpdateQuickSlot();
+
+	void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
+
+	int32 GetSize() const { return Size; } // FORCEINLINE ?
 };

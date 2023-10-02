@@ -8,9 +8,14 @@
 
 // Sets default values
 
-bool FItem::UseItem(class APawn* OwingPawn)
+bool FItemSlot::Use(class APawn* OwingPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Item Use"));
+	auto ID = Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find ID / FItemSlot")->ID;
 	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
 	return EffectManager->PrintID(ID, OwingPawn);
+}
+
+TObjectPtr<class UTexture2D> FItemSlot::GetTexture()
+{
+	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find Texture / FItemSlot")->Texture;
 }

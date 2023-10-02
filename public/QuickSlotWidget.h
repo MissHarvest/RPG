@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "CustomStruct.h"
+#include "CustomEnum.h"
 #include "QuickSlotWidget.generated.h"
 
 /**
@@ -15,15 +16,30 @@ class RPG_API UQuickSlotWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI", meta = (BindWidget, AllowPrivateAccess = "true"))
-	class UImage* Thumbnail;
-
 	UPROPERTY()
 	int32 ID;
+
+	UPROPERTY()
+	int32 SlotIndex;
+
+	UPROPERTY()
+	class UQuickSlotSystem* QuickSlotModel;
+
+	UPROPERTY()
+	ESlotType SlotType;
+
+protected:
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Thumbnail;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* KeyName;
 
 public:
 	void SetQuickSlot(FQuickSlot QuickSlot);
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
+	void SetIndex(int32 IndexToSet);
+	void SetKeyName(FString KeyNameToSet);
 
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

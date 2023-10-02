@@ -5,29 +5,18 @@
 #include "Components/WrapBox.h"
 #include "ItemSlotWidget.h"
 #include "InventorySystem.h"
+#include <Components/PanelWidget.h>
+#include "PlayerCharacter.h"
 
 // OnInit : Set Padding?
 void UInventoryWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	Size = 20;
+	InventoryModel = Cast<APlayerCharacter>(GetOwningPlayerPawn())->GetInventory();
+	if (nullptr == InventoryModel) return;
+
+	InventoryModel->OnSlotChanged.AddDynamic(this, &UInventoryWidget::UpdatedInventory);
 	CreateItemSlots();
-}
-
-void UInventoryWidget::LinkInventory(class UInventorySystem* PlayerInventory)
-{
-	if (IsValid(InventoryModel)) return;
-	
-	// Bind
-	PlayerInventory->OnSlotChanged.AddDynamic(this, &UInventoryWidget::UpdatedInventory);
-
-	//
-	InventoryModel = PlayerInventory;
-
-	for (int i = 0; i < Size; ++i)
-	{
-		ItemSlots[i]->SetInventoryModel(PlayerInventory);
-	}
 }
 
 void UInventoryWidget::UpdatedInventory()
@@ -40,10 +29,11 @@ void UInventoryWidget::UpdatedInventory()
 
 void UInventoryWidget::CreateItemSlots()
 {
-	for (int i = 0; i < Size; ++i)
+	for (int i = 0; i < InventoryModel->GetSize(); ++i)
 	{
 		auto ItemSlot = CreateWidget<UItemSlotWidget>(GetOwningPlayer(), ItemSlotClass);
 		ItemSlot->SetIndex(i);
+		ItemSlot->SetInventoryModel(InventoryModel);
 		GridBox->AddChild(ItemSlot);
 		ItemSlots.Add(ItemSlot);
 	}
