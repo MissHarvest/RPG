@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* KeyName;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* Quantity;
+
 public:
 	void SetQuickSlot(FQuickSlot QuickSlot);
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);

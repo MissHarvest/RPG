@@ -39,12 +39,15 @@ void UQuickSlotSystem::Press(EQuickSlotKey QuickSlotKey)
 {
 	// Check Slot Type
 	
-	// Do Anything
+	// Do Anything , Slot Type == Item
 	int32 Index = (int)QuickSlotKey;
 	if (-1 == QuickSlots[Index].Index) return;
 	
 	auto OwnigPawn = Cast<APawn>(GetOwner());
-	QuickSlots[Index].SourceInventory->GetContent(QuickSlots[Index].Index).Use(OwnigPawn);
+	bool bUsedIem = QuickSlots[Index].SourceInventory->ConsumeItem(QuickSlots[Index].Index);
+	if (bUsedIem) UpdateQuickSlot();	
+
+	// Do Anything , Slot Type == Skill
 }
 
 void UQuickSlotSystem::UpdateQuickSlot()

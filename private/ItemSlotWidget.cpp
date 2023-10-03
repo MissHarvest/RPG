@@ -3,6 +3,7 @@
 
 #include "ItemSlotWidget.h"
 #include <Components/Image.h>
+#include <Components/TextBlock.h>
 
 // Other
 #include "CustomStruct.h"
@@ -45,7 +46,7 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 	Preview->SetThumbnail(Texture);
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index);//, ItemModel.Item.DataTable->FindRow<FItem>(ItemModel.Item.RowName, "Failed")->ID);
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index);
 	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), Index);
 	OutOperation = DragDrop;
 }
@@ -66,12 +67,15 @@ void UItemSlotWidget::SetItem(FItemSlot ItemSlot)
 	if (ItemSlot.Item.IsNull())
 	{
 		ItemModel = FItemSlot::FItemSlot();
-		Thumbnail->SetBrushFromTexture(nullptr);		
+		Thumbnail->SetBrushFromTexture(nullptr);
+		Quantity->SetVisibility(ESlateVisibility::Hidden);
 	}
 	else
 	{
 		ItemModel = ItemSlot;
 		auto ItemTexture = ItemModel.GetTexture();
+		Quantity->SetVisibility(ESlateVisibility::Visible);
+		Quantity->SetText(FText::FromString(FString::FromInt(ItemModel.Quentity)));
 		Thumbnail->SetBrushFromTexture(ItemTexture);
 	}
 }

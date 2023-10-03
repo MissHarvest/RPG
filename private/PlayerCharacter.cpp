@@ -52,7 +52,7 @@ void APlayerCharacter::BeginPlay()
 		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);		
 		if (IsValid(DefaultScreen))
 		{
-			DefaultScreen->LinkStatController(Stat);
+			//DefaultScreen->LinkStatController(Stat);
 			//DefaultScreen->LinkInventory(Inventory);
 			//DefaultScreen->LinkQuickSlot(QuickSlotSystem);
 			DefaultScreen->AddToViewport();			
@@ -73,7 +73,16 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 		// Quick Slot
 		EnhancedInputComponent->BindAction(QuickAction1, ETriggerEvent::Started, this, &APlayerCharacter::PressKey1);
-		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::RecoveryMp);
+		EnhancedInputComponent->BindAction(QuickAction2, ETriggerEvent::Started, this, &APlayerCharacter::PressKey2);
+		EnhancedInputComponent->BindAction(QuickAction3, ETriggerEvent::Started, this, &APlayerCharacter::PressKey3);
+		EnhancedInputComponent->BindAction(QuickAction4, ETriggerEvent::Started, this, &APlayerCharacter::PressKey4);
+		EnhancedInputComponent->BindAction(QuickAction5, ETriggerEvent::Started, this, &APlayerCharacter::PressKey5);
+		EnhancedInputComponent->BindAction(QuickAction6, ETriggerEvent::Started, this, &APlayerCharacter::PressKey6);
+		EnhancedInputComponent->BindAction(QuickAction7, ETriggerEvent::Started, this, &APlayerCharacter::PressKey7);
+		EnhancedInputComponent->BindAction(QuickAction8, ETriggerEvent::Started, this, &APlayerCharacter::PressKey8);
+		EnhancedInputComponent->BindAction(QuickAction9, ETriggerEvent::Started, this, &APlayerCharacter::PressKey9);
+		EnhancedInputComponent->BindAction(QuickAction0, ETriggerEvent::Started, this, &APlayerCharacter::PressKey0);		
+
 
 		// Interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::TryInteraction);
@@ -183,8 +192,17 @@ void APlayerCharacter::TryInteraction()
 	else if (OverlapActors[0]->ActorHasTag(TEXT("Item")))
 	{
 		auto Item = Cast<AItemBase>(OverlapActors[0]);
-		if (Inventory->AddItem(Item->GetItem()))
-			Item->Destroy();
+
+		auto temp = NewObject<UTestItem>();
+
+		auto ItemData = Item->GetItem();
+		temp->ItemName = FText::FromName(ItemData.Item.RowName).ToString();
+		TestItemList.Add(temp);
+
+		TestItem = temp;
+		
+		//if (Inventory->AddItem(Item->GetItem()))
+		//	Item->Destroy();
 	}
 }
 
@@ -207,4 +225,50 @@ void APlayerCharacter::TargetLock()
 void APlayerCharacter::PressKey1()
 {
 	QuickSlotSystem->Press(EQuickSlotKey::NumberKey1);
+}
+
+void APlayerCharacter::PressKey2()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey2);
+}
+
+void APlayerCharacter::PressKey3()
+{
+	//QuickSlotSystem->Press(EQuickSlotKey::NumberKey3);
+	TestItemList[0]->ItemName = "Apple";
+}
+
+void APlayerCharacter::PressKey4()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey4);
+}
+
+void APlayerCharacter::PressKey5()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey5);
+}
+
+void APlayerCharacter::PressKey6()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey6);
+}
+
+void APlayerCharacter::PressKey7()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey7);
+}
+
+void APlayerCharacter::PressKey8()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey8);
+}
+
+void APlayerCharacter::PressKey9()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey9);
+}
+
+void APlayerCharacter::PressKey0()
+{
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey0);
 }

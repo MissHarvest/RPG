@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include <Engine/DataTable.h>
 #include "CustomEnum.h"
+#include <UObject/Object.h>
 #include "CustomStruct.generated.h"
 
 UCLASS()
@@ -40,7 +41,7 @@ struct RPG_API FItemSlot
 
 public:
 	FItemSlot() 
-	: Quentity(1) // Item 은 하지 않아도 되는가.
+	: Quentity(0) // Item 은 하지 않아도 되는가.
 	{};
 
 public:
@@ -53,6 +54,20 @@ public:
 	bool Use(class APawn* OwingPawn);
 
 	TObjectPtr<class UTexture2D> GetTexture();
+};
+
+
+UCLASS(BlueprintType)
+class RPG_API UTestItem : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	int32 Index;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FString ItemName;
 };
 
 USTRUCT(Atomic, BlueprintType)

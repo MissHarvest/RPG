@@ -30,32 +30,6 @@ void UDefaultScreenWidget::NativeOnInitialized()
 	UE_LOG(LogTemp, Warning, TEXT("Default Screen Widget _ Native On Init"));
 }
 
-void UDefaultScreenWidget::LinkStatController(class UStatComponent* StatComponent)
-{
-	StatComponent->OnHpChanged.AddDynamic(this, &UDefaultScreenWidget::SetHpPercent);
-	StatComponent->OnMpChanged.AddDynamic(this, &UDefaultScreenWidget::SetMpPercent);
-	StatComponent->OnXpChanged.AddDynamic(this, &UDefaultScreenWidget::SetXpPercent);
-
-	SetHpPercent(StatComponent->GetHpPercent());
-	SetMpPercent(StatComponent->GetMpPercent());
-	SetXpPercent(StatComponent->GetXpPercent());
-}
-
-void UDefaultScreenWidget::SetHpPercent(float Percent)
-{
-	HpBar->SetPercent(Percent);
-}
-
-void UDefaultScreenWidget::SetMpPercent(float Percent)
-{
-	MpBar->SetPercent(Percent);
-}
-
-void UDefaultScreenWidget::SetXpPercent(float Percent)
-{
-	XpBar->SetPercent(Percent);
-}
-
 void UDefaultScreenWidget::ActivateTargetInfo(class AActor* Opponent)
 {
 	if (TargetInfo->GetVisibility() != ESlateVisibility::Visible) TargetInfo->SetVisibility(ESlateVisibility::Visible);
@@ -65,11 +39,6 @@ void UDefaultScreenWidget::ActivateTargetInfo(class AActor* Opponent)
 void UDefaultScreenWidget::DeactivateTargetInfo()
 {
 	TargetInfo->SetVisibility(ESlateVisibility::Hidden);
-}
-
-void UDefaultScreenWidget::LinkInventory(class UInventorySystem* PlayerInventory)
-{
-	//InventoryWidget->LinkInventory(PlayerInventory);
 }
 
 void UDefaultScreenWidget::LinkStorage(class UInventorySystem* StorageInventory)
@@ -129,9 +98,4 @@ void UDefaultScreenWidget::ToggleStorage()
 		ShowStorage();
 		break;
 	}
-}
-
-void UDefaultScreenWidget::LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot)
-{
-	//QuickSlot->LinkQuickSlot(PlayerQuickSlot);
 }

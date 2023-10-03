@@ -11,6 +11,7 @@
 #include "QuickSlotSystem.h"
 #include <Components/TextBlock.h>
 #include "InventorySystem.h"
+#include <Components/TextBlock.h>
 
 FReply UQuickSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -43,8 +44,13 @@ void UQuickSlotWidget::SetQuickSlot(FQuickSlot QuickSlot)
 	{
 		auto Inven = QuickSlot.SourceInventory;
 		auto Index = QuickSlot.Index;
-		auto Texture = Inven->GetContent(Index).GetTexture();
-		Thumbnail->SetBrushFromTexture(Texture);
+		if (Inven->GetContent(Index).Item.IsNull() == false)
+		{
+			auto Texture = Inven->GetContent(Index).GetTexture();
+			Thumbnail->SetBrushFromTexture(Texture);
+		}
+		Quantity->SetText(FText::FromString(FString::FromInt(Inven->GetContent(Index).Quentity)));
+		Quantity->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 

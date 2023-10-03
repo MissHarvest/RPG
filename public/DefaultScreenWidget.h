@@ -19,18 +19,6 @@ class RPG_API UDefaultScreenWidget : public UUserWidget
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UProgressBar* HpBar;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UProgressBar* MpBar;
-	
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UProgressBar* XpBar;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* LvText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* AimImage;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
@@ -45,27 +33,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UQuickSlotCollectionWidget* QuickSlot;
 
-public: // public? private?
-	UFUNCTION()
-	void SetHpPercent(float Percent);
-
-	UFUNCTION()
-	void SetMpPercent(float Percent);
-
-	UFUNCTION()
-	void SetXpPercent(float Percent);
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UDefaultStatWidget* DefaultStatWidget;
 
 protected:
 	virtual void NativeOnInitialized() override;
 
 public:
-	void LinkStatController(class UStatComponent* StatComponent);
-
 	void ActivateTargetInfo(class AActor* Opponent);
 
 	void DeactivateTargetInfo();
-
-	void LinkInventory(class UInventorySystem* PlayerInventory);
 
 	void LinkStorage(class UInventorySystem* StorageInventory);
 
@@ -80,6 +57,4 @@ public:
 	void HideStorage();
 
 	void ToggleStorage();// 필요 없을듯
-
-	void LinkQuickSlot(class UQuickSlotSystem* PlayerQuickSlot);
 };

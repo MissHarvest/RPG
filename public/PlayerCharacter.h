@@ -25,6 +25,30 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	class UInputAction* QuickAction2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction4;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction5;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction6;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction7;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction8;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction9;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QuickAction0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -71,6 +95,13 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 
 	UPROPERTY()
 	FHitResult HitResult;
+
+	/* Test Code */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Test Var", meta = (AllowPrivateAccess = "true"))
+	class UTestItem* TestItem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Test Var", meta = (AllowPrivateAccess = "true"))
+	TArray<class UTestItem*> TestItemList;
 
 public:
 	APlayerCharacter();
@@ -120,4 +151,22 @@ private:
 	void TargetLock();
 
 	void PressKey1();
+
+	void PressKey2();
+
+	void PressKey3();
+
+	void PressKey4();
+
+	void PressKey5();
+
+	void PressKey6();
+
+	void PressKey7();
+
+	void PressKey8();
+
+	void PressKey9();
+
+	void PressKey0();
 };
