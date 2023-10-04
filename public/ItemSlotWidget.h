@@ -37,6 +37,10 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* Quantity;
 
+public:
+	UPROPERTY()
+	class UTestItem* TestItemModel;
+
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
@@ -46,4 +50,7 @@ public:
 	void SetItem(FItemSlot ItemSlot);
 	void SetInventoryModel(class UInventorySystem* TargetInventory);
 	void SetIndex(int32 IndexToSet);
+
+	/* Test Code */
+	void SetItem(class UTestItem* RefItem);
 };

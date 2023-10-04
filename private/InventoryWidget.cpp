@@ -24,6 +24,7 @@ void UInventoryWidget::UpdatedInventory()
 	for (int i = 0; i < InventoryModel->GetSize(); ++i)
 	{
 		ItemSlots[i]->SetItem(InventoryModel->GetContent(i));
+		//ItemSlots[i]->SetItem(InventoryModel->TestContents[i]);
 	}
 }
 

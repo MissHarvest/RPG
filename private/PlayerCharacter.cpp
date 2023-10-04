@@ -193,16 +193,16 @@ void APlayerCharacter::TryInteraction()
 	{
 		auto Item = Cast<AItemBase>(OverlapActors[0]);
 
-		auto temp = NewObject<UTestItem>();
-
-		auto ItemData = Item->GetItem();
-		temp->ItemName = FText::FromName(ItemData.Item.RowName).ToString();
-		TestItemList.Add(temp);
-
-		TestItem = temp;
+		//auto temp = NewObject<UTestItem>();
+		//temp->Item = Item->GetItem().Item;
 		
-		//if (Inventory->AddItem(Item->GetItem()))
+		//if (Inventory->AddItem(Item->GetItem())) // Add Item 의 매개변수로, FItemSlot 값을 받은 후, 인벤토리 내에서 형변환
+		//{
 		//	Item->Destroy();
+		//}
+
+		if (Inventory->AddItem(Item->GetItem()))
+			Item->Destroy();
 	}
 }
 
@@ -235,7 +235,6 @@ void APlayerCharacter::PressKey2()
 void APlayerCharacter::PressKey3()
 {
 	//QuickSlotSystem->Press(EQuickSlotKey::NumberKey3);
-	TestItemList[0]->ItemName = "Apple";
 }
 
 void APlayerCharacter::PressKey4()

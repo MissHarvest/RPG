@@ -31,14 +31,20 @@ FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 	
 	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 	{
+		// 원본 코드 //
 		if (ItemModel.Item.IsNull()) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
-		InventoryModel->ConsumeItem(Index);
+		InventoryModel->ConsumeItem(ItemModel.GetID());
+
+		/*if (nullptr == TestItemModel) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
+		UE_LOG(LogTemp, Warning, TEXT("%d Slot iss not nullptr"), Index);
+		InventoryModel->ConsumeItem(Index);*/
 	}
 	return UWidgetBlueprintLibrary::Unhandled().NativeReply;	
 }
 
 void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
+	// 원본 코드 /
 	if (ItemModel.Item.IsNull()) return;
 
 	auto Preview = CreateWidget<UDragItemPreviewWidget>(GetOwningPlayer(), DragItemPreviewClass);
@@ -46,9 +52,21 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 	Preview->SetThumbnail(Texture);
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index);
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, ItemModel.GetID()); 
 	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), Index);
 	OutOperation = DragDrop;
+
+	/* Test Code /
+	if (nullptr == TestItemModel) return;
+	auto Preview = CreateWidget<UDragItemPreviewWidget>(GetOwningPlayer(), DragItemPreviewClass);
+	auto Texture = TestItemModel->GetTexture();
+	Preview->SetThumbnail(Texture);
+	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);
+	DragDrop->DefaultDragVisual = Preview;
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, TestItemModel);
+	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), Index);
+	OutOperation = DragDrop;
+	*/
 }
 
 bool UItemSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -76,6 +94,24 @@ void UItemSlotWidget::SetItem(FItemSlot ItemSlot)
 		auto ItemTexture = ItemModel.GetTexture();
 		Quantity->SetVisibility(ESlateVisibility::Visible);
 		Quantity->SetText(FText::FromString(FString::FromInt(ItemModel.Quentity)));
+		Thumbnail->SetBrushFromTexture(ItemTexture);
+	}
+}
+
+void UItemSlotWidget::SetItem(class UTestItem* RefItem)
+{
+	if (nullptr == RefItem)
+	{
+		ItemModel = FItemSlot::FItemSlot();
+		Thumbnail->SetBrushFromTexture(nullptr);
+		Quantity->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		TestItemModel = RefItem;
+		auto ItemTexture = RefItem->GetTexture();//ItemModel.GetTexture();
+		Quantity->SetVisibility(ESlateVisibility::Visible);
+		Quantity->SetText(FText::FromString(FString::FromInt(RefItem->Quentity)));
 		Thumbnail->SetBrushFromTexture(ItemTexture);
 	}
 }

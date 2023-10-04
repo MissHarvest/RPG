@@ -100,6 +100,7 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Test Var", meta = (AllowPrivateAccess = "true"))
 	class UTestItem* TestItem;
 
+	/* Test Code */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Test Var", meta = (AllowPrivateAccess = "true"))
 	TArray<class UTestItem*> TestItemList;
 

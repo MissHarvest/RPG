@@ -22,6 +22,7 @@ AItemBase::AItemBase()
 		UE_LOG(LogTemp, Warning, TEXT("Not Exist"));
 	}
 	else UE_LOG(LogTemp, Warning, TEXT("Exist"));
+	ItemSlot.Quentity = 1;
 }
 
 // Called when the game starts or when spawned

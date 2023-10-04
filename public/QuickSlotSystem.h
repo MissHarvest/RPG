@@ -38,7 +38,13 @@ public:
 
 	void UpdateQuickSlot();
 
-	void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
+	//void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
+
+	/* Test Code */
+	void SetQuickSlot(int32 IndexToSet, class UTestItem* RefItem);
+
+	/* Test Code */
+	void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 Ref_ItemID);
 
 	int32 GetSize() const { return Size; } // FORCEINLINE ?
 };

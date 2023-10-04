@@ -40,6 +40,10 @@ protected:
 
 public:
 	void SetQuickSlot(FQuickSlot QuickSlot);
+
+	/* Test Code */
+	void SetQuickSlot(class UTestItem* RefItem);
+
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
 	void SetIndex(int32 IndexToSet);
 	void SetKeyName(FString KeyNameToSet);

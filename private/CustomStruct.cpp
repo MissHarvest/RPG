@@ -19,3 +19,21 @@ TObjectPtr<class UTexture2D> FItemSlot::GetTexture()
 {
 	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find Texture / FItemSlot")->Texture;
 }
+
+int32 FItemSlot::GetID()
+{
+	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to FInd Item ID / FItemSlot")->ID;
+}
+
+
+bool UTestItem::Use(class APawn* OwingPawn)
+{
+	auto ID = Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find ID / FItemSlot")->ID;
+	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
+	return EffectManager->PrintID(ID, OwingPawn);
+}
+
+TObjectPtr<class UTexture2D> UTestItem::GetTexture()
+{
+	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find Texture / FItemSlot")->Texture;
+}

@@ -26,6 +26,9 @@ void UQuickSlotCollectionWidget::UpdateQuickSlots()
 	for (int i = 0; i < QuickSlotWidgets.Num(); ++i)
 	{
 		QuickSlotWidgets[i]->SetQuickSlot(QuickSlotModel->QuickSlots[i]);
+		
+		/* Test Code */
+		//QuickSlotWidgets[i]->SetQuickSlot(QuickSlotModel->QuickSlots[i].Ref_Item);
 	}
 }
 

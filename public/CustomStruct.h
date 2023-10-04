@@ -51,9 +51,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
 
-	bool Use(class APawn* OwingPawn);
+	bool Use(class APawn* OwingPawn); // not need //
+	 
+	TObjectPtr<class UTexture2D> GetTexture(); // not need //
 
-	TObjectPtr<class UTexture2D> GetTexture();
+	int32 GetID();
 };
 
 
@@ -63,11 +65,15 @@ class RPG_API UTestItem : public UObject
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
-	int32 Index;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Quentity;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FString ItemName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDataTableRowHandle Item;
+
+	bool Use(class APawn* OwingPawn);
+
+	TObjectPtr<class UTexture2D> GetTexture();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -79,16 +85,27 @@ public:
 	FQuickSlot()
 		: SourceInventory(nullptr)
 		, Index(-1)
+		, ItemID(0)
 		, SlotType(ESlotType::Item)
+		, Ref_Item(nullptr)
 	{};
 
 public:
 	UPROPERTY()
 	class UInventorySystem* SourceInventory;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 Index;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 ItemID;
+
+	// ¼ö·®?
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ESlotType SlotType;
+
+	/* Test Code */
+	UPROPERTY()
+	class UTestItem* Ref_Item;
 };

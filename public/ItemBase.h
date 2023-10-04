@@ -22,9 +22,6 @@ class RPG_API AItemBase : public AActor, public IInteractionInterface
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item", meta = (AllowPrivateAccess = "true"))
 	FItemSlot ItemSlot;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Item", meta = (AllowPrivateAccess = "true"))
-	class UTestItem* CItemSlot;
-
 public:	
 	// Sets default values for this actor's properties
 	AItemBase();
