@@ -31,13 +31,8 @@ FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 	
 	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 	{
-		// 원본 코드 //
-		if (ItemModel.Item.IsNull()) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
-		InventoryModel->ConsumeItem(ItemModel.GetID());
-
-		/*if (nullptr == TestItemModel) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
-		UE_LOG(LogTemp, Warning, TEXT("%d Slot iss not nullptr"), Index);
-		InventoryModel->ConsumeItem(Index);*/
+		if (bIsEmpty) return UWidgetBlueprintLibrary::Unhandled().NativeReply;
+		InventoryModel->ConsumeItemByIndex(MyIndex);
 	}
 	return UWidgetBlueprintLibrary::Unhandled().NativeReply;	
 }
@@ -45,28 +40,15 @@ FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, con
 void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
 	// 원본 코드 /
-	if (ItemModel.Item.IsNull()) return;
+	if (bIsEmpty) return;
 
 	auto Preview = CreateWidget<UDragItemPreviewWidget>(GetOwningPlayer(), DragItemPreviewClass);
-	auto Texture = ItemModel.GetTexture();
-	Preview->SetThumbnail(Texture);
+	Preview->SetThumbnail(ThumbnailTexture);
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, ItemModel.GetID()); 
-	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), Index);
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, MyIndex, 0); //ItemModel.GetID()
+	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), MyIndex);
 	OutOperation = DragDrop;
-
-	/* Test Code /
-	if (nullptr == TestItemModel) return;
-	auto Preview = CreateWidget<UDragItemPreviewWidget>(GetOwningPlayer(), DragItemPreviewClass);
-	auto Texture = TestItemModel->GetTexture();
-	Preview->SetThumbnail(Texture);
-	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);
-	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, Index, TestItemModel);
-	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), Index);
-	OutOperation = DragDrop;
-	*/
 }
 
 bool UItemSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -74,45 +56,34 @@ bool UItemSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropE
 	auto Operation = Cast<UItemDragDropOperation>(InOperation);
 	if (IsValid(Operation))
 	{
-		InventoryModel->SwapItem(Operation->GetSourceInventory(), Operation->GetIndex(), Index);
-		UE_LOG(LogTemp, Warning, TEXT("%d -> %d"), Operation->GetIndex(), Index);
+		InventoryModel->SwapItem(Operation->GetSourceInventory(), Operation->GetIndex(), MyIndex);
+		UE_LOG(LogTemp, Warning, TEXT("%d -> %d"), Operation->GetIndex(), MyIndex);
 	}
+
+	// InventoryWidget.Changed --> InventoryWidget.BroadCast To Inventory
 	return false;
 }
 
 void UItemSlotWidget::SetItem(FItemSlot ItemSlot)
 {
-	if (ItemSlot.Item.IsNull())
+	if (ItemSlot.IsEmpty())
 	{
-		ItemModel = FItemSlot::FItemSlot();
-		Thumbnail->SetBrushFromTexture(nullptr);
+		bIsEmpty = true;
+		ThumbnailTexture = nullptr;
+		Thumbnail->SetBrushFromTexture(ThumbnailTexture);
 		Quantity->SetVisibility(ESlateVisibility::Hidden);
 	}
 	else
 	{
-		ItemModel = ItemSlot;
-		auto ItemTexture = ItemModel.GetTexture();
+		bIsEmpty = false;
+		ThumbnailTexture = ItemSlot.GetTexture();
 		Quantity->SetVisibility(ESlateVisibility::Visible);
-		Quantity->SetText(FText::FromString(FString::FromInt(ItemModel.Quentity)));
-		Thumbnail->SetBrushFromTexture(ItemTexture);
-	}
-}
-
-void UItemSlotWidget::SetItem(class UTestItem* RefItem)
-{
-	if (nullptr == RefItem)
-	{
-		ItemModel = FItemSlot::FItemSlot();
-		Thumbnail->SetBrushFromTexture(nullptr);
-		Quantity->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		TestItemModel = RefItem;
-		auto ItemTexture = RefItem->GetTexture();//ItemModel.GetTexture();
-		Quantity->SetVisibility(ESlateVisibility::Visible);
-		Quantity->SetText(FText::FromString(FString::FromInt(RefItem->Quentity)));
-		Thumbnail->SetBrushFromTexture(ItemTexture);
+		Quantity->SetText(
+			FText::FromString(
+				FString::FromInt(ItemSlot.GetQuantity())
+			)
+		);
+		Thumbnail->SetBrushFromTexture(ThumbnailTexture);
 	}
 }
 
@@ -123,5 +94,5 @@ void UItemSlotWidget::SetInventoryModel(class UInventorySystem* TargetInventory)
 
 void UItemSlotWidget::SetIndex(int32 IndexToSet)
 {
-	this->Index = IndexToSet;
+	this->MyIndex = IndexToSet;
 }

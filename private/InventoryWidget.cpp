@@ -12,10 +12,14 @@
 void UInventoryWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	// invnetorymodel var to change local var //
 	InventoryModel = Cast<APlayerCharacter>(GetOwningPlayerPawn())->GetInventory();
 	if (nullptr == InventoryModel) return;
 
 	InventoryModel->OnSlotChanged.AddDynamic(this, &UInventoryWidget::UpdatedInventory);
+
+	/* BroadCast */
+
 	CreateItemSlots();
 }
 

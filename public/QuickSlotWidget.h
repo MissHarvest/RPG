@@ -20,7 +20,7 @@ class RPG_API UQuickSlotWidget : public UUserWidget
 	int32 ID;
 
 	UPROPERTY()
-	int32 SlotIndex;
+	int32 MyIndex;
 
 	UPROPERTY()
 	class UQuickSlotSystem* QuickSlotModel;
@@ -40,10 +40,6 @@ protected:
 
 public:
 	void SetQuickSlot(FQuickSlot QuickSlot);
-
-	/* Test Code */
-	void SetQuickSlot(class UTestItem* RefItem);
-
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
 	void SetIndex(int32 IndexToSet);
 	void SetKeyName(FString KeyNameToSet);

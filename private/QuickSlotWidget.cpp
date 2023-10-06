@@ -34,54 +34,35 @@ bool UQuickSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	auto ItemID = Operation->GetID();
 
 	if (nullptr == QuickSlotModel) return false;
-	//QuickSlotModel->SetQuickSlot(SlotIndex, SourceInventory, SourceIndex);
-	UE_LOG(LogTemp, Warning, TEXT("Drop Quick Slot Item ID : %d / Slot Index : %d"), ItemID, SlotIndex);
-	QuickSlotModel->SetQuickSlot(SlotIndex, SourceInventory, ItemID);
+	SourceInventory->GetContent(SourceIndex).LinkQuickSlotIndex(MyIndex);
+	QuickSlotModel->UpdateQuickSlotInfoByIndex(MyIndex, SourceInventory, SourceIndex);
 	return true;
-
-	/* Test Code /
-	if (nullptr == QuickSlotModel) return false;
-	QuickSlotModel->SetQuickSlot(SlotIndex, Operation->RefTestItem);
-	return true;
-	*/
 }
 
 void UQuickSlotWidget::SetQuickSlot(FQuickSlot QuickSlot)
 {
-	// if (-1 == QuickSlot.Index) return; // QuickSlot Struct Empty check Function Add
+	/* IsLinked? */
+	if (false == QuickSlot.IsSet()) return;
 
-	if (0 == QuickSlot.ItemID) return;
-
-	if (ESlotType::Item == QuickSlot.SlotType) // enum not include
+	if (ESlotType::Item == QuickSlot.SlotType)
 	{
 		auto Inven = QuickSlot.SourceInventory;
-		auto Index = QuickSlot.Index;
-		auto Ref_ID = QuickSlot.ItemID;
-
-		if (-1 != Inven->GetItem(Ref_ID))//.Item.IsNull() == false)
-		{
-			auto Texture = Inven->GetContent(Inven->GetItem(Ref_ID)).GetTexture();
-			Thumbnail->SetBrushFromTexture(Texture);
-			Quantity->SetText(FText::FromString(FString::FromInt(Inven->GetContent(Inven->GetItem(Ref_ID)).Quentity)));
-			Quantity->SetVisibility(ESlateVisibility::Visible);
-		}
-		else
+		auto Index = QuickSlot.LinkedIndex;
+		
+		if (Inven->GetItemByIndex(Index).IsEmpty())
 		{
 			Quantity->SetText(FText::FromString(FString::FromInt(0)));
 			Quantity->SetVisibility(ESlateVisibility::Hidden);
 		}
+		else
+		{
+			auto Texture = Inven->GetContent(Index).GetTexture();
+			Thumbnail->SetBrushFromTexture(Texture);
+			Quantity->SetText(FText::FromString(FString::FromInt(Inven->GetContent(Index).GetQuantity())));
+			Quantity->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }
-
-void UQuickSlotWidget::SetQuickSlot(class UTestItem* RefItem)
-{
-	if (nullptr == RefItem) return;
-
-	Thumbnail->SetBrushFromTexture(RefItem->GetTexture());
-	Quantity->SetText(FText::FromString(FString::FromInt(RefItem->Quentity)));
-	Quantity->SetVisibility(ESlateVisibility::Visible);
-}
-
 
 void UQuickSlotWidget::SetQuickSlotModel(class UQuickSlotSystem* QuickSlot)
 {
@@ -90,7 +71,7 @@ void UQuickSlotWidget::SetQuickSlotModel(class UQuickSlotSystem* QuickSlot)
 
 void UQuickSlotWidget::SetIndex(int32 IndexToSet)
 {
-	SlotIndex = IndexToSet;
+	MyIndex = IndexToSet;
 }
 
 void UQuickSlotWidget::SetKeyName(FString KeyNameToSet)

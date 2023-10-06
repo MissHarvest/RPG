@@ -31,20 +31,19 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FQuickSlot> QuickSlots;
 
+	/* Do : GetQuickSlot Function Make */
+
 	void Press(EQuickSlotKey QuickSlotKey);
 
 	UPROPERTY()
 	FQuickChangedSignature OnQuickSlotChanged;
 
+	/* Update Quick Slot Widget by index */
 	void UpdateQuickSlot();
 
-	//void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
+	void UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
 
-	/* Test Code */
-	void SetQuickSlot(int32 IndexToSet, class UTestItem* RefItem);
+	FORCEINLINE int32 GetSize() const { return Size; } 
 
-	/* Test Code */
-	void SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 Ref_ItemID);
-
-	int32 GetSize() const { return Size; } // FORCEINLINE ?
+	void ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange);
 };

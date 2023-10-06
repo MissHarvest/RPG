@@ -52,13 +52,13 @@ void APlayerCharacter::BeginPlay()
 		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);		
 		if (IsValid(DefaultScreen))
 		{
-			//DefaultScreen->LinkStatController(Stat);
-			//DefaultScreen->LinkInventory(Inventory);
-			//DefaultScreen->LinkQuickSlot(QuickSlotSystem);
 			DefaultScreen->AddToViewport();			
 		}
 	}
 	Stat->DecreaseHP(50);
+
+	/* Inventory System Link QuickSlotSystem */
+	Inventory->QuickSlotSystem = QuickSlotSystem;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -163,7 +163,6 @@ void APlayerCharacter::SpawnArrow()
 void APlayerCharacter::RecoveryHp()
 {
 	Stat->RecoveryHp(10);
-	// Stat->RecoveryHp(10, 3);
 }
 
 void APlayerCharacter::RecoveryMp()
@@ -193,15 +192,7 @@ void APlayerCharacter::TryInteraction()
 	{
 		auto Item = Cast<AItemBase>(OverlapActors[0]);
 
-		//auto temp = NewObject<UTestItem>();
-		//temp->Item = Item->GetItem().Item;
-		
-		//if (Inventory->AddItem(Item->GetItem())) // Add Item 의 매개변수로, FItemSlot 값을 받은 후, 인벤토리 내에서 형변환
-		//{
-		//	Item->Destroy();
-		//}
-
-		if (Inventory->AddItem(Item->GetItem()))
+		if (Inventory->AddItem(Item->GetItem())) /* Get Item Info */
 			Item->Destroy();
 	}
 }
@@ -234,7 +225,7 @@ void APlayerCharacter::PressKey2()
 
 void APlayerCharacter::PressKey3()
 {
-	//QuickSlotSystem->Press(EQuickSlotKey::NumberKey3);
+	QuickSlotSystem->Press(EQuickSlotKey::NumberKey3);
 }
 
 void APlayerCharacter::PressKey4()

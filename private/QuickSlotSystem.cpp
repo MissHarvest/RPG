@@ -41,30 +41,13 @@ void UQuickSlotSystem::Press(EQuickSlotKey QuickSlotKey)
 	
 	// Do Anything , Slot Type == Item
 	int32 Index = (int)QuickSlotKey;
-	if (0 == QuickSlots[Index].ItemID) return;
+	if (false == QuickSlots[Index].IsSet()) return;
 	
 	auto OwnigPawn = Cast<APawn>(GetOwner());
-	bool bUsedIem = QuickSlots[Index].SourceInventory->ConsumeItem(QuickSlots[Index].ItemID);
-	if (bUsedIem)
-	{
-		// inventory 에 해당 아이템이 있나?
-		if (-1 != QuickSlots[Index].SourceInventory->GetItem(QuickSlots[Index].ItemID))
-		{
-			//QuickSlots[Index].
-		}
-
-		// 수량 업데이트
-
-		// 위젯 업데이트		
-		//UpdateQuickSlot();
-	}
-
-	//int32 Index = (int)QuickSlotKey;
-	//if (nullptr == QuickSlots[Index].Ref_Item) return;
-	//auto OwningPawn = Cast<APawn>(GetOwner());
-	//bool bUsedItem = QuickSlots[Index].Ref_Item->Use(OwningPawn); // Inventory 정보를 가져야 한다.
-	//if (bUsedItem) UpdateQuickSlot();
-
+	QuickSlots[Index].SourceInventory->ConsumeItemByIndex(QuickSlots[Index].LinkedIndex);
+	/* check bUsed ? */
+	UpdateQuickSlot();
+	
 	// Do Anything , Slot Type == Skill
 }
 
@@ -76,24 +59,16 @@ void UQuickSlotSystem::UpdateQuickSlot()
 	}
 }
 
-//void UQuickSlotSystem::SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource)
-//{
-//	QuickSlots[IndexToSet].SlotType = ESlotType::Item;
-//	QuickSlots[IndexToSet].Index = IndexToSource;
-//	QuickSlots[IndexToSet].SourceInventory = Ref_Inventory;
-//	UpdateQuickSlot();
-//}
-
-void UQuickSlotSystem::SetQuickSlot(int32 IndexToSet, class UTestItem* RefItem)
-{
-	QuickSlots[IndexToSet].Ref_Item = RefItem;
-	UpdateQuickSlot();
-}
-
-void UQuickSlotSystem::SetQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 Ref_ItemID)
+void UQuickSlotSystem::UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource)
 {
 	QuickSlots[IndexToSet].SlotType = ESlotType::Item;
+	QuickSlots[IndexToSet].LinkedIndex = IndexToSource;
 	QuickSlots[IndexToSet].SourceInventory = Ref_Inventory;
-	QuickSlots[IndexToSet].ItemID = Ref_ItemID;
-	UpdateQuickSlot();
+	UpdateQuickSlot(); // index /
+}
+
+void UQuickSlotSystem::ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange)
+{
+	if(QuickSlots[TargetIndex].IsSet())
+		QuickSlots[TargetIndex].LinkedIndex = IndexToChange;
 }

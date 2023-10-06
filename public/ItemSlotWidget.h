@@ -19,10 +19,7 @@ class RPG_API UItemSlotWidget : public UUserWidget
 	class UInventorySystem* InventoryModel;
 
 	UPROPERTY()
-	FItemSlot ItemModel;
-
-	UPROPERTY()
-	int32 Index;
+	int32 MyIndex;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Source", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UDragItemPreviewWidget> DragItemPreviewClass;
@@ -30,16 +27,18 @@ class RPG_API UItemSlotWidget : public UUserWidget
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Source", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UItemDragDropOperation> DragDropOperationClass;
 
+	UPROPERTY()
+	TObjectPtr<class UTexture2D> ThumbnailTexture;
+
+	UPROPERTY()
+	bool bIsEmpty;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Thumbnail;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* Quantity;
-
-public:
-	UPROPERTY()
-	class UTestItem* TestItemModel;
 
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -50,7 +49,4 @@ public:
 	void SetItem(FItemSlot ItemSlot);
 	void SetInventoryModel(class UInventorySystem* TargetInventory);
 	void SetIndex(int32 IndexToSet);
-
-	/* Test Code */
-	void SetItem(class UTestItem* RefItem);
 };

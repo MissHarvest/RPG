@@ -41,21 +41,47 @@ struct RPG_API FItemSlot
 
 public:
 	FItemSlot() 
-	: Quentity(0) // Item 은 하지 않아도 되는가.
+	: Quantity(0)
+	, LinkedIndex(-1)
 	{};
 
-public:
+protected:
+	/* 인벤토리 시스템에서 보인다. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Quentity;
+	int32 Quantity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 LinkedIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
 
-	bool Use(class APawn* OwingPawn); // not need //
+public:
+	bool Use(class APawn* OwingPawn);
 	 
-	TObjectPtr<class UTexture2D> GetTexture(); // not need //
+	TObjectPtr<class UTexture2D> GetTexture();
+
+	TObjectPtr<class UStaticMesh> GetMesh();
 
 	int32 GetID();
+
+	bool IsEmpty();
+
+	void SetEmpty();
+
+	int32 GetQuantity() const { return Quantity; }
+
+	void AddQuantity(int32 CountToAdd);
+
+	void LinkQuickSlotIndex(int32 IndexToLink);
+
+	bool IsLinked();
+
+	/* Function const */
+	int32 GetLinkedIndex() const { return LinkedIndex;  }
+
+	/* Check : is need ? */
+	void SetLinkedIndex(int32 IndexToChanage);
 };
 
 
@@ -71,9 +97,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
 
-	bool Use(class APawn* OwingPawn);
+	//bool Use(class APawn* OwingPawn);
 
-	TObjectPtr<class UTexture2D> GetTexture();
+	//TObjectPtr<class UTexture2D> GetTexture();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -84,10 +110,9 @@ struct RPG_API FQuickSlot
 public:
 	FQuickSlot()
 		: SourceInventory(nullptr)
-		, Index(-1)
+		, LinkedIndex(-1)
 		, ItemID(0)
 		, SlotType(ESlotType::Item)
-		, Ref_Item(nullptr)
 	{};
 
 public:
@@ -95,7 +120,7 @@ public:
 	class UInventorySystem* SourceInventory;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 Index;
+	int32 LinkedIndex;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 ItemID;
@@ -105,7 +130,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ESlotType SlotType;
 
-	/* Test Code */
-	UPROPERTY()
-	class UTestItem* Ref_Item;
+	/* Do, Check : Change Function name to IsEmpty ? */
+	bool IsSet();
 };

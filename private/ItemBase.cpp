@@ -17,12 +17,7 @@ AItemBase::AItemBase()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	StaticMesh->SetupAttachment(SphereComponent);
 
-	if (ItemSlot.Item.IsNull())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not Exist"));
-	}
-	else UE_LOG(LogTemp, Warning, TEXT("Exist"));
-	ItemSlot.Quentity = 1;
+	ItemSlot.AddQuantity(2);
 }
 
 // Called when the game starts or when spawned
@@ -30,10 +25,9 @@ void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (ItemSlot.Item.IsNull()) return;
+	if (ItemSlot.IsEmpty()) return;
 
-	auto Item = ItemSlot.Item.DataTable->FindRow<FItem>(ItemSlot.Item.RowName, "Failed");
-	StaticMesh->SetStaticMesh(Item->Mesh);
+	StaticMesh->SetStaticMesh(ItemSlot.GetMesh());
 }
 
 // Called every frame

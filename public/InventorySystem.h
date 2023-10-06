@@ -29,9 +29,8 @@ public:
 	UPROPERTY()
 	FSlotChangedSignature OnSlotChanged;
 
-	/* Test Code */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
-	TArray<class UTestItem*> TestContents;
+	UPROPERTY()
+	class UQuickSlotSystem* QuickSlotSystem;
 
 protected:
 	// Called when the game starts
@@ -43,24 +42,19 @@ public:
 
 	int32 GetSize() const { return Size; }
 
-	FItemSlot GetContent(int32 Index) const { return Contents[Index]; }
+	/* 변수를 직접 참조함. 주의 */
+	FItemSlot& GetContent(int32 Index) { return Contents[Index]; }
 	
-	/* Test Code */
-	class UTestItem* GetTestContent(int32 Index) const { return TestContents[Index]; }
-
-	bool AddItem(const FItemSlot Item); // 주의
-
-	/* Test Code */
-	bool AddItem(class UTestItem* RefItem);
+	bool AddItem(const FItemSlot Item);
 
 	void SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex);
 
-	bool ConsumeItem(int32 ItemIDToUse);
+	void ConsumeItemByIndex(int32 IndexToUse);
 
-	/* Change Return Value FIemSlot& , after FItemSlot's Empty Function maked */
-	/* GetItemIndex */
-	int32 GetItem(int32 ItemID);
+	/* 중복 삭제 요망 */
+	FItemSlot GetItemByIndex(int32 IndexToFind);
 
 private:
+	/* Index 를 매개변수로 넘기는건 방식으로 변경해야한다. */
 	void BroadCastSlotChanged();
 };
