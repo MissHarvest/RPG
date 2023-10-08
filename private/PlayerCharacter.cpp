@@ -121,9 +121,10 @@ void APlayerCharacter::ReceivedAttackInput(const FInputActionValue& Value)
 void APlayerCharacter::LineTraceForward()
 {
 	auto Camera = GetFollowCamera();
-	FVector StartPoint = Camera->K2_GetComponentLocation();
-	FVector FocalPoint = StartPoint + Camera->GetForwardVector() * 15000.0f;
-	bool IsHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, FocalPoint, ECollisionChannel::ECC_Visibility);
+	Cast<UPlayerCameraComponent>(Camera)->FindEnemyAtForward(HitResult);
+	//FVector StartPoint = Camera->K2_GetComponentLocation();
+	//FVector FocalPoint = StartPoint + Camera->GetForwardVector() * 15000.0f;
+	//bool IsHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, FocalPoint, ECollisionChannel::ECC_Visibility);
 }
 
 FVector APlayerCharacter::GetFocalPoint()

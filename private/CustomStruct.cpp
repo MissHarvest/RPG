@@ -64,7 +64,7 @@ void FItemSlot::SetEmpty()
 	Quantity = 0;
 }
 
-bool FQuickSlot::IsSet()
+bool FQuickSlot::IsEmpty()
 {
-	return -1 != LinkedIndex;
+	return -1 == LinkedIndex;
 }

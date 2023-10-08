@@ -26,4 +26,6 @@ public:
 	void ChaseTarget();
 
 	void SetTargetToChase();
+
+	bool FindEnemyAtForward(FHitResult& HitResult);
 };

@@ -41,7 +41,7 @@ void UQuickSlotSystem::Press(EQuickSlotKey QuickSlotKey)
 	
 	// Do Anything , Slot Type == Item
 	int32 Index = (int)QuickSlotKey;
-	if (false == QuickSlots[Index].IsSet()) return;
+	if (QuickSlots[Index].IsEmpty()) return;
 	
 	auto OwnigPawn = Cast<APawn>(GetOwner());
 	QuickSlots[Index].SourceInventory->ConsumeItemByIndex(QuickSlots[Index].LinkedIndex);
@@ -69,6 +69,23 @@ void UQuickSlotSystem::UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInven
 
 void UQuickSlotSystem::ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange)
 {
-	if(QuickSlots[TargetIndex].IsSet())
-		QuickSlots[TargetIndex].LinkedIndex = IndexToChange;
+	if (QuickSlots[TargetIndex].IsEmpty()) return;
+	QuickSlots[TargetIndex].LinkedIndex = IndexToChange;
+}
+
+void UQuickSlotSystem::SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex)
+{
+	auto temp = QuickSlots[SourceIndex];
+	QuickSlots[SourceIndex] = QuickSlots[DestinationIndex];
+	QuickSlots[DestinationIndex] = temp;
+
+	if (QuickSlots[SourceIndex].SlotType == ESlotType::Item)
+	{
+		QuickSlots[SourceIndex].SourceInventory->ChangedLinkedIndex(QuickSlots[SourceIndex].LinkedIndex, SourceIndex);		
+	}
+	if (QuickSlots[DestinationIndex].SlotType == ESlotType::Item)
+	{
+		QuickSlots[DestinationIndex].SourceInventory->ChangedLinkedIndex(QuickSlots[DestinationIndex].LinkedIndex, DestinationIndex);
+	}	
+	UpdateQuickSlot();
 }

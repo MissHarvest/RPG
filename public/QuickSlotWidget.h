@@ -28,6 +28,15 @@ class RPG_API UQuickSlotWidget : public UUserWidget
 	UPROPERTY()
 	ESlotType SlotType;
 
+	UPROPERTY()
+	TObjectPtr<class UTexture2D> ThumbnailTexture;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Source", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UDragItemPreviewWidget> DragItemPreviewClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Source", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UQuickSlotDragDropOperation> DragDropOperationClass;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Thumbnail;
@@ -43,6 +52,7 @@ public:
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
 	void SetIndex(int32 IndexToSet);
 	void SetKeyName(FString KeyNameToSet);
+	bool IsEmpty() const { return nullptr == ThumbnailTexture; }
 
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

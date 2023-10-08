@@ -15,6 +15,7 @@ class RPG_API ACustomEnum : public AActor
 UENUM(BlueprintType)
 enum class ESlotType : uint8
 {
+	None,
 	Item,
 	Skill
 };

@@ -39,10 +39,42 @@ void UPlayerCameraComponent::SetTargetToChase()
 		return;
 	}
 
+	//FVector Start = K2_GetComponentLocation();
+	//FVector End = Start + GetForwardVector() * 15000.0f;
+
+	FHitResult LocalHitResult;
+	//TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
+	//TEnumAsByte<EObjectTypeQuery> PawnType = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn);
+	//TraceObjectTypes.Add(PawnType);
+
+	//TArray<AActor*> ActorsToIgnore;
+	//ActorsToIgnore.Add(GetOwner());
+
+	bool IsHit = FindEnemyAtForward(LocalHitResult);
+		/*UKismetSystemLibrary::SphereTraceSingleForObjects(
+		GetWorld(),
+		Start,
+		End,
+		30.0f,
+		TraceObjectTypes,
+		false,
+		ActorsToIgnore,
+		EDrawDebugTrace::ForDuration,
+		LocalHitResult,
+		true
+	);*/
+
+	if (IsHit && LocalHitResult.GetActor()->ActorHasTag(FName("Enemy")))
+	{
+		TargetActor = LocalHitResult.GetActor();
+	}
+}
+
+bool UPlayerCameraComponent::FindEnemyAtForward(FHitResult& HitResult)
+{
 	FVector Start = K2_GetComponentLocation();
 	FVector End = Start + GetForwardVector() * 15000.0f;
 
-	FHitResult LocalHitResult;
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
 	TEnumAsByte<EObjectTypeQuery> PawnType = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn);
 	TraceObjectTypes.Add(PawnType);
@@ -54,17 +86,13 @@ void UPlayerCameraComponent::SetTargetToChase()
 		GetWorld(),
 		Start,
 		End,
-		30.0f,
+		50.0f,
 		TraceObjectTypes,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
-		LocalHitResult,
+		EDrawDebugTrace::None,
+		HitResult,
 		true
 	);
-
-	if (IsHit && LocalHitResult.GetActor()->ActorHasTag(FName("Enemy")))
-	{
-		TargetActor = LocalHitResult.GetActor();
-	}
+	return IsHit;
 }

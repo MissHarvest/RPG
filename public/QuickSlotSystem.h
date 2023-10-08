@@ -46,4 +46,6 @@ public:
 	FORCEINLINE int32 GetSize() const { return Size; } 
 
 	void ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange);
+
+	void SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex);
 };

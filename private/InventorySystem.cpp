@@ -100,3 +100,9 @@ FItemSlot UInventorySystem::GetItemByIndex(int32 IndexToFind)
 {
 	return Contents[IndexToFind];
 }
+
+
+void UInventorySystem::ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex)
+{
+	Contents[TargetIndex].SetLinkedIndex(ChangedIndex);
+}

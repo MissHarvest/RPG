@@ -80,7 +80,6 @@ public:
 	/* Function const */
 	int32 GetLinkedIndex() const { return LinkedIndex;  }
 
-	/* Check : is need ? */
 	void SetLinkedIndex(int32 IndexToChanage);
 };
 
@@ -96,10 +95,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle Item;
-
-	//bool Use(class APawn* OwingPawn);
-
-	//TObjectPtr<class UTexture2D> GetTexture();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -111,8 +106,7 @@ public:
 	FQuickSlot()
 		: SourceInventory(nullptr)
 		, LinkedIndex(-1)
-		, ItemID(0)
-		, SlotType(ESlotType::Item)
+		, SlotType(ESlotType::None)
 	{};
 
 public:
@@ -123,13 +117,8 @@ public:
 	int32 LinkedIndex;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 ItemID;
-
-	// ¼ö·®?
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ESlotType SlotType;
 
 	/* Do, Check : Change Function name to IsEmpty ? */
-	bool IsSet();
+	bool IsEmpty();
 };

@@ -51,8 +51,10 @@ public:
 
 	void ConsumeItemByIndex(int32 IndexToUse);
 
-	/* 중복 삭제 요망 */
+	/* 중복 삭제 요망 - GetContent */
 	FItemSlot GetItemByIndex(int32 IndexToFind);
+
+	void ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex);
 
 private:
 	/* Index 를 매개변수로 넘기는건 방식으로 변경해야한다. */
