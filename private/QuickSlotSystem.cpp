@@ -5,8 +5,6 @@
 #include "ItemEffectManager.h"
 #include "InventorySystem.h"
 
-//#include "CustomEnum.h"
-
 // Sets default values for this component's properties
 UQuickSlotSystem::UQuickSlotSystem()
 {
@@ -64,6 +62,7 @@ void UQuickSlotSystem::UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInven
 	QuickSlots[IndexToSet].SlotType = ESlotType::Item;
 	QuickSlots[IndexToSet].LinkedIndex = IndexToSource;
 	QuickSlots[IndexToSet].SourceInventory = Ref_Inventory;
+	QuickSlots[IndexToSet].ItemID = Ref_Inventory->GetContent(IndexToSource).GetID();
 	UpdateQuickSlot(); // index /
 }
 
@@ -88,4 +87,23 @@ void UQuickSlotSystem::SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex)
 		QuickSlots[DestinationIndex].SourceInventory->ChangedLinkedIndex(QuickSlots[DestinationIndex].LinkedIndex, DestinationIndex);
 	}	
 	UpdateQuickSlot();
+}
+
+void UQuickSlotSystem::ClearQuickSlotByIndex(int32 index)
+{	
+	QuickSlots[index].SourceInventory->DeleteRegistedID(QuickSlots[index].ItemID);
+	QuickSlots[index].Clear();
+	UpdateQuickSlot();
+}
+
+int32 UQuickSlotSystem::GetQuickSlotIndexByItemID(int32 ID)
+{
+	for (int i = 0; i < QuickSlots.Num(); ++i)
+	{
+		if (QuickSlots[i].SlotType == ESlotType::Item && QuickSlots[i].ItemID == ID)
+		{
+			return i;
+		}
+	}
+	return -1;
 }

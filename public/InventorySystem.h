@@ -17,6 +17,9 @@ class RPG_API UInventorySystem : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
 	TArray<FItemSlot> Contents;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items", meta = (AllowPrivateAccess = "true"))
+	TArray<int32> RegistedItemsID;
+
 	int32 Size;
 
 	int32 EmptyIndex;
@@ -55,6 +58,12 @@ public:
 	FItemSlot GetItemByIndex(int32 IndexToFind);
 
 	void ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex);
+
+	/*  */
+	void RegisterItemID(int32 ID);
+
+	/*  */
+	void DeleteRegistedID(int32 ID);
 
 private:
 	/* Index 를 매개변수로 넘기는건 방식으로 변경해야한다. */

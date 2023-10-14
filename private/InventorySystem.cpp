@@ -2,7 +2,6 @@
 
 
 #include "InventorySystem.h"
-#include "ItemBase.h"
 #include "QuickSlotSystem.h"
 
 // Sets default values for this component's properties
@@ -15,7 +14,6 @@ UInventorySystem::UInventorySystem()
 	Size = 20;
 	EmptyIndex = -1;
 }
-
 
 // Called when the game starts
 void UInventorySystem::BeginPlay()
@@ -30,7 +28,6 @@ void UInventorySystem::BeginPlay()
 	// Set EmptyIndex //
 	EmptyIndex = 0;
 }
-
 
 // Called every frame
 void UInventorySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -56,6 +53,19 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 	if (-1 == emptyIdx) return false;
 	Contents[emptyIdx] = ItemSlot;
 	BroadCastSlotChanged();
+
+	int32 index = 0;
+	if (RegistedItemsID.Find(Contents[emptyIdx].GetID(), index))
+	{
+		int32 QuickSlotIndex = QuickSlotSystem->GetQuickSlotIndexByItemID(Contents[emptyIdx].GetID());
+		if (-1 != QuickSlotIndex)
+		{
+			QuickSlotSystem->ChangeLinkedIndex(QuickSlotIndex, emptyIdx);
+			Contents[emptyIdx].SetLinkedIndex(QuickSlotIndex);
+		}
+	}
+	QuickSlotSystem->UpdateQuickSlot();
+
 	return true;
 }
 
@@ -96,13 +106,32 @@ void UInventorySystem::ConsumeItemByIndex(int32 IndexToUse)
 	}	
 }
 
+void UInventorySystem::RegisterItemID(int32 ID)
+{
+	int32 index = 0;
+	if (!RegistedItemsID.Find(ID, index))
+	{
+		RegistedItemsID.Add(ID);
+	}
+}
+
+void UInventorySystem::DeleteRegistedID(int32 ID)
+{
+	int32 index = 0;
+	UE_LOG(LogTemp, Warning, TEXT("Delete Registed Item : %d"), ID);
+	if (RegistedItemsID.Find(ID, index))
+	{
+		RegistedItemsID.RemoveAt(index);
+	}
+}
+
 FItemSlot UInventorySystem::GetItemByIndex(int32 IndexToFind)
 {
 	return Contents[IndexToFind];
 }
 
-
 void UInventorySystem::ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex)
 {
 	Contents[TargetIndex].SetLinkedIndex(ChangedIndex);
 }
+

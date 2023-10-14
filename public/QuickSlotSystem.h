@@ -48,4 +48,8 @@ public:
 	void ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange);
 
 	void SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex);
+
+	void ClearQuickSlotByIndex(int32 index);
+
+	int32 GetQuickSlotIndexByItemID(int32 ID);
 };

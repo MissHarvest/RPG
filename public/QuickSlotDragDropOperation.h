@@ -18,10 +18,12 @@ class RPG_API UQuickSlotDragDropOperation : public UDragDropOperation
 	int32 SourceIndex;
 
 	UPROPERTY()
-	int32 DestinationIndex;
+	class UQuickSlotSystem* QuickSlotModel;
 
 public:
-	void SetOperation(int32 sourceIndex);
+	void SetOperation(class UQuickSlotSystem* QuickSlotSystem, int32 sourceIndex);
 
 	int32 GetIndex() const { return SourceIndex; }
+
+	class UQuickSlotSystem* GetSystem() const { return QuickSlotModel; }
 };

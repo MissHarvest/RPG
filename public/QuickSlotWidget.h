@@ -17,9 +17,6 @@ class RPG_API UQuickSlotWidget : public UUserWidget
 	GENERATED_BODY()
 	
 	UPROPERTY()
-	int32 ID;
-
-	UPROPERTY()
 	int32 MyIndex;
 
 	UPROPERTY()
@@ -48,14 +45,22 @@ protected:
 	class UTextBlock* Quantity;
 
 public:
+	
 	void SetQuickSlot(FQuickSlot QuickSlot);
+	
 	void SetQuickSlotModel(class UQuickSlotSystem* QuickSlot);
+	
 	void SetIndex(int32 IndexToSet);
+	
 	void SetKeyName(FString KeyNameToSet);
+	
 	bool IsEmpty() const { return nullptr == ThumbnailTexture; }
 
 protected:
+	
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation);
 };

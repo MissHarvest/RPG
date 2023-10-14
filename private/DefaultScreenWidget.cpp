@@ -24,10 +24,26 @@
 #include <Blueprint/WidgetBlueprintLibrary.h>
 #include <Blueprint/WidgetLayoutLibrary.h>
 
+#include "QuickSlotSystem.h"
+#include "QuickSlotDragDropOperation.h"
+
 void UDefaultScreenWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	UE_LOG(LogTemp, Warning, TEXT("Default Screen Widget _ Native On Init"));
+}
+
+bool UDefaultScreenWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Default Game Native On Drop"));
+	auto QuickOperation = Cast<UQuickSlotDragDropOperation>(InOperation);
+	if (QuickOperation)
+	{
+		QuickOperation->GetSystem()->ClearQuickSlotByIndex(QuickOperation->GetIndex());
+		return true;
+	}
+	return false;
+
 }
 
 void UDefaultScreenWidget::ActivateTargetInfo(class AActor* Opponent)

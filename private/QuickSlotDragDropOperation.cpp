@@ -3,7 +3,8 @@
 
 #include "QuickSlotDragDropOperation.h"
 
-void UQuickSlotDragDropOperation::SetOperation(int32 sourceIndex)
+void UQuickSlotDragDropOperation::SetOperation(class UQuickSlotSystem* QuickSlotSystem,int32 sourceIndex)
 {
 	SourceIndex = sourceIndex;
+	QuickSlotModel = QuickSlotSystem;
 }

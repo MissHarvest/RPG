@@ -2,17 +2,18 @@
 
 
 #include "QuickSlotWidget.h"
-#include <Blueprint/WidgetBlueprintLibrary.h>
-#include "ItemDragDropOperation.h"
-#include "InventorySystem.h"
-#include "CustomStruct.h"
+
 #include <Engine/Texture2D.h>
 #include <Components/Image.h>
-#include "QuickSlotSystem.h"
 #include <Components/TextBlock.h>
+
+#include <Blueprint/WidgetBlueprintLibrary.h>
+
 #include "InventorySystem.h"
-#include <Components/TextBlock.h>
+#include "QuickSlotSystem.h"
+
 #include "QuickSlotDragDropOperation.h"
+#include "ItemDragDropOperation.h"
 #include "DragItemPreviewWidget.h"
 
 FReply UQuickSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -24,11 +25,6 @@ FReply UQuickSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, co
 		UE_LOG(LogTemp, Warning, TEXT("Quick Slot Pressed"));
 		auto ReturnValue = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
 		return ReturnValue.NativeReply;
-	}
-
-	if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
-	{
-		// Slot ºñ¿ì±â 
 	}
 	return UWidgetBlueprintLibrary::Unhandled().NativeReply;
 }
@@ -42,7 +38,7 @@ void UQuickSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const F
 
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UQuickSlotDragDropOperation>(DragDrop)->SetOperation(MyIndex); 
+	Cast<UQuickSlotDragDropOperation>(DragDrop)->SetOperation(QuickSlotModel, MyIndex);
 	OutOperation = DragDrop;
 }
 
@@ -56,7 +52,11 @@ bool UQuickSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 		auto ItemID = ItemOperation->GetID();
 
 		if (nullptr == QuickSlotModel) return false;
+
+		/* Make one Function */
 		SourceInventory->GetContent(SourceIndex).LinkQuickSlotIndex(MyIndex);
+		SourceInventory->RegisterItemID(ItemID);
+
 		QuickSlotModel->UpdateQuickSlotInfoByIndex(MyIndex, SourceInventory, SourceIndex);
 		return true;
 	}

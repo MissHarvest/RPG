@@ -68,3 +68,11 @@ bool FQuickSlot::IsEmpty()
 {
 	return -1 == LinkedIndex;
 }
+
+void FQuickSlot::Clear()
+{
+	SlotType = ESlotType::None;
+	ItemID = -1;
+	LinkedIndex = -1;
+	SourceInventory = nullptr;
+}

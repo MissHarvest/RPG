@@ -83,20 +83,6 @@ public:
 	void SetLinkedIndex(int32 IndexToChanage);
 };
 
-
-UCLASS(BlueprintType)
-class RPG_API UTestItem : public UObject
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Quentity;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FDataTableRowHandle Item;
-};
-
 USTRUCT(Atomic, BlueprintType)
 struct RPG_API FQuickSlot
 {
@@ -107,6 +93,7 @@ public:
 		: SourceInventory(nullptr)
 		, LinkedIndex(-1)
 		, SlotType(ESlotType::None)
+		, ItemID(-1)
 	{};
 
 public:
@@ -119,6 +106,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ESlotType SlotType;
 
-	/* Do, Check : Change Function name to IsEmpty ? */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int32 ItemID;
+
 	bool IsEmpty();
+
+	void Clear();
 };

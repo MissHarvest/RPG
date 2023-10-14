@@ -9,10 +9,3 @@ void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventor
 	this->Index = IndexToSet;
 	this->ID = ItemID;
 }
-
-void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet, class UTestItem* RefItem)
-{
-	this->SourceInventory = SourceInventoryToSet;
-	this->Index = IndexToSet;
-	RefTestItem = RefItem;
-}

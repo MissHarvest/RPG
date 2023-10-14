@@ -122,9 +122,6 @@ void APlayerCharacter::LineTraceForward()
 {
 	auto Camera = GetFollowCamera();
 	Cast<UPlayerCameraComponent>(Camera)->FindEnemyAtForward(HitResult);
-	//FVector StartPoint = Camera->K2_GetComponentLocation();
-	//FVector FocalPoint = StartPoint + Camera->GetForwardVector() * 15000.0f;
-	//bool IsHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartPoint, FocalPoint, ECollisionChannel::ECC_Visibility);
 }
 
 FVector APlayerCharacter::GetFocalPoint()

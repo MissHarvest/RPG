@@ -39,6 +39,8 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
 public:
 	void ActivateTargetInfo(class AActor* Opponent);
 
