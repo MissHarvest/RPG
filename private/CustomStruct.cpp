@@ -76,3 +76,9 @@ void FQuickSlot::Clear()
 	LinkedIndex = -1;
 	SourceInventory = nullptr;
 }
+
+void FQuest::Set(int32 IDofQuest)
+{
+	auto Names = QuestManager.DataTable->GetRowNames();
+	QuestManager.RowName = Names[IDofQuest];
+}

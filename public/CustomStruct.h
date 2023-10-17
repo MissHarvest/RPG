@@ -113,3 +113,49 @@ public:
 
 	void Clear();
 };
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FQuestInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Content;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FQuest
+{
+	GENERATED_BODY()
+public:
+	FQuest()
+		:QuestManager()
+	{
+		//static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(
+		//TEXT("/Game/Data/PhysicsPoseDataTable.PhysicsPoseDataTable"));
+		// C:/Users/ParkjunUk/Documents/Unreal Projects/RPG/Content/Data/DT_QuestList.uasset
+		ConstructorHelpers::FObjectFinder<UDataTable>DataTable(TEXT("Data/DT_QuestList.DT_QuestList"));
+		if (DataTable.Succeeded())
+		{
+			QuestManager.DataTable = DataTable.Object;
+		}
+	}
+protected:
+	/* 인벤토리 시스템에서 보인다. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 QuestID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDataTableRowHandle QuestManager;
+
+public:
+	/* */
+	void Set(int32 IDofQuest);
+};

@@ -5,6 +5,7 @@
 
 // Components
 #include "QuestGiver.h"
+#include <Components/SphereComponent.h>
 
 // Sets default values
 ANPC::ANPC()
@@ -13,6 +14,10 @@ ANPC::ANPC()
 	PrimaryActorTick.bCanEverTick = true;
 
 	QuestGiver = CreateDefaultSubobject<UQuestGiver>(TEXT("Quest Giver"));
+
+	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("Interact Range"));
+	SphereComp->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -24,5 +29,5 @@ void ANPC::BeginPlay()
 
 void ANPC::Interact()
 {
-	// QuestGiver->ShowQuestPanel();
+	QuestGiver->ShowQuestPanel();
 }

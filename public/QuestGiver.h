@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CustomStruct.h"
 #include "Components/ActorComponent.h"
 #include "QuestGiver.generated.h"
 
@@ -14,6 +15,15 @@ class RPG_API UQuestGiver : public UActorComponent
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UUserWidget> QuestPanelWidgetClass;
+
+	UPROPERTY()
+	class UUserWidget* QuestGiverWidget;
+
+	UPROPERTY()
+	TArray<int32> QuestIdList;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	TArray<FQuest> QuestList;
 
 public:	
 	// Sets default values for this component's properties

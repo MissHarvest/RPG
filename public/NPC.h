@@ -15,6 +15,9 @@ class RPG_API ANPC : public ACharacter, public IInteractionInterface
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UQuestGiver* QuestGiver;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* SphereComp;
+
 public:
 	// Sets default values for this character's properties
 	ANPC();
