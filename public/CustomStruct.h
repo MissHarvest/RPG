@@ -134,28 +134,15 @@ USTRUCT(Atomic, BlueprintType)
 struct RPG_API FQuest
 {
 	GENERATED_BODY()
-public:
-	FQuest()
-		:QuestManager()
-	{
-		//static ConstructorHelpers::FObjectFinder<UDataTable> DataTable(
-		//TEXT("/Game/Data/PhysicsPoseDataTable.PhysicsPoseDataTable"));
-		// C:/Users/ParkjunUk/Documents/Unreal Projects/RPG/Content/Data/DT_QuestList.uasset
-		ConstructorHelpers::FObjectFinder<UDataTable>DataTable(TEXT("Data/DT_QuestList.DT_QuestList"));
-		if (DataTable.Succeeded())
-		{
-			QuestManager.DataTable = DataTable.Object;
-		}
-	}
-protected:
-	/* 인벤토리 시스템에서 보인다. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 QuestID;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle QuestManager;
 
 public:
-	/* */
+	/* Set Quest ID */
 	void Set(int32 IDofQuest);
+
+	/* Get Quest Name */
+	FName GetName();
 };

@@ -20,4 +20,21 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UButton* Button;
+
+	UPROPERTY()
+	class UQuestGiverWidget* QuestGiverWidget;
+
+private:
+	UFUNCTION()
+	void OnClicked();
+
+protected:
+	virtual void NativeOnInitialized() override;
+
+public:
+	/* Set Quest Name Label */
+	void SetName(FName Name);
+
+	/* Set Quest Giver Widget */
+	void SetQuestGiver(class UQuestGiverWidget* QuestGiver);
 };

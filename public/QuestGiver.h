@@ -14,15 +14,15 @@ class RPG_API UQuestGiver : public UActorComponent
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UUserWidget> QuestPanelWidgetClass;
+	TSubclassOf<class UQuestGiverWidget> QuestPanelWidgetClass;
 
 	UPROPERTY()
-	class UUserWidget* QuestGiverWidget;
+	class UQuestGiverWidget* QuestGiverWidget;
 
 	UPROPERTY()
 	TArray<int32> QuestIdList;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	TArray<FQuest> QuestList;
 
 public:	

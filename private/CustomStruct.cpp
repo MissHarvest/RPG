@@ -79,6 +79,15 @@ void FQuickSlot::Clear()
 
 void FQuest::Set(int32 IDofQuest)
 {
-	auto Names = QuestManager.DataTable->GetRowNames();
-	QuestManager.RowName = Names[IDofQuest];
+	QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
+	if (QuestManager.DataTable)
+	{
+		auto Names = QuestManager.DataTable->GetRowNames();
+		QuestManager.RowName = Names[IDofQuest];
+	}
+}
+
+FName FQuest::GetName()
+{
+	return QuestManager.RowName;
 }

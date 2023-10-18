@@ -3,6 +3,9 @@
 
 #include "QuestGiver.h"
 
+// Widget
+#include "QuestGiverWidget.h"
+
 #include <Blueprint/UserWidget.h>
 #include <Kismet/GameplayStatics.h>
 #include <Blueprint/WidgetBlueprintLibrary.h>
@@ -15,8 +18,8 @@ UQuestGiver::UQuestGiver()
 
 	// Load Quest Id List
 	QuestIdList.Add(1);
-
-	
+	QuestIdList.Add(2);
+	QuestIdList.Add(3);
 }
 
 
@@ -26,9 +29,12 @@ void UQuestGiver::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	FQuest temp;
-	temp.Set(1);
-	QuestList.Add(temp);
+	for (int i = 0; i < QuestIdList.Num(); ++i)
+	{
+		FQuest Quest;
+		Quest.Set(QuestIdList[i]);
+		QuestList.Add(Quest);
+	}
 }
 
 
@@ -44,12 +50,13 @@ void UQuestGiver::ShowQuestPanel()
 {
 	if (nullptr == QuestPanelWidgetClass) return;
 	
-	QuestGiverWidget = CreateWidget<UUserWidget>(GetWorld(), QuestPanelWidgetClass);
+	QuestGiverWidget = CreateWidget<UQuestGiverWidget>(GetWorld(), QuestPanelWidgetClass);
 	if (QuestGiverWidget)
 	{
 		auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		PlayerController->SetShowMouseCursor(true);
-		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);		
+		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
+		QuestGiverWidget->AddQuest(QuestList);
 		QuestGiverWidget->AddToViewport();
 	}
 }
