@@ -87,7 +87,37 @@ void FQuest::Set(int32 IDofQuest)
 	}
 }
 
-FName FQuest::GetName()
+void FQuest::Set(FText Name)
+{
+	QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
+	if (QuestManager.DataTable)
+	{
+		QuestManager.RowName = FName(*Name.ToString());
+	}
+}
+
+/* Operator == */
+//bool operator==(const FMargin& Other) const
+//{
+//	return (Left == Other.Left) && (Right == Other.Right) && (Top == Other.Top) && (Bottom == Other.Bottom);
+//}
+
+FString FQuest::GetName() const
+{
+	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Name;
+}
+
+FName FQuest::GetID()
 {
 	return QuestManager.RowName;
+}
+
+FString FQuest::GetContent()
+{
+	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Content;
+}
+
+FString FQuest::GetObjectives()
+{
+	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Objectives;
 }

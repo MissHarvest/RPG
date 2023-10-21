@@ -19,7 +19,7 @@ class RPG_API UQuestGiverWidget : public UUserWidget
 	TSubclassOf<class UQuestSelectorSlot> QuestSelectorWidgetClass;
 
 	UPROPERTY()
-	TArray<UQuestSelectorSlot*> QuestSelectors;
+	class UQuestGiver* QuestGiver;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
@@ -28,10 +28,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UQuestInformationWidget* QuestInformation;
 
+protected:
+	/*  */
+	virtual void NativeOnInitialized() override;
+
 public:
 	/* Add Quest Widgets in ListBox */
 	void AddQuest(TArray<FQuest> QuestList);
 
 	/* Show Quest Information by name */
-	void ShowQuestInformation(FText QuestName);
+	UFUNCTION()
+	void ShowQuestInformation(FName QuestID);
+
+	/*  */
+	void SetModel(class UQuestGiver* QuestGiverModel);
+
+	/*  */
+	UFUNCTION()
+	void SendToGiver(FName QuestID);
+
+
 };

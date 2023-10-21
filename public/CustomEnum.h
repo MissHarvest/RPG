@@ -34,3 +34,11 @@ enum class EQuickSlotKey : uint8
 	NumberKey9,
 	NumberKey0,
 };
+
+UENUM(BlueprintType)
+enum class EObjectiveType : uint8
+{
+	Hunting,
+	Collection,
+	Deliver,
+};

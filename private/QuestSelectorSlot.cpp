@@ -11,9 +11,10 @@ void UQuestSelectorSlot::NativeOnInitialized()
 	Button->OnClicked.AddDynamic(this, &UQuestSelectorSlot::OnClicked);
 }
 
-void UQuestSelectorSlot::SetName(FName Name)
+void UQuestSelectorSlot::Init(FQuest Quest)
 {
-	QuestName->SetText(FText::FromName(Name));		
+	QuestName->SetText(FText::FromString(Quest.GetName()));
+	QuestID = Quest.GetID();
 }
 
 void UQuestSelectorSlot::SetQuestGiver(class UQuestGiverWidget* QuestGiver)
@@ -23,5 +24,5 @@ void UQuestSelectorSlot::SetQuestGiver(class UQuestGiverWidget* QuestGiver)
 
 void UQuestSelectorSlot::OnClicked()
 {
-	QuestGiverWidget->ShowQuestInformation(QuestName->GetText());
+	OnSelected.Broadcast(QuestID);
 }

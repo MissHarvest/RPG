@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "QuestInformationWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnAccpetSignature, UQuestInformationWidget, OnAccepted, FName, QuestID);
+
 /**
  * 
  */
@@ -14,6 +16,8 @@ UCLASS()
 class RPG_API UQuestInformationWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+	FName QuestID;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
@@ -25,9 +29,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UButton* AcceptButton;
 
+	UPROPERTY()
+	class UQuestGiverWidget* QuestGiverWidget;
+
 	/* Quest Reward Variable */
+public:
+	UPROPERTY()
+	FOnAccpetSignature OnAccepted;
+
+private:
+	/*  */
+	UFUNCTION()
+	void ClickAccpetButton();
 
 public:
 	/* Show Quest Information by Name */
-	void ShowQuest(FText Name);
+	void ShowQuest(FName QuestID);
+
+	/*  */
+	void SetQuestGiver(class UQuestGiverWidget* QuestGiver);
 };

@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CustomStruct.h"
 #include "Blueprint/UserWidget.h"
 #include "QuestSelectorSlot.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSelectedSignature, UQuestSelectorSlot, OnSelected, FName, QuestID);
 
 /**
  * 
@@ -23,6 +26,12 @@ protected:
 
 	UPROPERTY()
 	class UQuestGiverWidget* QuestGiverWidget;
+	
+	FName QuestID;
+
+public:
+	UPROPERTY()
+	FOnSelectedSignature OnSelected;
 
 private:
 	UFUNCTION()
@@ -32,8 +41,8 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 public:
-	/* Set Quest Name Label */
-	void SetName(FName Name);
+	/*  */
+	void Init(FQuest Quest);
 
 	/* Set Quest Giver Widget */
 	void SetQuestGiver(class UQuestGiverWidget* QuestGiver);

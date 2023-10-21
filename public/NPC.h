@@ -22,11 +22,17 @@ public:
 	// Sets default values for this character's properties
 	ANPC();
 
+private:
+	/*  */
+	UFUNCTION()
+	void CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Interact() override;
+	/* Override Interface Function */
+	virtual void ReceiveQuest(class UQuestReceiver* Receiver) override;
 
 public:	
 

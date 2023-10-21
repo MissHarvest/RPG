@@ -10,6 +10,7 @@
 #include "InventorySystem.h"
 #include "PlayerCameraComponent.h"
 #include "QuickSlotSystem.h"
+#include "QuestReceiver.h"
 
 // Other Class
 #include "Arrow.h"
@@ -41,6 +42,7 @@ APlayerCharacter::APlayerCharacter()
 	Stat = CreateDefaultSubobject<UStatComponent>(TEXT("Stat"));
 	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
 	QuickSlotSystem = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
+	QuestReceiver = CreateDefaultSubobject<UQuestReceiver>(TEXT("Quest Receiver"));
 }
 
 void APlayerCharacter::BeginPlay()
@@ -185,6 +187,11 @@ void APlayerCharacter::TryInteraction()
 	{
 		auto Interaction = Cast<IInteractionInterface>(OverlapActors[0]);
 		Interaction->Interact();
+	}
+	else if (OverlapActors[0]->ActorHasTag(TEXT("QuestGiver")))
+	{
+		auto Interaction = Cast<IInteractionInterface>(OverlapActors[0]);
+		Interaction->ReceiveQuest(QuestReceiver);
 	}
 	else if (OverlapActors[0]->ActorHasTag(TEXT("Item")))
 	{

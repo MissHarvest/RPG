@@ -43,7 +43,7 @@ public:
 	FItemSlot() 
 	: Quantity(0)
 	, LinkedIndex(-1)
-	{};
+	{ };
 
 protected:
 	/* 인벤토리 시스템에서 보인다. */
@@ -128,6 +128,37 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Content;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Summary;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Objectives;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FObjective
+{
+	GENERATED_BODY()
+
+	EObjectiveType ObjectiveType;
+
+	FString ObjectiveName;
+
+	int32 ObjectiveCount;
+
+public:
+	FObjective()
+		: ObjectiveType(EObjectiveType::Hunting)
+		, ObjectiveName("")
+		, ObjectiveCount(0)
+	{};
+
+	FObjective(EObjectiveType Type, FString Name, int32 Count)
+		: ObjectiveType(Type)
+		, ObjectiveName(Name)
+		, ObjectiveCount(Count)
+	{};
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -135,14 +166,51 @@ struct RPG_API FQuest
 {
 	GENERATED_BODY()
 
+public:
+	FQuest()
+		: bCompleted(false)
+	{
+		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
+	};
+
+	FQuest(FName QuestID)
+		: bCompleted(false)
+	{
+		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
+		QuestManager.RowName = QuestID;
+	}
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle QuestManager;
+
+	bool bCompleted;
+
+	// int32 Count;
 
 public:
 	/* Set Quest ID */
 	void Set(int32 IDofQuest);
 
+	/*  */
+	void Set(FText Name);
+
 	/* Get Quest Name */
-	FName GetName();
+	FString GetName() const;
+
+	/*  */
+	FString GetObjectives();
+
+	/*  */
+	FName GetID();
+
+	/*  */
+	FString GetContent();
 };
+
+//UCLASS()
+//class RPG_API UQuest : public UObject
+//{
+//	GENERATED_BODY()
+//
+//};
