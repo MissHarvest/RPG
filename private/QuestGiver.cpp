@@ -21,10 +21,11 @@ UQuestGiver::UQuestGiver()
 	//UE_LOG(LogTemp, Warning, TEXT("Giver Constructor"));
 
 	// Load Quest Id List
+
 	QuestIdList.Add(1);
 	QuestIdList.Add(2);
 	QuestIdList.Add(3);
-
+	
 	for (int i = 0; i < QuestIdList.Num(); ++i)
 	{
 		FQuest Quest;
@@ -73,8 +74,11 @@ void UQuestGiver::SetRecevier(class UQuestReceiver* Receiver)
 
 void UQuestGiver::CloseQuestGiverWidget()
 {
-	QuestGiverWidget->RemoveFromParent();
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	PlayerController->SetShowMouseCursor(false);
-	UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+	if (QuestGiverWidget)
+	{
+		QuestGiverWidget->RemoveFromParent();
+		auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		PlayerController->SetShowMouseCursor(false);
+		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+	}
 }

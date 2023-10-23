@@ -20,6 +20,9 @@ protected:
 	class UTextBlock* QuestSummaryText;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* ObjectiveNameText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UCheckBox* CompletedCheckBox;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))

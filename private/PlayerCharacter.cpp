@@ -19,6 +19,7 @@
 #include "Recovery.h"
 #include "ItemBase.h"
 #include "InteractionInterface.h"
+#include "EnemyCharacter.h"
 
 // Unreal System
 #include "EnhancedInputComponent.h"
@@ -138,6 +139,7 @@ FVector APlayerCharacter::GetFocalPoint()
 
 void APlayerCharacter::SetTargetInfo()
 {
+	// Tag 가 아닌 Cast 으로 구분하는 것은  ? 
 	if (HitResult.bBlockingHit && HitResult.GetActor()->ActorHasTag(FName(TEXT("Enemy"))) || bCombatting)
 	{
 		DefaultScreen->ActivateTargetInfo(HitResult.GetActor());
@@ -211,6 +213,13 @@ void APlayerCharacter::StartCombat(class AActor* Opponent)
 {
 	bCombatting = true;
 	DefaultScreen->ActivateTargetInfo(Opponent);
+
+	/* 화살쪽으로 이동 ? */
+	/*auto Enemy = Cast<AEnemyCharacter>(Opponent);
+	if (nullptr != Enemy)
+	{
+		Enemy->OnDeath.AddUniqueDynamic(this, &APlayerCharacter::EnemyDeath);
+	}*/
 }
 
 void APlayerCharacter::TargetLock()
@@ -266,4 +275,10 @@ void APlayerCharacter::PressKey9()
 void APlayerCharacter::PressKey0()
 {
 	QuickSlotSystem->Press(EQuickSlotKey::NumberKey0);
+}
+
+void APlayerCharacter::EnemyDeath(FName Name)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Hunt : %s"), Name);
+	QuestReceiver->UpdateQuestProgress(Name);
 }

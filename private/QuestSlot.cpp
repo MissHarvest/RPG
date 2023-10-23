@@ -8,17 +8,15 @@
 
 void UQuestSlot::SetQuest(FQuest Quest)
 {
+	ObjectiveListBox->ClearChildren();
+
 	QuestNameText->SetText(FText::FromString(Quest.GetName()));
 	
-	FString Data = Quest.GetObjectives();
-	TArray<FString> temp;
-	Data.ParseIntoArray(temp, TEXT(","));
-	EObjectiveType ObjectiveType = (EObjectiveType)(FCString::Atoi(*temp[0]));
-	FString Summary = temp[1];
-	int32 ObjectiveCount = FCString::Atoi(*temp[2]);
-	FObjective Objective(ObjectiveType, Summary, ObjectiveCount);
-
-	AddObjective(Objective); 	
+	TArray<FObjective> Objectives = Quest.GetObjectives();
+	for (int i = 0; i < Objectives.Num(); ++i)
+	{
+		AddObjective(Objectives[i]);
+	}	
 }
 
 void UQuestSlot::AddObjective(FObjective Objective)

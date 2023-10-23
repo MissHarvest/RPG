@@ -35,7 +35,17 @@ void UQuestReceiver::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UQuestReceiver::ReceiveQuest(FQuest ReceivedQuest)
 {
 	//HaveQuest = Quest;
+	ReceivedQuest.Activate();
 	HaveQuest.Add(ReceivedQuest);
 	int32 index_ = HaveQuest.IndexOfByPredicate([=](const FQuest& Quest) { return Quest.GetName() == ReceivedQuest.GetName(); });
 	OnQuestUpdated.Broadcast(index_, ReceivedQuest);
+}
+
+void UQuestReceiver::UpdateQuestProgress(FName Name)
+{
+	for (int i = 0; i < HaveQuest.Num(); ++i)
+	{
+		HaveQuest[i].UpdateObjective(Name); // bool - return -> BroadCast
+		OnQuestUpdated.Broadcast(i, HaveQuest[i]);
+	}
 }

@@ -22,6 +22,14 @@ UStatComponent::UStatComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true; // false 로 해도 되지 않을까
 
+	auto MS = Cast<AEnemyCharacter>(GetOwner());
+	if (MS)
+	{
+		auto Data = MS->GetData();
+		Status = FStatus(Data);
+	}
+	
+
 	// ...
 }
 

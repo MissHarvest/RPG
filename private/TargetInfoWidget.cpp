@@ -12,20 +12,23 @@
 
 void UTargetInfoWidget::SetInfo(class AActor* EnemyActor)
 {
-	//LvText->SetText(Lv);
-	//NameText->SetText(Name);
-	//HpBar->SetPercent(Percent);
-
-	// Logic Test //
 	auto Actor = Cast<AEnemyCharacter>(EnemyActor);
 	if (nullptr == Actor) return;
 	if (Enemy == Actor) return;
 
 	Enemy = Cast<AEnemyCharacter>(EnemyActor);
-	if (Enemy->GetStat()->OnHpChanged.IsBound()) Enemy->GetStat()->OnHpChanged.Clear();
-	Enemy->GetStat()->OnHpChanged.AddDynamic(this, &UTargetInfoWidget::SetHpPercent);
-	SetHpPercent(Enemy->GetStat()->GetHpPercent());
+	auto EnemyStat = Enemy->GetStat();
+	if (nullptr == EnemyStat) return;
+	
+	if (EnemyStat->OnHpChanged.IsBound()) EnemyStat->OnHpChanged.Clear();
+	EnemyStat->OnHpChanged.AddUniqueDynamic(this, & UTargetInfoWidget::SetHpPercent);
+	
+	// OnHpChanged 를 Clear 하는거 생각보다 위험한거 아닐까
+	// 지금은 체력이 변경되면 UI 만 변경하면 되지만, 그 외에 다른 기능이 해당 델리게이트에 바인딩 되어있으면 문제가 될 것 같음.
+	 
+	SetHpPercent(EnemyStat->GetHpPercent());
 	MonsterLvText->SetText(FText::FromString(FString::FromInt(Enemy->GetStat()->GetLevel())));
+	MonsterNameText->SetText(FText::FromString(Enemy->Name));
 }
 
 void UTargetInfoWidget::SetHpPercent(float Percent)

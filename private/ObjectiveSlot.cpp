@@ -7,6 +7,16 @@
 
 void UObjectiveSlot::SetObjective(FObjective Objective)
 {
-	QuestSummaryText->SetText(FText::FromString(Objective.ObjectiveName));	
-	FMargin Margin;
+	QuestSummaryText->SetText(FText::FromString(Objective.Summary));	
+	ObjectiveNameText->SetText(FText::FromString(Objective.Target));
+	
+	/* Format */
+	FString temp;
+	temp.Append("( ");
+	temp.Append(FString::FromInt(Objective.ProgressCount));
+	temp.Append(" / ");
+	temp.Append(FString::FromInt(Objective.RequestedCount));
+	temp.Append(" )");
+
+	ProgressText->SetText(FText::FromString(temp));
 }

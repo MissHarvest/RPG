@@ -7,6 +7,8 @@
 #include <Components/BoxComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include "PlayerCharacter.h"
+#include "EnemyCharacter.h"
+
 // Sets default values
 AArrow::AArrow()
 {
@@ -52,6 +54,12 @@ void AArrow::OnCollisionEnter(UPrimitiveComponent* OverlappedComponent, AActor* 
 	OwningPlayer->StartCombat(OtherActor);
 	auto Controller = OwningPlayer->GetController();
 	TSubclassOf<UDamageType> DefaultDamageClass;
-	UGameplayStatics::ApplyDamage(OtherActor, 10, Controller, this, DefaultDamageClass);
+	UGameplayStatics::ApplyDamage(OtherActor, 50, Controller, this, DefaultDamageClass);
+
+	auto Enemy = Cast<AEnemyCharacter>(OtherActor);
+	if (nullptr != Enemy)
+	{
+		Enemy->OnDeath.AddUniqueDynamic(OwningPlayer, &APlayerCharacter::EnemyDeath);
+	}
 	Destroy();
 }

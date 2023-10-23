@@ -137,28 +137,68 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
+struct RPG_API FMonsterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MaxHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 EXP;
+};
+
+USTRUCT(Atomic, BlueprintType)
 struct RPG_API FObjective
 {
 	GENERATED_BODY()
 
-	EObjectiveType ObjectiveType;
+private:
+	FName MID;
 
-	FString ObjectiveName;
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FDataTableRowHandle MonsterDataHandle;
 
-	int32 ObjectiveCount;
+public:
+	EObjectiveType Type;
+
+	FString Summary;
+
+	FString Target;
+
+	int32 ProgressCount;
+
+	int32 RequestedCount;
 
 public:
 	FObjective()
-		: ObjectiveType(EObjectiveType::Hunting)
-		, ObjectiveName("")
-		, ObjectiveCount(0)
+		: Type(EObjectiveType::Hunting)
+		, Summary("")
+		, Target("")
+		, ProgressCount(0)
+		, RequestedCount(0)
 	{};
 
-	FObjective(EObjectiveType Type, FString Name, int32 Count)
-		: ObjectiveType(Type)
-		, ObjectiveName(Name)
-		, ObjectiveCount(Count)
-	{};
+	FObjective(EObjectiveType ObjectiveType, FString ObjectSummary, FString TargetName, int32 ObjectiveCount)
+		: MID(FName(*TargetName))
+		, Type(ObjectiveType)
+		, Summary(ObjectSummary)
+		, ProgressCount(0)
+		, RequestedCount(ObjectiveCount)
+	{
+		MonsterDataHandle.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_MonsterList.DT_MonsterList'"));
+		Target = MonsterDataHandle.DataTable->FindRow<FMonsterData>(MID, TEXT("Failed"))->Name;
+	};
+
+	bool IsTarget(FName Name);
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -186,7 +226,8 @@ protected:
 
 	bool bCompleted;
 
-	// int32 Count;
+	UPROPERTY()
+	TArray<FObjective> Objectives;
 
 public:
 	/* Set Quest ID */
@@ -195,22 +236,63 @@ public:
 	/*  */
 	void Set(FText Name);
 
+	/*  */
+	void Activate();
+
 	/* Get Quest Name */
 	FString GetName() const;
 
 	/*  */
-	FString GetObjectives();
+	TArray<FObjective> GetObjectives();
 
 	/*  */
 	FName GetID();
 
 	/*  */
 	FString GetContent();
+
+	/*  */
+	FString GetSummary();
+
+	/*  */
+	void UpdateObjective(FName Name);
 };
 
-//UCLASS()
-//class RPG_API UQuest : public UObject
-//{
-//	GENERATED_BODY()
-//
-//};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FStatus
+{
+	GENERATED_BODY()
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FDataTableRowHandle MonsterDataHandle;
+
+public:
+	FStatus()
+		: Level(0)
+		, CurrentHP(0)
+		, MaxHP(0)
+		, EXP(0)
+	{};
+
+	FStatus(FMonsterData* MonsterData)
+	{
+		Level = MonsterData->Level;
+		MaxHP = MonsterData->MaxHP;
+		CurrentHP = MaxHP;
+		EXP = MonsterData->EXP;
+	};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CurrentHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MaxHP;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 EXP;
+};

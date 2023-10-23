@@ -36,4 +36,6 @@ public:
 	/*  */
 	void ReceiveQuest(FQuest Quest);
 		
+	/*  */
+	void UpdateQuestProgress(FName Name);
 };

@@ -19,7 +19,7 @@ void UQuestViewWidget::UpdateQuestViewer(int32 Index, FQuest Quest)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UpdateQuestViewer %d/%d"), Index, QuestWidgets.Num());
 	if (Index > QuestWidgets.Num()) return;
-	else if (Index == QuestWidgets.Num())
+	else if (Index == QuestList->GetChildrenCount())
 	{
 		// Create Widget 
 		auto QuestWidget = CreateWidget<UQuestSlot>(GetOwningPlayer(), QuestProgressWidgetClass);
@@ -36,7 +36,8 @@ void UQuestViewWidget::UpdateQuestViewer(int32 Index, FQuest Quest)
 	else
 	{
 		// Access Widget
-
+		auto QuestWidget = Cast<UQuestSlot>(QuestList->GetChildAt(Index));
+		QuestWidget->SetQuest(Quest);
 		// Set Detail
 	}
 }

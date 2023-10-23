@@ -136,6 +136,10 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	/*  */
+	UFUNCTION()
+	void EnemyDeath(FName Name);
+
 private:
 	UFUNCTION(BlueprintCallable)
 	void SpawnArrow();

@@ -117,7 +117,44 @@ FString FQuest::GetContent()
 	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Content;
 }
 
-FString FQuest::GetObjectives()
+FString FQuest::GetSummary()
 {
-	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Objectives;
+	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Summary;
+}
+
+TArray<FObjective> FQuest::GetObjectives()
+{
+	return Objectives;
+}
+
+void FQuest::Activate()
+{
+	auto Quest = QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"));
+	
+	FString Data = Quest->Objectives;
+	TArray<FString> temp;
+	Data.ParseIntoArray(temp, TEXT(","));
+
+	EObjectiveType ObjectiveType = (EObjectiveType)(FCString::Atoi(*temp[0]));
+	FString ObjectiveName = temp[1];
+	int32 ObjectiveCount = FCString::Atoi(*temp[2]);
+
+	FObjective Objective(ObjectiveType, Quest->Summary, ObjectiveName, ObjectiveCount);
+	Objectives.Emplace(Objective);
+}
+
+void FQuest::UpdateObjective(FName Name)
+{
+	for (int i = 0; i < Objectives.Num(); ++i)
+	{
+		if (Objectives[i].IsTarget(Name))
+		{
+			Objectives[i].ProgressCount += 1;
+		}
+	}
+}
+
+bool FObjective::IsTarget(FName Name)
+{
+	return MID == Name;
 }

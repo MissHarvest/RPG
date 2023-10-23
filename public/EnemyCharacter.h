@@ -4,16 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include <Engine/DataTable.h>
 #include "AttackInterface.h"
 #include "EnemyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FAttackEndSignature, AEnemyCharacter, OnAttackEnd);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDeathSignature, AEnemyCharacter, OnDeath, FName, Name);
 
 UCLASS()
 class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FDataTableRowHandle MonsterDataHandle;
+
+	UPROPERTY()
+	FName MID;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* AttackMontage;
 
@@ -33,12 +41,18 @@ public:
 	UPROPERTY()
 	int32 CurrentHp;
 
+	UPROPERTY()
+	FString Name;
+
 public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
 
 	UPROPERTY()
 	FAttackEndSignature OnAttackEnd;
+
+	UPROPERTY()
+	FDeathSignature OnDeath;
 
 protected:
 	// Called when the game starts or when spawned
@@ -63,4 +77,7 @@ public:
 	int32 GetHP() const { return CurrentHp; }
 
 	UStatComponent* GetStat() const { return Stat; }
+
+	/*  */
+	FMonsterData* GetData();
 };
