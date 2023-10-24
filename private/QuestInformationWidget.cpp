@@ -6,34 +6,22 @@
 #include <Components/Button.h>
 #include "QuestGiverWidget.h"
 
-void UQuestInformationWidget::ShowQuest(FName QuestIDToShow)
+void UQuestInformationWidget::ShowQuest(FQuest Quest)//FQuest ë¡œ ë°”ê¿”ì•¼í• ë“¯
 {
-	FQuest Quest(QuestIDToShow);
-	QuestID = QuestIDToShow;
-	//auto QuestTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
-	//FName QuestName = FName(*Name.ToString());
-	//auto QuestInfo = QuestTable->FindRow<FQuestInfo>(QuestName, TEXT("Failed To Find Quest by Name"));
-
 	QuestNameText->SetText(FText::FromString(Quest.GetName()));
 	QuestContentText->SetText(FText::FromString(Quest.GetContent()));
-	//QuestNameText->SetText(FText::FromString(QuestInfo->Name));
-	//QuestContentText->SetText(FText::FromString(QuestInfo->Content));
 
-	// Native On Init. . . ?
-	AcceptButton->OnClicked.AddDynamic(this, &UQuestInformationWidget::ClickAccpetButton);
-}
-
-void UQuestInformationWidget::ClickAccpetButton()
-{
-	// °¡Áö°í ÀÖ´Â Äù½ºÆ® Á¤º¸¸¦ Äù½ºÆ® ¸®½Ã¹ö¿¡°Ô Àü´ÞÇØ¾ß ÇÑ´Ù.
-	OnAccepted.Broadcast(QuestID);
-	// Quest Giver Àº Quest Receiver ¸¦ ¾Ë¾Æ¾ß ÇÑ´Ù?
-	//QuestGiverWidget->SendToGiver(QuestNameText->GetText());
-	
-	// Quest Giver Æ÷ÀÎÆ®¸¦ ¾Ë°í ÀÖ¾î¾ß ÇÑ´Ù.
-
-	// Äù½ºÆ® ÀÌ¸§À» Àü´Þ -> »óÀ§ À§Á¬¿¡
-	// QuestGiverWidget->DELEGATE.BroadCast(Name);
+	FString Label;// = TEXT("ìˆ˜ë½");
+	switch (Quest.QuestState)
+	{
+	case EQuestState::Stay:
+		Label = TEXT("ìˆ˜ë½");
+		break;
+	case EQuestState::Accept:
+		Label = TEXT("í¬ê¸°");
+		break;
+	}
+	ButtonText->SetText(FText::FromString(Label));
 }
 
 void UQuestInformationWidget::SetQuestGiver(class UQuestGiverWidget* QuestGiver)

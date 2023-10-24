@@ -107,9 +107,9 @@ FString FQuest::GetName() const
 	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Name;
 }
 
-FName FQuest::GetID()
+int32 FQuest::GetIndex()
 {
-	return QuestManager.RowName;
+	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Index;
 }
 
 FString FQuest::GetContent()

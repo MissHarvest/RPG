@@ -75,6 +75,12 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	class UDefaultScreenWidget* DefaultScreen;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UQuestGiverWidget> QuestPanelWidgetClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	class UQuestGiverWidget* QuestGiverWidget;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Flag", meta = (AllowPrivateAccess = "true"))
 	bool bIsAttacking;
 
@@ -99,6 +105,12 @@ class RPG_API APlayerCharacter : public ARPGCharacter
 	UPROPERTY()
 	FHitResult HitResult;
 
+	UPROPERTY()
+	class UDataTable* PlayerQuestTable;
+
+	UPROPERTY()
+	FName PID;
+
 public:
 	APlayerCharacter();
 
@@ -122,6 +134,15 @@ public:
 	FORCEINLINE class UQuickSlotSystem* GetQuickSlotSystem() const { return QuickSlotSystem; }
 
 	FORCEINLINE class UQuestReceiver* GetQuestReceiver() const { return QuestReceiver; }
+
+private:
+	/*  */
+	void ShowQuestGiverWidget(TArray<FString> ListQID);
+
+	/*  */
+	UFUNCTION()
+	void CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 
 protected:
 	void ReceivedAttackInput(const FInputActionValue& Value);
@@ -171,4 +192,6 @@ private:
 	void PressKey9();
 
 	void PressKey0();
+
+	
 };

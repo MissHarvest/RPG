@@ -5,14 +5,16 @@
 #include <Components/VerticalBox.h>
 #include "QuestInformationWidget.h"
 #include "QuestSelectorSlot.h"
+#include <Components/Button.h>
 
 //
 #include "QuestGiver.h"
+#include "QuestReceiver.h"
 
 void UQuestGiverWidget::NativeOnInitialized()
 {
 	QuestInformation->SetQuestGiver(this);
-	QuestInformation->OnAccepted.AddDynamic(this, &UQuestGiverWidget::SendToGiver);
+	QuestInformation->GetAcceptButton()->OnClicked.AddDynamic(this, &UQuestGiverWidget::SendToGiver);
 }
 
 void UQuestGiverWidget::AddQuest(TArray<FQuest> QuestList)
@@ -30,18 +32,21 @@ void UQuestGiverWidget::AddQuest(TArray<FQuest> QuestList)
 	}
 }
 
-void UQuestGiverWidget::ShowQuestInformation(FName QuestID)
+void UQuestGiverWidget::ShowQuestInformation(FQuest Quest)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Show Quest"));
-	QuestInformation->ShowQuest(QuestID);
+	SelectedQuest = Quest;
+	QuestInformation->ShowQuest(SelectedQuest); // ÂüÁ¶·Î?
 }
 
-void UQuestGiverWidget::SetModel(class UQuestGiver* QuestGiverModel)
+void UQuestGiverWidget::SetReceiver(class UQuestReceiver* Receiver)
 {
-	QuestGiver = QuestGiverModel;
+	QuestReceiver = Receiver;
 }
 
-void UQuestGiverWidget::SendToGiver(FName QuestID)
+void UQuestGiverWidget::SendToGiver()
 {
-	QuestGiver->GiveQuestToReceiver(QuestID);
+	QuestReceiver->ReceiveQuest(SelectedQuest);
+
+	// Quest Information Clear() or Off
 }

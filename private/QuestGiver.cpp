@@ -20,18 +20,6 @@ UQuestGiver::UQuestGiver()
 	PrimaryComponentTick.bCanEverTick = false;
 	//UE_LOG(LogTemp, Warning, TEXT("Giver Constructor"));
 
-	// Load Quest Id List
-
-	QuestIdList.Add(1);
-	QuestIdList.Add(2);
-	QuestIdList.Add(3);
-	
-	for (int i = 0; i < QuestIdList.Num(); ++i)
-	{
-		FQuest Quest;
-		Quest.Set(QuestIdList[i]);
-		QuestList.Add(Quest);
-	}
 }
 
 
@@ -45,22 +33,6 @@ void UQuestGiver::BeginPlay()
 	
 }
 
-void UQuestGiver::ShowQuestPanel()
-{
-	if (nullptr == QuestPanelWidgetClass) return;
-	
-	QuestGiverWidget = CreateWidget<UQuestGiverWidget>(GetWorld(), QuestPanelWidgetClass);
-	if (QuestGiverWidget)
-	{
-		auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		PlayerController->SetShowMouseCursor(true);
-		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
-		QuestGiverWidget->SetModel(this);
-		QuestGiverWidget->AddQuest(QuestList); // quest id list ? 
-		QuestGiverWidget->AddToViewport();
-	}
-}
-
 void UQuestGiver::GiveQuestToReceiver(FName QuestID)
 {
 	FQuest Quest(QuestID);	
@@ -72,13 +44,12 @@ void UQuestGiver::SetRecevier(class UQuestReceiver* Receiver)
 	QuestReceiver = Receiver;
 }
 
-void UQuestGiver::CloseQuestGiverWidget()
+void UQuestGiver::LoadTable(const TCHAR* Path, FName NID)
 {
-	if (QuestGiverWidget)
+	NPCQuestTable = LoadObject<UDataTable>(NULL, Path);
+	if (NPCQuestTable)
 	{
-		QuestGiverWidget->RemoveFromParent();
-		auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		PlayerController->SetShowMouseCursor(false);
-		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+		auto QuestStr = NPCQuestTable->FindRow<FNPCQuest>(NID, TEXT("Failed"))->Quest;
+		QuestStr.ParseIntoArray(ListQID, TEXT(","));
 	}
 }

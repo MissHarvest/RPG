@@ -13,7 +13,10 @@ ANPC::ANPC()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	NID = "000001";
+
 	QuestGiver = CreateDefaultSubobject<UQuestGiver>(TEXT("Quest Giver"));
+	QuestGiver->LoadTable(TEXT("/Script/Engine.DataTable'/Game/Data/DT_NPCQuestList.DT_NPCQuestList'"), NID);
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("Interact Range"));
 	SphereComp->SetupAttachment(RootComponent);
@@ -24,22 +27,14 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
-	SphereComp->OnComponentEndOverlap.AddDynamic(this, &ANPC::CloseWidget);
 }
 
 // 상호작용도 종류가 있다.
 // 줍기 - 자신이 들어갈 인벤토리 ?
 // 퀘스트 - 리시버
 // 
-void ANPC::ReceiveQuest(class UQuestReceiver* Receiver)
+TArray<FString> ANPC::ReceiveQuest(class UQuestReceiver* Receiver)
 {
-	QuestGiver->ShowQuestPanel();
-	QuestGiver->SetRecevier(Receiver);
-}
-
-void ANPC::CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	// Player 한테 주는게 맞을지도
-	UE_LOG(LogTemp, Warning, TEXT("sdf"));
-	QuestGiver->CloseQuestGiverWidget();
+	//QuestGiver->SetRecevier(Receiver);
+	return QuestGiver->GetQuestList();
 }

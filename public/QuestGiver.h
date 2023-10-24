@@ -20,17 +20,13 @@ class RPG_API UQuestGiver : public UActorComponent
 	class UQuestGiverWidget* QuestGiverWidget;
 
 	UPROPERTY()
-	TArray<int32> QuestIdList;
-
-	/* 필요 없는 것 같음 */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Widget", meta = (AllowPrivateAccess = "true"))
-	TArray<FQuest> QuestList;
+	TArray<FString> ListQID;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UQuestReceiver* QuestReceiver;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class UDataTable* QuestDT;
+	class UDataTable* NPCQuestTable;
 
 public:	
 	// Sets default values for this component's properties
@@ -46,12 +42,12 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	/* Show Quest Information Widget */
-	void ShowQuestPanel();
-
 	/*  */
 	void SetRecevier(class UQuestReceiver* Receiver);
 
 	/*  */
-	void CloseQuestGiverWidget();
+	void LoadTable(const TCHAR* Path, FName NID);
+
+	/*  */
+	TArray<FString> GetQuestList() const { return ListQID; };
 };

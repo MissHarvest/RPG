@@ -42,3 +42,11 @@ enum class EObjectiveType : uint8
 	Collection,
 	Deliver,
 };
+
+UENUM(BlueprintType)
+enum class EQuestState : uint8
+{
+	Stay,
+	Accept,
+	Complete,
+};

@@ -121,7 +121,7 @@ struct RPG_API FQuestInfo : public FTableRowBase
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ID;
+	int32 Index;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Name;
@@ -208,13 +208,11 @@ struct RPG_API FQuest
 
 public:
 	FQuest()
-		: bCompleted(false)
 	{
 		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
 	};
 
 	FQuest(FName QuestID)
-		: bCompleted(false)
 	{
 		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
 		QuestManager.RowName = QuestID;
@@ -223,11 +221,13 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDataTableRowHandle QuestManager;
-
-	bool bCompleted;
-
+	
 	UPROPERTY()
 	TArray<FObjective> Objectives;
+
+public:
+	UPROPERTY(VisibleAnywhere)
+	EQuestState QuestState;
 
 public:
 	/* Set Quest ID */
@@ -246,7 +246,7 @@ public:
 	TArray<FObjective> GetObjectives();
 
 	/*  */
-	FName GetID();
+	int32 GetIndex();
 
 	/*  */
 	FString GetContent();
@@ -295,4 +295,24 @@ public:
 		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 EXP;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FPlayerQuest : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Quest;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct RPG_API FNPCQuest : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Quest;
 };

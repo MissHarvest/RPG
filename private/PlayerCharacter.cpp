@@ -11,6 +11,7 @@
 #include "PlayerCameraComponent.h"
 #include "QuickSlotSystem.h"
 #include "QuestReceiver.h"
+#include <Components/CapsuleComponent.h>
 
 // Other Class
 #include "Arrow.h"
@@ -20,10 +21,12 @@
 #include "ItemBase.h"
 #include "InteractionInterface.h"
 #include "EnemyCharacter.h"
+#include "QuestGiverWidget.h"
 
 // Unreal System
 #include "EnhancedInputComponent.h"
 #include <Blueprint/UserWidget.h>
+#include <Blueprint/WidgetBlueprintLibrary.h>
 
 // Kismet System
 #include <Kismet/GameplayStatics.h>
@@ -44,6 +47,14 @@ APlayerCharacter::APlayerCharacter()
 	Inventory = CreateDefaultSubobject<UInventorySystem>(TEXT("Inventory"));
 	QuickSlotSystem = CreateDefaultSubobject<UQuickSlotSystem>(TEXT("Quick Slot System"));
 	QuestReceiver = CreateDefaultSubobject<UQuestReceiver>(TEXT("Quest Receiver"));
+
+	PID = "000001";
+
+	ConstructorHelpers::FObjectFinder<UDataTable> DT(TEXT("/Script/Engine.DataTable'/Game/Data/DT_PlayerQuestList.DT_PlayerQuestList'"));
+	if (DT.Succeeded())
+	{
+		PlayerQuestTable = DT.Object;
+	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -58,7 +69,15 @@ void APlayerCharacter::BeginPlay()
 			DefaultScreen->AddToViewport();			
 		}
 	}
+
+	if (QuestPanelWidgetClass)
+	{
+		QuestGiverWidget = CreateWidget<UQuestGiverWidget>(Cast<APlayerController>(Controller), QuestPanelWidgetClass);
+	}
+
 	Stat->DecreaseHP(50);
+
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::CloseWidget);
 
 	/* Inventory System Link QuickSlotSystem */
 	Inventory->QuickSlotSystem = QuickSlotSystem;
@@ -193,7 +212,7 @@ void APlayerCharacter::TryInteraction()
 	else if (OverlapActors[0]->ActorHasTag(TEXT("QuestGiver")))
 	{
 		auto Interaction = Cast<IInteractionInterface>(OverlapActors[0]);
-		Interaction->ReceiveQuest(QuestReceiver);
+		ShowQuestGiverWidget(Interaction->ReceiveQuest(QuestReceiver));
 	}
 	else if (OverlapActors[0]->ActorHasTag(TEXT("Item")))
 	{
@@ -213,13 +232,6 @@ void APlayerCharacter::StartCombat(class AActor* Opponent)
 {
 	bCombatting = true;
 	DefaultScreen->ActivateTargetInfo(Opponent);
-
-	/* 화살쪽으로 이동 ? */
-	/*auto Enemy = Cast<AEnemyCharacter>(Opponent);
-	if (nullptr != Enemy)
-	{
-		Enemy->OnDeath.AddUniqueDynamic(this, &APlayerCharacter::EnemyDeath);
-	}*/
 }
 
 void APlayerCharacter::TargetLock()
@@ -279,6 +291,47 @@ void APlayerCharacter::PressKey0()
 
 void APlayerCharacter::EnemyDeath(FName Name)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Hunt : %s"), Name);
 	QuestReceiver->UpdateQuestProgress(Name);
+}
+
+void APlayerCharacter::ShowQuestGiverWidget(TArray<FString> ListQID)
+{
+	if (QuestGiverWidget)
+	{
+		auto PlayerController = Cast<APlayerController>(Controller);
+		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
+		PlayerController->SetShowMouseCursor(true);
+
+		TArray<FQuest> QuestArray;
+		for (int i = 0; i < ListQID.Num(); ++i)
+		{
+			// 해당 Quest 의 진행률 DT 에서 확인 후 설정
+			auto PlayerQuest = PlayerQuestTable->FindRow<FPlayerQuest>(PID, TEXT("Failed"))->Quest;
+			TArray<FString> QuestList;
+			PlayerQuest.ParseIntoArray(QuestList, TEXT(","));
+
+			auto Quest = FQuest(FName(*ListQID[i]));
+			int32 QuestIndex = Quest.GetIndex();
+
+			Quest.QuestState = EQuestState((uint8)FCString::Atoi(*QuestList[QuestIndex]));
+			
+			// 만약 퀘스트 상태가 완료 라면 제외 //
+			QuestArray.Add(Quest);
+		}
+
+		QuestGiverWidget->AddQuest(QuestArray);
+		QuestGiverWidget->SetReceiver(QuestReceiver);
+		QuestGiverWidget->AddToViewport();
+	}	
+}
+
+void APlayerCharacter::CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (QuestGiverWidget)
+	{
+		auto PlayerController = Cast<APlayerController>(Controller);
+		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+		PlayerController->SetShowMouseCursor(false);
+		QuestGiverWidget->RemoveFromParent();
+	}
 }

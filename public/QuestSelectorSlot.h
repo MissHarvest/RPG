@@ -7,7 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "QuestSelectorSlot.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSelectedSignature, UQuestSelectorSlot, OnSelected, FName, QuestID);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSelectedSignature, UQuestSelectorSlot, OnSelected, FQuest, Quest);
 
 /**
  * 
@@ -27,7 +27,7 @@ protected:
 	UPROPERTY()
 	class UQuestGiverWidget* QuestGiverWidget;
 	
-	FName QuestID;
+	FQuest Quest;
 
 public:
 	UPROPERTY()

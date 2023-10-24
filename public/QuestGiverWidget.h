@@ -19,7 +19,10 @@ class RPG_API UQuestGiverWidget : public UUserWidget
 	TSubclassOf<class UQuestSelectorSlot> QuestSelectorWidgetClass;
 
 	UPROPERTY()
-	class UQuestGiver* QuestGiver;
+	class UQuestReceiver* QuestReceiver;
+
+	UPROPERTY()
+	FQuest SelectedQuest;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
@@ -38,14 +41,14 @@ public:
 
 	/* Show Quest Information by name */
 	UFUNCTION()
-	void ShowQuestInformation(FName QuestID);
+	void ShowQuestInformation(FQuest Quest);
 
 	/*  */
-	void SetModel(class UQuestGiver* QuestGiverModel);
+	void SetReceiver(class UQuestReceiver* Receiver);
 
 	/*  */
 	UFUNCTION()
-	void SendToGiver(FName QuestID);
+	void SendToGiver();
 
 
 };

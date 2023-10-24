@@ -18,21 +18,22 @@ class RPG_API ANPC : public ACharacter, public IInteractionInterface
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* SphereComp;
 
+	UPROPERTY()
+	FName NID;
+
+	UPROPERTY()
+	class UDataTable* NPCQuestTable;
+
 public:
 	// Sets default values for this character's properties
 	ANPC();
-
-private:
-	/*  */
-	UFUNCTION()
-	void CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	/* Override Interface Function */
-	virtual void ReceiveQuest(class UQuestReceiver* Receiver) override;
+	virtual TArray<FString> ReceiveQuest(class UQuestReceiver* Receiver) override;
 
 public:	
 
