@@ -48,5 +48,6 @@ enum class EQuestState : uint8
 {
 	Stay,
 	Accept,
+	CompleteStay,
 	Complete,
 };

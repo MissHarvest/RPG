@@ -96,12 +96,6 @@ void FQuest::Set(FText Name)
 	}
 }
 
-/* Operator == */
-//bool operator==(const FMargin& Other) const
-//{
-//	return (Left == Other.Left) && (Right == Other.Right) && (Top == Other.Top) && (Bottom == Other.Bottom);
-//}
-
 FString FQuest::GetName() const
 {
 	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Name;
@@ -134,6 +128,7 @@ void FQuest::Activate()
 	FString Data = Quest->Objectives;
 	TArray<FString> temp;
 	Data.ParseIntoArray(temp, TEXT(","));
+	if (temp.Num() == 0) return;
 
 	EObjectiveType ObjectiveType = (EObjectiveType)(FCString::Atoi(*temp[0]));
 	FString ObjectiveName = temp[1];
@@ -143,15 +138,33 @@ void FQuest::Activate()
 	Objectives.Emplace(Objective);
 }
 
-void FQuest::UpdateObjective(FName Name)
+bool FQuest::UpdateObjective(FName Name)
 {
+	bool bUpdated = false;
 	for (int i = 0; i < Objectives.Num(); ++i)
 	{
 		if (Objectives[i].IsTarget(Name))
 		{
+			bUpdated = true;
 			Objectives[i].ProgressCount += 1;
+			if (Objectives[i].ProgressCount == Objectives[i].RequestedCount)
+			{
+				Objectives[i].bCompleted = true;
+			}
 		}
 	}
+	if (bUpdated == false) return bUpdated;
+
+	bool bIsCompleted = true;
+	for (int i = 0; i < Objectives.Num(); ++i)
+	{
+		bIsCompleted = bIsCompleted && Objectives[i].bCompleted;		
+	}
+	if (bIsCompleted)
+	{
+		QuestState = EQuestState::CompleteStay;
+	}
+	return bUpdated;
 }
 
 bool FObjective::IsTarget(FName Name)

@@ -22,7 +22,9 @@ class RPG_API UQuestGiverWidget : public UUserWidget
 	class UQuestReceiver* QuestReceiver;
 
 	UPROPERTY()
-	FQuest SelectedQuest;
+	TArray<FQuest> PerformableQuest;
+
+	int32 SelectedIndex;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
@@ -41,7 +43,7 @@ public:
 
 	/* Show Quest Information by name */
 	UFUNCTION()
-	void ShowQuestInformation(FQuest Quest);
+	void ShowQuestInformation(int32 IndexOfList);
 
 	/*  */
 	void SetReceiver(class UQuestReceiver* Receiver);

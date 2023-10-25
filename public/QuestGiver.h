@@ -32,11 +32,6 @@ public:
 	// Sets default values for this component's properties
 	UQuestGiver();
 
-	/*  */
-	UFUNCTION()
-	void GiveQuestToReceiver(FName QuestID);
-
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

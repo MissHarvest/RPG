@@ -3,16 +3,20 @@
 
 #include "QuestReceiver.h"
 
+// Unreal System
+#include <Kismet/GameplayStatics.h>
+#include "MyGameInstance.h"
+
 // Sets default values for this component's properties
 UQuestReceiver::UQuestReceiver()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+	
 }
-
 
 // Called when the game starts
 void UQuestReceiver::BeginPlay()
@@ -20,32 +24,68 @@ void UQuestReceiver::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI)
+	{
+		PlayerQuestState = GI->GetPlayerQuestState(TEXT("000001"));
+	}
 }
 
-
-// Called every frame
-void UQuestReceiver::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UQuestReceiver::AddOrUpdateQuest(FQuest Quest)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	switch (Quest.QuestState)
+	{
+	case EQuestState::Stay:
+		Quest.QuestState = EQuestState::Accept;
+		PlayerQuestState[Quest.GetIndex()] = EQuestState::Accept;
+		Quest.Activate();
+		HaveQuest.Add(Quest);		
+		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), Quest);
+		break;
 
-	// ...
-}
+	case EQuestState::Accept:
+		PlayerQuestState[Quest.GetIndex()] = EQuestState::Stay;
+		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), FQuest());
+		HaveQuest.Remove(Quest);
+		break;
+		
+	case EQuestState::CompleteStay:
+		PlayerQuestState[Quest.GetIndex()] = EQuestState::Complete;
+		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), FQuest());
+		HaveQuest.Remove(Quest);
+		// Get Reward
+		break;
 
-void UQuestReceiver::ReceiveQuest(FQuest ReceivedQuest)
-{
-	//HaveQuest = Quest;
-	ReceivedQuest.Activate();
-	HaveQuest.Add(ReceivedQuest);
-	int32 index_ = HaveQuest.IndexOfByPredicate([=](const FQuest& Quest) { return Quest.GetName() == ReceivedQuest.GetName(); });
-	OnQuestUpdated.Broadcast(index_, ReceivedQuest);
+	case EQuestState::Complete:
+		break;
+	}
 }
 
 void UQuestReceiver::UpdateQuestProgress(FName Name)
 {
 	for (int i = 0; i < HaveQuest.Num(); ++i)
 	{
-		HaveQuest[i].UpdateObjective(Name); // bool - return -> BroadCast
-		OnQuestUpdated.Broadcast(i, HaveQuest[i]);
+		if (HaveQuest[i].UpdateObjective(Name))
+		{
+			OnUpdatedHaveQuest.Broadcast(i, HaveQuest[i]);
+			PlayerQuestState[HaveQuest[i].GetIndex()] = EQuestState::CompleteStay;
+		}
 	}
+}
+
+TArray<FQuest> UQuestReceiver::GetPerformableQuest(TArray<FString> ListQID)
+{
+	TArray<FQuest> PerformableQuest;
+	for (int i = 0; i < ListQID.Num(); ++i)
+	{
+		auto Quest = FQuest(FName(*ListQID[i]));
+		int32 QuestIndex = Quest.GetIndex();
+
+		if (PlayerQuestState[QuestIndex] != EQuestState::Complete)
+		{
+			Quest.QuestState = PlayerQuestState[QuestIndex];
+			PerformableQuest.Add(Quest);
+		}		
+	}
+	return PerformableQuest;
 }

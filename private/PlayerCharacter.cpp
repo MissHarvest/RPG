@@ -49,12 +49,6 @@ APlayerCharacter::APlayerCharacter()
 	QuestReceiver = CreateDefaultSubobject<UQuestReceiver>(TEXT("Quest Receiver"));
 
 	PID = "000001";
-
-	ConstructorHelpers::FObjectFinder<UDataTable> DT(TEXT("/Script/Engine.DataTable'/Game/Data/DT_PlayerQuestList.DT_PlayerQuestList'"));
-	if (DT.Succeeded())
-	{
-		PlayerQuestTable = DT.Object;
-	}
 }
 
 void APlayerCharacter::BeginPlay()
@@ -68,11 +62,6 @@ void APlayerCharacter::BeginPlay()
 		{
 			DefaultScreen->AddToViewport();			
 		}
-	}
-
-	if (QuestPanelWidgetClass)
-	{
-		QuestGiverWidget = CreateWidget<UQuestGiverWidget>(Cast<APlayerController>(Controller), QuestPanelWidgetClass);
 	}
 
 	Stat->DecreaseHP(50);
@@ -296,33 +285,21 @@ void APlayerCharacter::EnemyDeath(FName Name)
 
 void APlayerCharacter::ShowQuestGiverWidget(TArray<FString> ListQID)
 {
-	if (QuestGiverWidget)
+	if (QuestPanelWidgetClass)
 	{
-		auto PlayerController = Cast<APlayerController>(Controller);
-		UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
-		PlayerController->SetShowMouseCursor(true);
+		QuestGiverWidget = CreateWidget<UQuestGiverWidget>(Cast<APlayerController>(Controller), QuestPanelWidgetClass);
 
-		TArray<FQuest> QuestArray;
-		for (int i = 0; i < ListQID.Num(); ++i)
+		if (QuestGiverWidget)
 		{
-			// 해당 Quest 의 진행률 DT 에서 확인 후 설정
-			auto PlayerQuest = PlayerQuestTable->FindRow<FPlayerQuest>(PID, TEXT("Failed"))->Quest;
-			TArray<FString> QuestList;
-			PlayerQuest.ParseIntoArray(QuestList, TEXT(","));
+			auto PlayerController = Cast<APlayerController>(Controller);
+			UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
+			PlayerController->SetShowMouseCursor(true);
 
-			auto Quest = FQuest(FName(*ListQID[i]));
-			int32 QuestIndex = Quest.GetIndex();
-
-			Quest.QuestState = EQuestState((uint8)FCString::Atoi(*QuestList[QuestIndex]));
-			
-			// 만약 퀘스트 상태가 완료 라면 제외 //
-			QuestArray.Add(Quest);
+			QuestGiverWidget->AddQuest(QuestReceiver->GetPerformableQuest(ListQID)); // add - > show ?
+			QuestGiverWidget->SetReceiver(QuestReceiver);
+			QuestGiverWidget->AddToViewport();
 		}
-
-		QuestGiverWidget->AddQuest(QuestArray);
-		QuestGiverWidget->SetReceiver(QuestReceiver);
-		QuestGiverWidget->AddToViewport();
-	}	
+	}
 }
 
 void APlayerCharacter::CloseWidget(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -333,5 +310,6 @@ void APlayerCharacter::CloseWidget(UPrimitiveComponent* OverlappedComponent, AAc
 		UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
 		PlayerController->SetShowMouseCursor(false);
 		QuestGiverWidget->RemoveFromParent();
+		QuestGiverWidget = nullptr;
 	}
 }

@@ -14,29 +14,28 @@
 void UQuestGiverWidget::NativeOnInitialized()
 {
 	QuestInformation->SetQuestGiver(this);
-	QuestInformation->GetAcceptButton()->OnClicked.AddDynamic(this, &UQuestGiverWidget::SendToGiver);
+	//QuestInformation->GetAcceptButton()->OnClicked.AddDynamic(this, &UQuestGiverWidget::SendToGiver);
 }
 
 void UQuestGiverWidget::AddQuest(TArray<FQuest> QuestList)
 {
 	if (nullptr == QuestSelectorWidgetClass) return;
+	PerformableQuest = QuestList;
 
 	for (int i = 0; i < QuestList.Num(); ++i)
 	{
 		auto QuestSelector = CreateWidget<UQuestSelectorSlot>(GetWorld(), QuestSelectorWidgetClass);	
-		QuestSelector->Init(QuestList[i]);
+		QuestSelector->Init(i, PerformableQuest[i].GetName());
 		QuestSelector->SetQuestGiver(this);
 		QuestSelector->SetPadding(FMargin(0,0,0,15));
-		QuestSelector->OnSelected.AddDynamic(this, &UQuestGiverWidget::ShowQuestInformation);
 		QuestListBox->AddChild(QuestSelector);
 	}
 }
 
-void UQuestGiverWidget::ShowQuestInformation(FQuest Quest)
+void UQuestGiverWidget::ShowQuestInformation(int32 IndexOfList)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Show Quest"));
-	SelectedQuest = Quest;
-	QuestInformation->ShowQuest(SelectedQuest); // 참조로?
+	SelectedIndex = IndexOfList;
+	QuestInformation->ShowQuest(PerformableQuest[SelectedIndex]);
 }
 
 void UQuestGiverWidget::SetReceiver(class UQuestReceiver* Receiver)
@@ -44,9 +43,30 @@ void UQuestGiverWidget::SetReceiver(class UQuestReceiver* Receiver)
 	QuestReceiver = Receiver;
 }
 
+/* 함수 이름 변경 */
 void UQuestGiverWidget::SendToGiver()
 {
-	QuestReceiver->ReceiveQuest(SelectedQuest);
+	QuestReceiver->AddOrUpdateQuest(PerformableQuest[SelectedIndex]);
+	
+	switch (PerformableQuest[SelectedIndex].QuestState)
+	{
+	case EQuestState::Stay:
+		PerformableQuest[SelectedIndex].QuestState = EQuestState::Accept;
+		break;
 
-	// Quest Information Clear() or Off
+	case EQuestState::Accept:
+		PerformableQuest[SelectedIndex].QuestState = EQuestState::Stay;
+		break;
+
+	case EQuestState::CompleteStay:
+		//PerformableQuest[SelectedIndex].QuestState = EQuestState::Complete;
+		QuestListBox->RemoveChildAt(SelectedIndex);
+		break;
+
+	case EQuestState::Complete:
+		break;
+	}
+		
+	//QuestInformation->ShowQuest(PerformableQuest[SelectedIndex]);
+	// QuestInformation. Reset()
 }

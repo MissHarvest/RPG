@@ -12,7 +12,7 @@ void UQuestViewWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 	//NativeOnInitialized
 	auto QuestReceiver = Cast<APlayerCharacter>(GetOwningPlayerPawn())->GetQuestReceiver();
-	QuestReceiver->OnQuestUpdated.AddDynamic(this, &UQuestViewWidget::UpdateQuestViewer);
+	QuestReceiver->OnUpdatedHaveQuest.AddDynamic(this, &UQuestViewWidget::UpdateQuestViewer);
 }
 
 void UQuestViewWidget::UpdateQuestViewer(int32 Index, FQuest Quest)
@@ -35,9 +35,16 @@ void UQuestViewWidget::UpdateQuestViewer(int32 Index, FQuest Quest)
 	}
 	else
 	{
-		// Access Widget
-		auto QuestWidget = Cast<UQuestSlot>(QuestList->GetChildAt(Index));
-		QuestWidget->SetQuest(Quest);
-		// Set Detail
+		if (Quest.QuestState == EQuestState::Stay)
+		{
+			QuestList->RemoveChildAt(Index);
+		}
+		else
+		{
+			// Access Widget
+			auto QuestWidget = Cast<UQuestSlot>(QuestList->GetChildAt(Index));
+			QuestWidget->SetQuest(Quest);
+			// Set Detail
+		}		
 	}
 }

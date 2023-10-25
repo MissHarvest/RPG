@@ -25,6 +25,7 @@ void UQuestSlot::AddObjective(FObjective Objective)
 	{
 		auto ObjectiveSlot = CreateWidget<UObjectiveSlot>(GetOwningPlayer(), ObjectiveSlotClass);
 		ObjectiveSlot->SetObjective(Objective);
+		ObjectiveSlot->SetCheckBox(Objective.bCompleted);
 		ObjectiveListBox->AddChild(ObjectiveSlot);
 	}
 }

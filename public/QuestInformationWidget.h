@@ -36,6 +36,15 @@ protected:
 	// EQuestState - > QuestState : Stay > 작동, Accpet > 작동
 
 	/* Quest Reward Variable */
+private:
+	/*  */
+	UFUNCTION()
+	void OnClicked();
+
+protected:
+	/*  */
+	virtual void NativeOnInitialized() override;
+
 public:
 	/* Show Quest Information */
 	void ShowQuest(FQuest Quest);

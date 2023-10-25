@@ -178,6 +178,8 @@ public:
 
 	int32 RequestedCount;
 
+	bool bCompleted;
+
 public:
 	FObjective()
 		: Type(EObjectiveType::Hunting)
@@ -185,6 +187,7 @@ public:
 		, Target("")
 		, ProgressCount(0)
 		, RequestedCount(0)
+		, bCompleted(false)
 	{};
 
 	FObjective(EObjectiveType ObjectiveType, FString ObjectSummary, FString TargetName, int32 ObjectiveCount)
@@ -208,6 +211,7 @@ struct RPG_API FQuest
 
 public:
 	FQuest()
+		:QuestState(EQuestState::Stay)
 	{
 		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
 	};
@@ -255,7 +259,13 @@ public:
 	FString GetSummary();
 
 	/*  */
-	void UpdateObjective(FName Name);
+	bool UpdateObjective(FName Name);
+
+	/*  */
+	bool operator==(const FQuest& Other) const
+	{
+		return (GetName() == Other.GetName());
+	}
 };
 
 

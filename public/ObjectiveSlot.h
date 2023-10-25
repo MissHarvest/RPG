@@ -31,4 +31,7 @@ protected:
 public:
 	/*  */
 	void SetObjective(FObjective Objective);
+
+	/*  */
+	void SetCheckBox(bool bCompleted);
 };

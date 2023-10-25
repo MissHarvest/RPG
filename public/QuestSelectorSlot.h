@@ -7,8 +7,6 @@
 #include "Blueprint/UserWidget.h"
 #include "QuestSelectorSlot.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSelectedSignature, UQuestSelectorSlot, OnSelected, FQuest, Quest);
-
 /**
  * 
  */
@@ -19,7 +17,7 @@ class RPG_API UQuestSelectorSlot : public UUserWidget
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* QuestName;
+	class UTextBlock* QuestNameText;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UButton* Button;
@@ -27,11 +25,7 @@ protected:
 	UPROPERTY()
 	class UQuestGiverWidget* QuestGiverWidget;
 	
-	FQuest Quest;
-
-public:
-	UPROPERTY()
-	FOnSelectedSignature OnSelected;
+	int32 Index;
 
 private:
 	UFUNCTION()
@@ -42,8 +36,11 @@ protected:
 
 public:
 	/*  */
-	void Init(FQuest Quest);
+	void Init(int32 IndexOfList, FString QuestName);
 
 	/* Set Quest Giver Widget */
 	void SetQuestGiver(class UQuestGiverWidget* QuestGiver);
+
+	/*  */
+	class UButton* GetButton() { return Button; } ;
 };

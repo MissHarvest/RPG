@@ -20,3 +20,8 @@ void UObjectiveSlot::SetObjective(FObjective Objective)
 
 	ProgressText->SetText(FText::FromString(temp));
 }
+
+void UObjectiveSlot::SetCheckBox(bool bCompleted)
+{
+	CompletedCheckBox->SetIsChecked(bCompleted);
+}

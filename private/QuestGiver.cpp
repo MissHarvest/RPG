@@ -33,12 +33,6 @@ void UQuestGiver::BeginPlay()
 	
 }
 
-void UQuestGiver::GiveQuestToReceiver(FName QuestID)
-{
-	FQuest Quest(QuestID);	
-	QuestReceiver->ReceiveQuest(Quest);	
-}
-
 void UQuestGiver::SetRecevier(class UQuestReceiver* Receiver)
 {
 	QuestReceiver = Receiver;

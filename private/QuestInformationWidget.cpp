@@ -6,7 +6,14 @@
 #include <Components/Button.h>
 #include "QuestGiverWidget.h"
 
-void UQuestInformationWidget::ShowQuest(FQuest Quest)//FQuest 로 바꿔야할듯
+void UQuestInformationWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	AcceptButton->OnClicked.AddDynamic(this, &UQuestInformationWidget::OnClicked);
+}
+
+void UQuestInformationWidget::ShowQuest(FQuest Quest)
 {
 	QuestNameText->SetText(FText::FromString(Quest.GetName()));
 	QuestContentText->SetText(FText::FromString(Quest.GetContent()));
@@ -17,8 +24,13 @@ void UQuestInformationWidget::ShowQuest(FQuest Quest)//FQuest 로 바꿔야할�
 	case EQuestState::Stay:
 		Label = TEXT("수락");
 		break;
+
 	case EQuestState::Accept:
 		Label = TEXT("포기");
+		break;
+
+	case EQuestState::CompleteStay:
+		Label = TEXT("완료");
 		break;
 	}
 	ButtonText->SetText(FText::FromString(Label));
@@ -27,4 +39,9 @@ void UQuestInformationWidget::ShowQuest(FQuest Quest)//FQuest 로 바꿔야할�
 void UQuestInformationWidget::SetQuestGiver(class UQuestGiverWidget* QuestGiver)
 {
 	QuestGiverWidget = QuestGiver;
+}
+
+void UQuestInformationWidget::OnClicked()
+{
+	QuestGiverWidget->SendToGiver();
 }
