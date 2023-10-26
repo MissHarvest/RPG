@@ -60,12 +60,12 @@ void APlayerCharacter::BeginPlay()
 		DefaultScreen = CreateWidget<UDefaultScreenWidget>(Cast<APlayerController>(Controller), DefaultScreenClass);		
 		if (IsValid(DefaultScreen))
 		{
-			DefaultScreen->AddToViewport();			
+			DefaultScreen->AddToViewport();
 		}
 	}
-
+	
 	Stat->DecreaseHP(50);
-
+	
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::CloseWidget);
 
 	/* Inventory System Link QuickSlotSystem */
@@ -93,7 +93,7 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(QuickAction8, ETriggerEvent::Started, this, &APlayerCharacter::PressKey8);
 		EnhancedInputComponent->BindAction(QuickAction9, ETriggerEvent::Started, this, &APlayerCharacter::PressKey9);
 		EnhancedInputComponent->BindAction(QuickAction0, ETriggerEvent::Started, this, &APlayerCharacter::PressKey0);		
-
+		
 
 		// Interact
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APlayerCharacter::TryInteraction);

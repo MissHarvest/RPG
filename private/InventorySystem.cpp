@@ -69,6 +69,15 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 	return true;
 }
 
+bool UInventorySystem::AddItem(const TArray<FItemSlot> Items)
+{
+	for (int i = 0; i < Items.Num(); ++i)
+	{
+		AddItem(Items[i]);
+	}
+	return true;
+}
+
 void UInventorySystem::SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex)
 {
 	/* 원본 코드 */

@@ -2,6 +2,8 @@
 
 
 #include "QuestReceiver.h"
+#include "PlayerCharacter.h"
+#include "InventorySystem.h"
 
 // Unreal System
 #include <Kismet/GameplayStatics.h>
@@ -22,7 +24,7 @@ UQuestReceiver::UQuestReceiver()
 void UQuestReceiver::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	// ...
 	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI)
@@ -53,7 +55,8 @@ void UQuestReceiver::AddOrUpdateQuest(FQuest Quest)
 		PlayerQuestState[Quest.GetIndex()] = EQuestState::Complete;
 		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), FQuest());
 		HaveQuest.Remove(Quest);
-		// Get Reward
+		// Get Reward				
+		Cast<APlayerCharacter>(GetOwner())->GetInventory()->AddItem(Quest.GetReward());
 		break;
 
 	case EQuestState::Complete:

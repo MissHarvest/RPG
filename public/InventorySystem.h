@@ -50,6 +50,9 @@ public:
 	
 	bool AddItem(const FItemSlot Item);
 
+	/*  */
+	bool AddItem(const TArray<FItemSlot> Items);
+
 	void SwapItem(UInventorySystem* SourceInventory, int32 SourceIndex, int32 DestinationIndex);
 
 	void ConsumeItemByIndex(int32 IndexToUse);

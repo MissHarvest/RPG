@@ -5,6 +5,8 @@
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
 #include "QuestGiverWidget.h"
+#include <Components/HorizontalBox.h>
+#include "RewardSlot.h"
 
 void UQuestInformationWidget::NativeOnInitialized()
 {
@@ -18,7 +20,7 @@ void UQuestInformationWidget::ShowQuest(FQuest Quest)
 	QuestNameText->SetText(FText::FromString(Quest.GetName()));
 	QuestContentText->SetText(FText::FromString(Quest.GetContent()));
 
-	FString Label;// = TEXT("수락");
+	FString Label;
 	switch (Quest.QuestState)
 	{
 	case EQuestState::Stay:
@@ -34,6 +36,18 @@ void UQuestInformationWidget::ShowQuest(FQuest Quest)
 		break;
 	}
 	ButtonText->SetText(FText::FromString(Label));
+
+	RewardBox->ClearChildren();
+	auto Reward = Quest.GetReward();
+	for (int i = 0; i < Reward.Num(); ++i)
+	{
+		if (RewardSlotClass)
+		{
+			auto RewardSlot = CreateWidget<URewardSlot>(GetWorld(), RewardSlotClass);
+			RewardSlot->Init(Reward[i]);
+			RewardBox->AddChild(RewardSlot);
+		}
+	}
 }
 
 void UQuestInformationWidget::SetQuestGiver(class UQuestGiverWidget* QuestGiver)

@@ -30,10 +30,14 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* ButtonText;
 
+	UPROPERTY(meta = (BindWidget))
+	class UHorizontalBox* RewardBox;
+
 	UPROPERTY()
 	class UQuestGiverWidget* QuestGiverWidget;
 
-	// EQuestState - > QuestState : Stay > 작동, Accpet > 작동
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class URewardSlot> RewardSlotClass;
 
 	/* Quest Reward Variable */
 private:

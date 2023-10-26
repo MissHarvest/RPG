@@ -43,6 +43,11 @@ void FItemSlot::SetLinkedIndex(int32 IndexToChanage)
 	this->LinkedIndex = IndexToChanage;
 }
 
+FString FItemSlot::GetName()
+{
+	return Item.DataTable->FindRow<FItem>(Item.RowName, TEXT(""))->Name;
+}
+
 bool FItemSlot::IsLinked()
 {
 	return -1 != LinkedIndex;
@@ -119,6 +124,22 @@ FString FQuest::GetSummary()
 TArray<FObjective> FQuest::GetObjectives()
 {
 	return Objectives;
+}
+
+TArray<FItemSlot> FQuest::GetReward()
+{
+	auto RewardData = QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT(""))->Reward;
+
+	TArray<FString> temp;
+	TArray<FItemSlot> OutArray;
+	RewardData.ParseIntoArray(temp, TEXT(","));
+	if (temp.Num() == 0) return OutArray;
+	
+	FName RewardItemName = FName(*temp[0]); // name - > id
+	int32 RewardItemCount = FCString::Atoi(*temp[1]);
+	
+	OutArray.Emplace(FItemSlot(RewardItemName, RewardItemCount));
+	return OutArray;
 }
 
 void FQuest::Activate()

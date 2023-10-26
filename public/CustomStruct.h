@@ -43,7 +43,17 @@ public:
 	FItemSlot() 
 	: Quantity(0)
 	, LinkedIndex(-1)
-	{ };
+	{
+		Item.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_ItemList.DT_ItemList'"));
+	};
+
+	FItemSlot(FName IID, int32 Count = 0)
+		: Quantity(Count)
+		, LinkedIndex(-1)
+	{
+		Item.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_ItemList.DT_ItemList'"));
+		Item.RowName = IID;
+	};
 
 protected:
 	/* 인벤토리 시스템에서 보인다. */
@@ -81,6 +91,9 @@ public:
 	int32 GetLinkedIndex() const { return LinkedIndex;  }
 
 	void SetLinkedIndex(int32 IndexToChanage);
+
+	/*  */
+	FString GetName();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -134,6 +147,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Objectives;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Reward;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -213,6 +229,7 @@ public:
 	FQuest()
 		:QuestState(EQuestState::Stay)
 	{
+		///Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'
 		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
 	};
 
@@ -248,6 +265,9 @@ public:
 
 	/*  */
 	TArray<FObjective> GetObjectives();
+
+	/*  */
+	TArray<FItemSlot> GetReward();
 
 	/*  */
 	int32 GetIndex();
