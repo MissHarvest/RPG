@@ -11,6 +11,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
+#include "MyGameInstance.h"
 
 // Sets default values for this component's properties
 UQuestGiver::UQuestGiver()
@@ -28,9 +29,11 @@ void UQuestGiver::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//UE_LOG(LogTemp, Warning, TEXT("Giver Begin"));
-	// ...
-	
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI)
+	{
+		Quest = GI->GetNPCQuest(TEXT("140001"));
+	}
 }
 
 void UQuestGiver::SetRecevier(class UQuestReceiver* Receiver)
@@ -38,12 +41,13 @@ void UQuestGiver::SetRecevier(class UQuestReceiver* Receiver)
 	QuestReceiver = Receiver;
 }
 
-void UQuestGiver::LoadTable(const TCHAR* Path, FName NID)
+TArray<FQuest> UQuestGiver::GetQuestList(/* PID */)
 {
-	NPCQuestTable = LoadObject<UDataTable>(NULL, Path);
-	if (NPCQuestTable)
+	TArray<FQuest> OutArray;
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI)
 	{
-		auto QuestStr = NPCQuestTable->FindRow<FNPCQuest>(NID, TEXT("Failed"))->Quest;
-		QuestStr.ParseIntoArray(ListQID, TEXT(","));
+		OutArray = GI->GetNoneClearQuest(Quest, TEXT("000001"));
 	}
+	return OutArray;
 }

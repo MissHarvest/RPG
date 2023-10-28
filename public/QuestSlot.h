@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UVerticalBox* ObjectiveListBox;
 
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* QuestSummaryText;
+
 private:
 	/*  */
 	void AddObjective(FObjective Objective);

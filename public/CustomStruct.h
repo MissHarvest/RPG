@@ -20,20 +20,23 @@ struct RPG_API FItem : public FTableRowBase
 {
 	GENERATED_BODY()
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 ID;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<class UStaticMesh> Mesh;
+	FString Content;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UTexture2D> Texture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Price;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DropRate;
 };
 
+// class ? 
 USTRUCT(Atomic, BlueprintType)
 struct RPG_API FItemSlot
 {
@@ -44,18 +47,27 @@ public:
 	: Quantity(0)
 	, LinkedIndex(-1)
 	{
-		Item.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_ItemList.DT_ItemList'"));
+		
 	};
 
-	FItemSlot(FName IID, int32 Count = 0)
-		: Quantity(Count)
+	FItemSlot(FItem* ItemData)
+		: Quantity(0)
 		, LinkedIndex(-1)
 	{
-		Item.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_ItemList.DT_ItemList'"));
-		Item.RowName = IID;
+		Item.Name = ItemData->Name;
+		Item.Content = ItemData->Content;
+		Item.Texture = ItemData->Texture;
+		Item.Price = ItemData->Price;
+		Item.DropRate = ItemData->DropRate;
 	};
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName IID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FItem Item;
+
 	/* 인벤토리 시스템에서 보인다. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Quantity;
@@ -63,17 +75,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 LinkedIndex;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FDataTableRowHandle Item;
-
 public:
-	bool Use(class APawn* OwingPawn);
+	//bool Use(class APawn* OwingPawn);
 	 
 	TObjectPtr<class UTexture2D> GetTexture();
 
-	TObjectPtr<class UStaticMesh> GetMesh();
-
-	int32 GetID();
+	FName GetID();
 
 	bool IsEmpty();
 
@@ -169,6 +176,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 EXP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString DropItems;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -176,17 +186,8 @@ struct RPG_API FObjective
 {
 	GENERATED_BODY()
 
-private:
-	FName MID;
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FDataTableRowHandle MonsterDataHandle;
-
 public:
 	EObjectiveType Type;
-
-	FString Summary;
 
 	FString Target;
 
@@ -199,23 +200,19 @@ public:
 public:
 	FObjective()
 		: Type(EObjectiveType::Hunting)
-		, Summary("")
 		, Target("")
 		, ProgressCount(0)
 		, RequestedCount(0)
 		, bCompleted(false)
 	{};
 
-	FObjective(EObjectiveType ObjectiveType, FString ObjectSummary, FString TargetName, int32 ObjectiveCount)
-		: MID(FName(*TargetName))
-		, Type(ObjectiveType)
-		, Summary(ObjectSummary)
+	FObjective(EObjectiveType ObjectiveType, FString TargetName, int32 ObjectiveCount)
+		: Type(ObjectiveType)
+		, Target(TargetName)
 		, ProgressCount(0)
 		, RequestedCount(ObjectiveCount)
-	{
-		MonsterDataHandle.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_MonsterList.DT_MonsterList'"));
-		Target = MonsterDataHandle.DataTable->FindRow<FMonsterData>(MID, TEXT("Failed"))->Name;
-	};
+		, bCompleted(false)
+	{};
 
 	bool IsTarget(FName Name);
 };
@@ -229,37 +226,34 @@ public:
 	FQuest()
 		:QuestState(EQuestState::Stay)
 	{
-		///Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'
-		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
+
 	};
 
-	FQuest(FName QuestID)
+	FQuest(FQuestInfo* QuestData, TArray<FItemSlot> QuestRewards, TArray<FObjective> QuestObjectives)
+		: Rewards(QuestRewards)
+		, Objectives(QuestObjectives)
 	{
-		QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
-		QuestManager.RowName = QuestID;
+		Quest.Name = QuestData->Name;
+		Quest.Content = QuestData->Content;
+		Quest.Summary = QuestData->Summary;
+		Quest.Index = QuestData->Index;		
 	}
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FDataTableRowHandle QuestManager;
+	UPROPERTY()
+	TArray<FItemSlot> Rewards;
 	
 	UPROPERTY()
 	TArray<FObjective> Objectives;
+	
+	UPROPERTY()
+	FQuestInfo Quest;	
 
 public:
 	UPROPERTY(VisibleAnywhere)
 	EQuestState QuestState;
 
 public:
-	/* Set Quest ID */
-	void Set(int32 IDofQuest);
-
-	/*  */
-	void Set(FText Name);
-
-	/*  */
-	void Activate();
-
 	/* Get Quest Name */
 	FString GetName() const;
 

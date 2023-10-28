@@ -11,7 +11,8 @@ void UQuestSlot::SetQuest(FQuest Quest)
 	ObjectiveListBox->ClearChildren();
 
 	QuestNameText->SetText(FText::FromString(Quest.GetName()));
-	
+	QuestSummaryText->SetText(FText::FromString(Quest.GetContent()));
+
 	TArray<FObjective> Objectives = Quest.GetObjectives();
 	for (int i = 0; i < Objectives.Num(); ++i)
 	{

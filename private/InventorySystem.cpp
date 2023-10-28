@@ -55,7 +55,8 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 	BroadCastSlotChanged();
 
 	int32 index = 0;
-	if (RegistedItemsID.Find(Contents[emptyIdx].GetID(), index))
+	// 퀵슬롯에 등록된 아이템 찾는 구간
+	/*if (RegistedItemsID.Find(Contents[emptyIdx].GetID(), index))
 	{
 		int32 QuickSlotIndex = QuickSlotSystem->GetQuickSlotIndexByItemID(Contents[emptyIdx].GetID());
 		if (-1 != QuickSlotIndex)
@@ -63,7 +64,7 @@ bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 			QuickSlotSystem->ChangeLinkedIndex(QuickSlotIndex, emptyIdx);
 			Contents[emptyIdx].SetLinkedIndex(QuickSlotIndex);
 		}
-	}
+	}*/
 	QuickSlotSystem->UpdateQuickSlot();
 
 	return true;
@@ -108,11 +109,13 @@ void UInventorySystem::BroadCastSlotChanged()
 void UInventorySystem::ConsumeItemByIndex(int32 IndexToUse)
 {
 	auto OwnigPawn = Cast<APawn>(GetOwner());
-	bool bUsed = Contents[IndexToUse].Use(OwnigPawn);
+	// 아이템 사용
+	/*bool bUsed = Contents[IndexToUse].Use(OwnigPawn);
 	if (bUsed)
 	{
 		BroadCastSlotChanged();
 	}	
+	*/
 }
 
 void UInventorySystem::RegisterItemID(int32 ID)

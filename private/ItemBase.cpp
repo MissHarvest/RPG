@@ -27,7 +27,7 @@ void AItemBase::BeginPlay()
 	
 	if (ItemSlot.IsEmpty()) return;
 
-	StaticMesh->SetStaticMesh(ItemSlot.GetMesh());
+	//StaticMesh->SetStaticMesh(ItemSlot.GetMesh());
 }
 
 // Called every frame

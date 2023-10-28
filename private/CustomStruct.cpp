@@ -8,28 +8,23 @@
 
 // Sets default values
 
-bool FItemSlot::Use(class APawn* OwingPawn)
-{
-	if (0 == Quantity) return false;
-	--Quantity;
-	auto ID = Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find ID / FItemSlot")->ID;
-	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
-	return EffectManager->PrintID(ID, OwingPawn);
-}
+//bool FItemSlot::Use(class APawn* OwingPawn)
+//{
+//	if (0 == Quantity) return false;
+//	--Quantity;
+//	auto ID = Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find ID / FItemSlot")->ID;
+//	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
+//	return EffectManager->PrintID(ID, OwingPawn);
+//}
 
 TObjectPtr<class UTexture2D> FItemSlot::GetTexture()
 {
-	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find Texture / FItemSlot")->Texture;
+	return Item.Texture;
 }
 
-TObjectPtr<class UStaticMesh> FItemSlot::GetMesh()
+FName FItemSlot::GetID()
 {
-	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find Mesh / FItemSlot")->Mesh;
-}
-
-int32 FItemSlot::GetID()
-{
-	return Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to FInd Item ID / FItemSlot")->ID;
+	return IID;
 }
 
 void FItemSlot::LinkQuickSlotIndex(int32 IndexToLink)
@@ -45,7 +40,7 @@ void FItemSlot::SetLinkedIndex(int32 IndexToChanage)
 
 FString FItemSlot::GetName()
 {
-	return Item.DataTable->FindRow<FItem>(Item.RowName, TEXT(""))->Name;
+	return Item.Name;
 }
 
 bool FItemSlot::IsLinked()
@@ -69,6 +64,9 @@ void FItemSlot::SetEmpty()
 	Quantity = 0;
 }
 
+//
+// FQuickSlot
+//
 bool FQuickSlot::IsEmpty()
 {
 	return -1 == LinkedIndex;
@@ -82,43 +80,24 @@ void FQuickSlot::Clear()
 	SourceInventory = nullptr;
 }
 
-void FQuest::Set(int32 IDofQuest)
-{
-	QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
-	if (QuestManager.DataTable)
-	{
-		auto Names = QuestManager.DataTable->GetRowNames();
-		QuestManager.RowName = Names[IDofQuest];
-	}
-}
-
-void FQuest::Set(FText Name)
-{
-	QuestManager.DataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/Data/DT_QuestList.DT_QuestList'"));
-	if (QuestManager.DataTable)
-	{
-		QuestManager.RowName = FName(*Name.ToString());
-	}
-}
-
 FString FQuest::GetName() const
 {
-	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Name;
+	return Quest.Name;
 }
 
 int32 FQuest::GetIndex()
 {
-	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Index;
+	return Quest.Index;
 }
 
 FString FQuest::GetContent()
 {
-	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Content;
+	return Quest.Content;
 }
 
 FString FQuest::GetSummary()
 {
-	return QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"))->Summary;
+	return Quest.Summary;
 }
 
 TArray<FObjective> FQuest::GetObjectives()
@@ -128,35 +107,7 @@ TArray<FObjective> FQuest::GetObjectives()
 
 TArray<FItemSlot> FQuest::GetReward()
 {
-	auto RewardData = QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT(""))->Reward;
-
-	TArray<FString> temp;
-	TArray<FItemSlot> OutArray;
-	RewardData.ParseIntoArray(temp, TEXT(","));
-	if (temp.Num() == 0) return OutArray;
-	
-	FName RewardItemName = FName(*temp[0]); // name - > id
-	int32 RewardItemCount = FCString::Atoi(*temp[1]);
-	
-	OutArray.Emplace(FItemSlot(RewardItemName, RewardItemCount));
-	return OutArray;
-}
-
-void FQuest::Activate()
-{
-	auto Quest = QuestManager.DataTable->FindRow<FQuestInfo>(QuestManager.RowName, TEXT("Failed"));
-	
-	FString Data = Quest->Objectives;
-	TArray<FString> temp;
-	Data.ParseIntoArray(temp, TEXT(","));
-	if (temp.Num() == 0) return;
-
-	EObjectiveType ObjectiveType = (EObjectiveType)(FCString::Atoi(*temp[0]));
-	FString ObjectiveName = temp[1];
-	int32 ObjectiveCount = FCString::Atoi(*temp[2]);
-
-	FObjective Objective(ObjectiveType, Quest->Summary, ObjectiveName, ObjectiveCount);
-	Objectives.Emplace(Objective);
+	return Rewards;
 }
 
 bool FQuest::UpdateObjective(FName Name)
@@ -190,5 +141,5 @@ bool FQuest::UpdateObjective(FName Name)
 
 bool FObjective::IsTarget(FName Name)
 {
-	return MID == Name;
+	return FName(*Target) == Name;
 }

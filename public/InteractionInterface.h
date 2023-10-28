@@ -25,9 +25,9 @@ class RPG_API IInteractionInterface
 public:
 	virtual void Interact() {}
 
-	virtual TArray<FString> ReceiveQuest(class UQuestReceiver* Receiver) 
+	virtual TArray<FQuest> ReceiveQuest(class UQuestReceiver* Receiver) 
 	{
-		TArray<FString> EmptyArray;
+		TArray<FQuest> EmptyArray;
 		return EmptyArray;
 	}
 

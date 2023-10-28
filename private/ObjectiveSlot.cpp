@@ -7,7 +7,6 @@
 
 void UObjectiveSlot::SetObjective(FObjective Objective)
 {
-	QuestSummaryText->SetText(FText::FromString(Objective.Summary));	
 	ObjectiveNameText->SetText(FText::FromString(Objective.Target));
 	
 	/* Format */

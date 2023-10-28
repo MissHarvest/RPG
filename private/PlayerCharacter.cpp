@@ -283,7 +283,7 @@ void APlayerCharacter::EnemyDeath(FName Name)
 	QuestReceiver->UpdateQuestProgress(Name);
 }
 
-void APlayerCharacter::ShowQuestGiverWidget(TArray<FString> ListQID)
+void APlayerCharacter::ShowQuestGiverWidget(TArray<FQuest> ListQID)
 {
 	if (QuestPanelWidgetClass)
 	{
@@ -295,7 +295,7 @@ void APlayerCharacter::ShowQuestGiverWidget(TArray<FString> ListQID)
 			UWidgetBlueprintLibrary::SetInputMode_GameAndUIEx(PlayerController, QuestGiverWidget);
 			PlayerController->SetShowMouseCursor(true);
 
-			QuestGiverWidget->AddQuest(QuestReceiver->GetPerformableQuest(ListQID)); // add - > show ?
+			QuestGiverWidget->AddQuest(ListQID); // add - > show ?
 			QuestGiverWidget->SetReceiver(QuestReceiver);
 			QuestGiverWidget->AddToViewport();
 		}

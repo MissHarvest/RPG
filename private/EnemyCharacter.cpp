@@ -13,7 +13,7 @@ AEnemyCharacter::AEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	MID = "000001";
+	MID = "130001";
 	ConstructorHelpers::FObjectFinder<UDataTable> DTMonster(TEXT("/Script/Engine.DataTable'/Game/Data/DT_MonsterList.DT_MonsterList'"));
 	if (DTMonster.Succeeded())
 	{
@@ -70,7 +70,7 @@ float AEnemyCharacter::Death()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Death"));
 	//FString temp("더미");
-	OnDeath.Broadcast(MID);
+	OnDeath.Broadcast(FName(*Name));
 	GetMesh()->SetSimulatePhysics(true);
 	return 0;
 }

@@ -137,7 +137,7 @@ public:
 
 private:
 	/*  */
-	void ShowQuestGiverWidget(TArray<FString> ListQID);
+	void ShowQuestGiverWidget(TArray<FQuest> ListQID);
 
 	/*  */
 	UFUNCTION()

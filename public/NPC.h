@@ -21,9 +21,6 @@ class RPG_API ANPC : public ACharacter, public IInteractionInterface
 	UPROPERTY()
 	FName NID;
 
-	UPROPERTY()
-	class UDataTable* NPCQuestTable;
-
 public:
 	// Sets default values for this character's properties
 	ANPC();
@@ -33,7 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	/* Override Interface Function */
-	virtual TArray<FString> ReceiveQuest(class UQuestReceiver* Receiver) override;
+	virtual TArray<FQuest> ReceiveQuest(class UQuestReceiver* Receiver) override;
 
 public:	
 

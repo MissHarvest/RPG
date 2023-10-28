@@ -17,9 +17,6 @@ class RPG_API UObjectiveSlot : public UUserWidget
 	
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UTextBlock* QuestSummaryText;
-
-	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* ObjectiveNameText;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))

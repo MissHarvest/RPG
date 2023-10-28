@@ -36,9 +36,6 @@ public:
 	/*  */
 	void UpdateQuestProgress(FName Name);
 
-	/* return performable quest in ListQID */
-	TArray<FQuest> GetPerformableQuest(TArray<FString> ListQID);
-
 	/* Add or Update HaveQuest */
 	void AddOrUpdateQuest(FQuest Quest);
 };

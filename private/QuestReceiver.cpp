@@ -40,7 +40,6 @@ void UQuestReceiver::AddOrUpdateQuest(FQuest Quest)
 	case EQuestState::Stay:
 		Quest.QuestState = EQuestState::Accept;
 		PlayerQuestState[Quest.GetIndex()] = EQuestState::Accept;
-		Quest.Activate();
 		HaveQuest.Add(Quest);		
 		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), Quest);
 		break;
@@ -74,21 +73,4 @@ void UQuestReceiver::UpdateQuestProgress(FName Name)
 			PlayerQuestState[HaveQuest[i].GetIndex()] = EQuestState::CompleteStay;
 		}
 	}
-}
-
-TArray<FQuest> UQuestReceiver::GetPerformableQuest(TArray<FString> ListQID)
-{
-	TArray<FQuest> PerformableQuest;
-	for (int i = 0; i < ListQID.Num(); ++i)
-	{
-		auto Quest = FQuest(FName(*ListQID[i]));
-		int32 QuestIndex = Quest.GetIndex();
-
-		if (PlayerQuestState[QuestIndex] != EQuestState::Complete)
-		{
-			Quest.QuestState = PlayerQuestState[QuestIndex];
-			PerformableQuest.Add(Quest);
-		}		
-	}
-	return PerformableQuest;
 }

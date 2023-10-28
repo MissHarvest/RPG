@@ -62,7 +62,7 @@ void UQuickSlotSystem::UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInven
 	QuickSlots[IndexToSet].SlotType = ESlotType::Item;
 	QuickSlots[IndexToSet].LinkedIndex = IndexToSource;
 	QuickSlots[IndexToSet].SourceInventory = Ref_Inventory;
-	QuickSlots[IndexToSet].ItemID = Ref_Inventory->GetContent(IndexToSource).GetID();
+	//QuickSlots[IndexToSet].ItemID = Ref_Inventory->GetContent(IndexToSource).GetID();
 	UpdateQuickSlot(); // index /
 }
 

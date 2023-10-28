@@ -46,7 +46,8 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 	Preview->SetThumbnail(ThumbnailTexture);
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
-	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, MyIndex, InventoryModel->GetContent(MyIndex).GetID()); //ItemModel.GetID()
+	// UItemDragDropOeration ¼³Á¤
+	//Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, MyIndex, InventoryModel->GetContent(MyIndex).GetID()); //ItemModel.GetID()
 	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), MyIndex);
 	OutOperation = DragDrop;
 }
