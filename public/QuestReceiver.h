@@ -17,8 +17,8 @@ class RPG_API UQuestReceiver : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Quest", meta = (AllowPrivateAccess = "true"))
 	TArray<FQuest> HaveQuest;
 
-	UPROPERTY(VisibleAnywhere, Category = "Quest")
-	TArray<EQuestState> PlayerQuestState;
+	//UPROPERTY(VisibleAnywhere, Category = "Quest")
+	//TArray<EQuestState>* PlayerQuestState;
 
 public:
 	UPROPERTY()

@@ -67,9 +67,6 @@ void APlayerCharacter::BeginPlay()
 	Stat->DecreaseHP(50);
 	
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::CloseWidget);
-
-	/* Inventory System Link QuickSlotSystem */
-	Inventory->QuickSlotSystem = QuickSlotSystem;
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -311,5 +308,25 @@ void APlayerCharacter::CloseWidget(UPrimitiveComponent* OverlappedComponent, AAc
 		PlayerController->SetShowMouseCursor(false);
 		QuestGiverWidget->RemoveFromParent();
 		QuestGiverWidget = nullptr;
+	}
+}
+
+void APlayerCharacter::ApplyEffect(FItem Item)
+{
+	switch (Item.Type)
+	{
+	case EItemType::Equipment:
+
+		break;
+
+	case EItemType::Consumable:
+		Stat->ApplyEffect(Item);
+		break;
+
+	case EItemType::Etc:
+		break;
+
+	default:
+		break;
 	}
 }

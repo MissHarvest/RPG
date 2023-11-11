@@ -7,10 +7,12 @@
 #include "EnemyCharacter.h"
 #include "EnemyAIController.h"
 
+#include <Kismet/GameplayStatics.h>
+#include "MyGameInstance.h"
+
 // Sets default values for this component's properties
 UStatComponent::UStatComponent()
 	: Super()
-	, Level(1)
 	, CurrentHp(0)
 	, MaxHp(100)
 	, CurrentMp(0)
@@ -22,14 +24,6 @@ UStatComponent::UStatComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true; // false 로 해도 되지 않을까
 
-	auto MS = Cast<AEnemyCharacter>(GetOwner());
-	if (MS)
-	{
-		auto Data = MS->GetData();
-		Status = FStatus(Data);
-	}
-	
-
 	// ...
 }
 
@@ -38,6 +32,16 @@ UStatComponent::UStatComponent()
 void UStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI)
+	{
+		auto Owner = Cast<AEnemyCharacter>(GetOwner());
+		if (Owner)
+		{
+			Status = FStatus(GI->GetMonsterData(Owner->MID));
+		}
+	}
 
 	// 
 	CurrentHp = MaxHp;
@@ -108,6 +112,23 @@ void UStatComponent::BroadCastMpChange()
 void UStatComponent::BroadCastXpChange()
 {
 	OnXpChanged.Broadcast(GetXpPercent());
+}
+
+void UStatComponent::ApplyEffect(FItem Item)
+{
+	switch (Item.Effect)
+	{
+	case EItemEffect::RecoveryHP:
+		RecoveryHp(FCString::Atoi(*Item.Value));
+		break;
+		
+	case EItemEffect::RecoveryMP:
+		RecoveryMp(FCString::Atoi(*Item.Value));
+		break;
+
+	default:
+		break;
+	}
 }
 
 void UStatComponent::RecoveryHp(int32 Amount)

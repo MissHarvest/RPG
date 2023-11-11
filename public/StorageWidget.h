@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CustomStruct.h"
 #include "Blueprint/UserWidget.h"
 #include "StorageWidget.generated.h"
 
@@ -38,7 +39,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void UpdatedInventory();
+	void UpdatedInventory(int32 Index, FItemSlot ItemSlot);
 
 	void CreateItemSlots();
 };

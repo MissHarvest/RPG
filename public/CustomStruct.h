@@ -34,6 +34,18 @@ struct RPG_API FItem : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float DropRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bNestable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EItemType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EItemEffect Effect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Value;
 };
 
 // class ? 
@@ -45,20 +57,22 @@ struct RPG_API FItemSlot
 public:
 	FItemSlot() 
 	: Quantity(0)
-	, LinkedIndex(-1)
 	{
 		
 	};
 
 	FItemSlot(FItem* ItemData)
 		: Quantity(0)
-		, LinkedIndex(-1)
 	{
 		Item.Name = ItemData->Name;
 		Item.Content = ItemData->Content;
 		Item.Texture = ItemData->Texture;
 		Item.Price = ItemData->Price;
 		Item.DropRate = ItemData->DropRate;
+		Item.bNestable = ItemData->bNestable;
+		Item.Type = ItemData->Type;
+		Item.Effect = ItemData->Effect;
+		Item.Value = ItemData->Value;
 	};
 
 protected:
@@ -72,12 +86,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Quantity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 LinkedIndex;
-
 public:
-	//bool Use(class APawn* OwingPawn);
-	 
 	TObjectPtr<class UTexture2D> GetTexture();
 
 	FName GetID();
@@ -90,17 +99,20 @@ public:
 
 	void AddQuantity(int32 CountToAdd);
 
-	void LinkQuickSlotIndex(int32 IndexToLink);
-
-	bool IsLinked();
-
-	/* Function const */
-	int32 GetLinkedIndex() const { return LinkedIndex;  }
-
-	void SetLinkedIndex(int32 IndexToChanage);
+	/*  */
+	bool Consume(int32 CountToUse = 1);
 
 	/*  */
-	FString GetName();
+	FString GetName() const;
+
+	/*  */
+	FItem GetItem() const { return Item; }
+
+	/*  */
+	bool operator==(const FItemSlot& Other) const
+	{
+		return (GetName() == Other.GetName());
+	}
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -113,7 +125,6 @@ public:
 		: SourceInventory(nullptr)
 		, LinkedIndex(-1)
 		, SlotType(ESlotType::None)
-		, ItemID(-1)
 	{};
 
 public:
@@ -127,11 +138,14 @@ public:
 	ESlotType SlotType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	int32 ItemID;
+	FString Name;
 
 	bool IsEmpty();
 
 	void Clear();
+
+	/*  */
+	FString GetName();
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -288,31 +302,27 @@ struct RPG_API FStatus
 {
 	GENERATED_BODY()
 
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	FDataTableRowHandle MonsterDataHandle;
-
 public:
 	FStatus()
-		: Level(0)
-		, CurrentHP(0)
+		: Name("")
+		, Level(0)
 		, MaxHP(0)
 		, EXP(0)
 	{};
 
 	FStatus(FMonsterData* MonsterData)
 	{
+		Name = MonsterData->Name;
 		Level = MonsterData->Level;
 		MaxHP = MonsterData->MaxHP;
-		CurrentHP = MaxHP;
 		EXP = MonsterData->EXP;
 	};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Level;
+	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CurrentHP;
+	int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxHP;

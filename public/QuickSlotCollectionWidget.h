@@ -35,7 +35,7 @@ protected:
 
 public:
 	UFUNCTION()
-	void UpdateQuickSlots();
+	void UpdateQuickSlots(int32 Index, FQuickSlot QuickSlot);
 
 private:
 	void CreateQuickSlots();

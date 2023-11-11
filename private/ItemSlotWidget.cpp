@@ -18,6 +18,12 @@
 #include <Blueprint/WidgetBlueprintLibrary.h>
 #include <Input/Reply.h>
 
+void UItemSlotWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	bIsEmpty = true;
+}
+
 FReply UItemSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
@@ -47,7 +53,7 @@ void UItemSlotWidget::NativeOnDragDetected(const FGeometry& InGeometry, const FP
 	auto DragDrop = UWidgetBlueprintLibrary::CreateDragDropOperation(DragDropOperationClass);	
 	DragDrop->DefaultDragVisual = Preview;
 	// UItemDragDropOeration ¼³Á¤
-	//Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, MyIndex, InventoryModel->GetContent(MyIndex).GetID()); //ItemModel.GetID()
+	Cast<UItemDragDropOperation>(DragDrop)->SetOperation(InventoryModel, MyIndex);//, InventoryModel->GetContent(MyIndex).GetID()); //ItemModel.GetID()
 	UE_LOG(LogTemp, Warning, TEXT("Drag %d Index Item"), MyIndex);
 	OutOperation = DragDrop;
 }

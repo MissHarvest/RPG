@@ -18,10 +18,7 @@ class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FDataTableRowHandle MonsterDataHandle;
-
-	UPROPERTY()
-	FName MID;
-	
+		
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* AttackMontage;
 
@@ -38,6 +35,9 @@ class RPG_API AEnemyCharacter : public ACharacter, public IAttackInterface
 	class UInventorySystem* TestInven;
 
 public:
+	UPROPERTY(VisibleAnywhere)
+	FName MID = "130001";
+
 	UPROPERTY()
 	int32 CurrentHp;
 
@@ -77,7 +77,4 @@ public:
 	int32 GetHP() const { return CurrentHp; }
 
 	UStatComponent* GetStat() const { return Stat; }
-
-	/*  */
-	FMonsterData* GetData();
 };

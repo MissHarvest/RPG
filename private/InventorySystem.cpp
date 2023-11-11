@@ -3,6 +3,7 @@
 
 #include "InventorySystem.h"
 #include "QuickSlotSystem.h"
+#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UInventorySystem::UInventorySystem()
@@ -12,7 +13,7 @@ UInventorySystem::UInventorySystem()
 	PrimaryComponentTick.bCanEverTick = true;
 	// ...
 	Size = 20;
-	EmptyIndex = -1;
+	EmptyIndex = 0;
 }
 
 // Called when the game starts
@@ -39,35 +40,44 @@ void UInventorySystem::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 bool UInventorySystem::AddItem(const FItemSlot ItemSlot)
 {
-	// 원본 코드 /
-	int emptyIdx = -1;
-	for (int i = 0; i < Contents.Num(); ++i)
+	if (EmptyIndex == -1) return false;
+
+	if (ItemSlot.GetItem().bNestable == false)
+	{
+		Contents[EmptyIndex] = ItemSlot;
+		BroadCastSlotChanged(EmptyIndex, ItemSlot);
+		UpdateEmptyIndex();		
+		return true;
+	}
+
+	int32 Index = Contents.Find(ItemSlot);
+	if (-1 == Index)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Index == -1"));
+		Contents[EmptyIndex] = ItemSlot;
+		BroadCastSlotChanged(EmptyIndex, ItemSlot);
+		UpdateEmptyIndex();		
+		return true;
+	}
+	
+	Contents[Index].AddQuantity(ItemSlot.GetQuantity());
+	BroadCastSlotChanged(Index, Contents[Index]);
+	return true;
+}
+
+void UInventorySystem::UpdateEmptyIndex()
+{
+	for (int i = EmptyIndex + 1; i < Contents.Num(); ++i)
 	{
 		if (Contents[i].IsEmpty())
 		{
-			emptyIdx = i;
-			break;
+			EmptyIndex = i;
+			return;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Empty Index : %d"), emptyIdx);
-	if (-1 == emptyIdx) return false;
-	Contents[emptyIdx] = ItemSlot;
-	BroadCastSlotChanged();
-
-	int32 index = 0;
-	// 퀵슬롯에 등록된 아이템 찾는 구간
-	/*if (RegistedItemsID.Find(Contents[emptyIdx].GetID(), index))
-	{
-		int32 QuickSlotIndex = QuickSlotSystem->GetQuickSlotIndexByItemID(Contents[emptyIdx].GetID());
-		if (-1 != QuickSlotIndex)
-		{
-			QuickSlotSystem->ChangeLinkedIndex(QuickSlotIndex, emptyIdx);
-			Contents[emptyIdx].SetLinkedIndex(QuickSlotIndex);
-		}
-	}*/
-	QuickSlotSystem->UpdateQuickSlot();
-
-	return true;
+	
+	// Inventory is full
+	EmptyIndex = -1;
 }
 
 bool UInventorySystem::AddItem(const TArray<FItemSlot> Items)
@@ -86,64 +96,34 @@ void UInventorySystem::SwapItem(UInventorySystem* SourceInventory, int32 SourceI
 	Contents[DestinationIndex] = SourceInventory->Contents[SourceIndex];
 	SourceInventory->Contents[SourceIndex] = TempItemSlot;
 	
-	/* 서로 다른 인벤토리 간의 이동일 경우 생각하기 */
-	if (Contents[SourceIndex].IsLinked())
-	{
-		QuickSlotSystem->ChangeLinkedIndex(Contents[SourceIndex].GetLinkedIndex(), SourceIndex);
-	}
-	
-	if (Contents[DestinationIndex].IsLinked())
-	{
-		QuickSlotSystem->ChangeLinkedIndex(Contents[DestinationIndex].GetLinkedIndex(), DestinationIndex);
-	}
-
-	BroadCastSlotChanged();
-	SourceInventory->BroadCastSlotChanged();
+	BroadCastSlotChanged(DestinationIndex, Contents[DestinationIndex]);
+	SourceInventory->BroadCastSlotChanged(SourceIndex, SourceInventory->Contents[SourceIndex]);
 }
 
-void UInventorySystem::BroadCastSlotChanged()
+void UInventorySystem::BroadCastSlotChanged(int32 Index, FItemSlot ItemSlot)
 {
-	OnSlotChanged.Broadcast();
+	OnSlotChanged.Broadcast(Index, ItemSlot);
 }
 
 void UInventorySystem::ConsumeItemByIndex(int32 IndexToUse)
 {
-	auto OwnigPawn = Cast<APawn>(GetOwner());
+	auto OwningPlayer = Cast<APlayerCharacter>(GetOwner());
+
 	// 아이템 사용
-	/*bool bUsed = Contents[IndexToUse].Use(OwnigPawn);
-	if (bUsed)
+	if (Contents[IndexToUse].Consume())
 	{
-		BroadCastSlotChanged();
-	}	
-	*/
-}
-
-void UInventorySystem::RegisterItemID(int32 ID)
-{
-	int32 index = 0;
-	if (!RegistedItemsID.Find(ID, index))
-	{
-		RegistedItemsID.Add(ID);
+		OwningPlayer->ApplyEffect(Contents[IndexToUse].GetItem());
+		OnSlotChanged.Broadcast(IndexToUse, Contents[IndexToUse]);
 	}
-}
 
-void UInventorySystem::DeleteRegistedID(int32 ID)
-{
-	int32 index = 0;
-	UE_LOG(LogTemp, Warning, TEXT("Delete Registed Item : %d"), ID);
-	if (RegistedItemsID.Find(ID, index))
+	if (Contents[IndexToUse].IsEmpty())
 	{
-		RegistedItemsID.RemoveAt(index);
+		EmptyIndex = IndexToUse;
 	}
 }
 
 FItemSlot UInventorySystem::GetItemByIndex(int32 IndexToFind)
 {
 	return Contents[IndexToFind];
-}
-
-void UInventorySystem::ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex)
-{
-	Contents[TargetIndex].SetLinkedIndex(ChangedIndex);
 }
 

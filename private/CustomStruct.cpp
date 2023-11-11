@@ -8,15 +8,6 @@
 
 // Sets default values
 
-//bool FItemSlot::Use(class APawn* OwingPawn)
-//{
-//	if (0 == Quantity) return false;
-//	--Quantity;
-//	auto ID = Item.DataTable->FindRow<FItem>(Item.RowName, "Failed to Find ID / FItemSlot")->ID;
-//	auto EffectManager = OwingPawn->GetGameInstance()->GetSubsystem<UItemEffectManager>();
-//	return EffectManager->PrintID(ID, OwingPawn);
-//}
-
 TObjectPtr<class UTexture2D> FItemSlot::GetTexture()
 {
 	return Item.Texture;
@@ -27,31 +18,22 @@ FName FItemSlot::GetID()
 	return IID;
 }
 
-void FItemSlot::LinkQuickSlotIndex(int32 IndexToLink)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Link Quick Slot Index %d"), IndexToLink);
-	LinkedIndex = IndexToLink;
-}
-
-void FItemSlot::SetLinkedIndex(int32 IndexToChanage)
-{
-	this->LinkedIndex = IndexToChanage;
-}
-
-FString FItemSlot::GetName()
+FString FItemSlot::GetName() const
 {
 	return Item.Name;
-}
-
-bool FItemSlot::IsLinked()
-{
-	return -1 != LinkedIndex;
 }
 
 void FItemSlot::AddQuantity(int32 CountToAdd)
 {
 	/* if item has max count, add condition */
 	Quantity += CountToAdd;
+}
+
+bool FItemSlot::Consume(int32 CountToUse)
+{
+	if (0 == Quantity) return false;
+	Quantity -= CountToUse;
+	return true;
 }
 
 bool FItemSlot::IsEmpty()
@@ -75,9 +57,13 @@ bool FQuickSlot::IsEmpty()
 void FQuickSlot::Clear()
 {
 	SlotType = ESlotType::None;
-	ItemID = -1;
 	LinkedIndex = -1;
 	SourceInventory = nullptr;
+}
+
+FString FQuickSlot::GetName()
+{
+	return Name;
 }
 
 FString FQuest::GetName() const

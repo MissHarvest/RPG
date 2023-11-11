@@ -49,15 +49,13 @@ bool UQuickSlotWidget::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	{
 		auto SourceInventory = ItemOperation->GetSourceInventory();
 		auto SourceIndex = ItemOperation->GetIndex();
-		auto ItemID = ItemOperation->GetID();
-
+		
 		if (nullptr == QuickSlotModel) return false;
 
 		/* Make one Function */
-		SourceInventory->GetContent(SourceIndex).LinkQuickSlotIndex(MyIndex);
-		SourceInventory->RegisterItemID(ItemID);
+		//SourceInventory->GetContent(SourceIndex).LinkQuickSlotIndex(MyIndex);
 
-		QuickSlotModel->UpdateQuickSlotInfoByIndex(MyIndex, SourceInventory, SourceIndex);
+		QuickSlotModel->UpdateQuickSlot(MyIndex, SourceInventory, SourceIndex);
 		return true;
 	}
 

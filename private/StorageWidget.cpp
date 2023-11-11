@@ -30,12 +30,9 @@ void UStorageWidget::LinkInventory(class UInventorySystem* PlayerInventory)
 	}
 }
 
-void UStorageWidget::UpdatedInventory()
+void UStorageWidget::UpdatedInventory(int32 Index, FItemSlot ItemSlot)
 {
-	for (int i = 0; i < InventoryModel->GetSize(); ++i)
-	{
-		ItemSlots[i]->SetItem(InventoryModel->GetContent(i));
-	}
+	ItemSlots[Index]->SetItem(ItemSlot);
 }
 
 void UStorageWidget::CreateItemSlots()

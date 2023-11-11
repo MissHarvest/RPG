@@ -36,22 +36,19 @@ UMyGameInstance::UMyGameInstance()
 	}
 }
 
-TArray<EQuestState> UMyGameInstance::GetPlayerQuestState(FName PID)
+void UMyGameInstance::LoadPlayerQuestState(FName PID)
 {
-	TArray<EQuestState> OutArray;
-
 	if (PlayerQuestStateTable)
 	{
-		auto PlayerQuestState = PlayerQuestStateTable->FindRow<FPlayerQuest>(PID, TEXT(""))->Quest;
+		auto PlayerQuestStateData = PlayerQuestStateTable->FindRow<FPlayerQuest>(PID, TEXT(""))->Quest;
 		TArray<FString> TempArray;
-		PlayerQuestState.ParseIntoArray(TempArray, TEXT(","));
+		PlayerQuestStateData.ParseIntoArray(TempArray, TEXT(","));
 
 		for (int i = 0; i < TempArray.Num(); ++i)
 		{
-			OutArray.Emplace(EQuestState((uint8)FCString::Atoi(*TempArray[i])));
+			PlayerQuestState.Emplace(EQuestState((uint8)FCString::Atoi(*TempArray[i])));
 		}
 	}
-	return OutArray;
 }
 
 FItemSlot UMyGameInstance::GetItem(FName IID)
@@ -86,7 +83,6 @@ TArray<FQuest> UMyGameInstance::GetNoneClearQuest(TArray<FQuest> NPCQuest, FName
 {
 	TArray<FQuest> OutArray;
 
-	auto PlayerQuestState = GetPlayerQuestState(PID);
 	for (int i = 0; i < NPCQuest.Num(); ++i)
 	{
 		int32 QuestIndex = NPCQuest[i].GetIndex();
@@ -166,4 +162,13 @@ TArray<FObjective> UMyGameInstance::GetObjectivesFromString(FString String)
 		OutArray.Emplace(FObjective(ObjectiveType, TargetName, RequestedCount));
 	}
 	return OutArray;
+}
+
+FMonsterData* UMyGameInstance::GetMonsterData(FName MID)
+{
+	if (MonsterTable)
+	{
+		return MonsterTable->FindRow<FMonsterData>(MID, TEXT(""));
+	}
+	return nullptr;
 }

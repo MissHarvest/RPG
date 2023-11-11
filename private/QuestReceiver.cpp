@@ -29,29 +29,32 @@ void UQuestReceiver::BeginPlay()
 	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GI)
 	{
-		PlayerQuestState = GI->GetPlayerQuestState(TEXT("000001"));
+		GI->LoadPlayerQuestState(TEXT("000001"));
 	}
 }
 
 void UQuestReceiver::AddOrUpdateQuest(FQuest Quest)
 {
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));	
+	if (GI == nullptr) return;
+	
 	switch (Quest.QuestState)
 	{
 	case EQuestState::Stay:
 		Quest.QuestState = EQuestState::Accept;
-		PlayerQuestState[Quest.GetIndex()] = EQuestState::Accept;
+		GI->PlayerQuestState[Quest.GetIndex()] = EQuestState::Accept;
 		HaveQuest.Add(Quest);		
 		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), Quest);
 		break;
 
 	case EQuestState::Accept:
-		PlayerQuestState[Quest.GetIndex()] = EQuestState::Stay;
+		GI->PlayerQuestState[Quest.GetIndex()] = EQuestState::Stay;
 		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), FQuest());
 		HaveQuest.Remove(Quest);
 		break;
 		
 	case EQuestState::CompleteStay:
-		PlayerQuestState[Quest.GetIndex()] = EQuestState::Complete;
+		GI->PlayerQuestState[Quest.GetIndex()] = EQuestState::Complete;
 		OnUpdatedHaveQuest.Broadcast(HaveQuest.Find(Quest), FQuest());
 		HaveQuest.Remove(Quest);
 		// Get Reward				
@@ -65,12 +68,15 @@ void UQuestReceiver::AddOrUpdateQuest(FQuest Quest)
 
 void UQuestReceiver::UpdateQuestProgress(FName Name)
 {
+	auto GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GI == nullptr) return;
+
 	for (int i = 0; i < HaveQuest.Num(); ++i)
 	{
 		if (HaveQuest[i].UpdateObjective(Name))
 		{
 			OnUpdatedHaveQuest.Broadcast(i, HaveQuest[i]);
-			PlayerQuestState[HaveQuest[i].GetIndex()] = EQuestState::CompleteStay;
+			GI->PlayerQuestState[HaveQuest[i].GetIndex()] = EQuestState::CompleteStay;
 		}
 	}
 }

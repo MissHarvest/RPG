@@ -19,9 +19,6 @@ class RPG_API UStatComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = "true"))
 	FStatus Status;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat", meta = (AllowPrivateAccess = "true"))
-	int32 Level;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat" , meta = (AllowPrivateAccess = "true"))
 	int32 CurrentHp; // unsinged?
 
@@ -70,6 +67,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/*  */
+	void ApplyEffect(FItem Item);
+
 	void RecoveryHp(int32 Amount);
 
 	void RecoveryHp(int32 Amount, int32 Sec);
@@ -84,7 +84,7 @@ public:
 
 	float GetXpPercent();
 
-	int32 GetLevel() const { return Level; }
+	int32 GetLevel() const { return Status.Level; }
 
 	UFUNCTION()
 	void ReceiveDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);

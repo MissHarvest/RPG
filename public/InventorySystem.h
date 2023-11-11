@@ -7,7 +7,7 @@
 #include "CustomStruct.h"
 #include "InventorySystem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FSlotChangedSignature, UInventorySystem, OnSlotChanged);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_TwoParams(FSlotChangedSignature, UInventorySystem, OnSlotChanged, int32, Index, FItemSlot, ItemSlot);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UInventorySystem : public UActorComponent
@@ -35,6 +35,9 @@ public:
 	UPROPERTY()
 	class UQuickSlotSystem* QuickSlotSystem;
 
+private:
+	void UpdateEmptyIndex();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -60,15 +63,7 @@ public:
 	/* 중복 삭제 요망 - GetContent */
 	FItemSlot GetItemByIndex(int32 IndexToFind);
 
-	void ChangedLinkedIndex(int32 TargetIndex, int32 ChangedIndex);
-
-	/*  */
-	void RegisterItemID(int32 ID);
-
-	/*  */
-	void DeleteRegistedID(int32 ID);
-
 private:
 	/* Index 를 매개변수로 넘기는건 방식으로 변경해야한다. */
-	void BroadCastSlotChanged();
+	void BroadCastSlotChanged(int32 Index, FItemSlot ItemSlot);
 };

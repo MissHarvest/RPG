@@ -7,7 +7,7 @@
 #include "CustomStruct.h"
 #include "QuickSlotSystem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FQuickChangedSignature, UQuickSlotSystem, OnQuickSlotChanged);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_TwoParams(FQuickChangedSignature, UQuickSlotSystem, OnChangedQuickSlot, int32, Index, FQuickSlot, QuickSlot);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RPG_API UQuickSlotSystem : public UActorComponent
@@ -35,21 +35,21 @@ public:
 
 	void Press(EQuickSlotKey QuickSlotKey);
 
-	UPROPERTY()
-	FQuickChangedSignature OnQuickSlotChanged;
+	UPROPERTY()// OnChangedQuickSlot
+	FQuickChangedSignature OnChangedQuickSlot;
 
 	/* Update Quick Slot Widget by index */
-	void UpdateQuickSlot();
+	void BroadCastQuickSlotChange(int32 Index, FQuickSlot QuickSlot);
 
-	void UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
+	void UpdateQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource);
 
 	FORCEINLINE int32 GetSize() const { return Size; } 
-
-	void ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange);
 
 	void SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex);
 
 	void ClearQuickSlotByIndex(int32 index);
 
-	int32 GetQuickSlotIndexByItemID(int32 ID);
+	/*  */
+	UFUNCTION()
+	void UpdateLink(int32 Index, FItemSlot Item);
 };

@@ -3,9 +3,9 @@
 
 #include "ItemDragDropOperation.h"
 
-void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet, int32 ItemID)
+void UItemDragDropOperation::SetOperation(class UInventorySystem* SourceInventoryToSet, int32 IndexToSet)
 {
 	this->SourceInventory = SourceInventoryToSet;
 	this->Index = IndexToSet;
-	this->ID = ItemID;
+	//this->ID = ItemID;
 }

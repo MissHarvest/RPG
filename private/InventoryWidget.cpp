@@ -23,13 +23,9 @@ void UInventoryWidget::NativeOnInitialized()
 	CreateItemSlots();
 }
 
-void UInventoryWidget::UpdatedInventory()
+void UInventoryWidget::UpdatedInventory(int32 Index, FItemSlot ItemSlot)
 {
-	for (int i = 0; i < InventoryModel->GetSize(); ++i)
-	{
-		ItemSlots[i]->SetItem(InventoryModel->GetContent(i));
-		//ItemSlots[i]->SetItem(InventoryModel->TestContents[i]);
-	}
+	ItemSlots[Index]->SetItem(ItemSlot);
 }
 
 void UInventoryWidget::CreateItemSlots()

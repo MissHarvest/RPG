@@ -4,6 +4,7 @@
 #include "QuickSlotSystem.h"
 #include "ItemEffectManager.h"
 #include "InventorySystem.h"
+#include "PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UQuickSlotSystem::UQuickSlotSystem()
@@ -23,6 +24,7 @@ void UQuickSlotSystem::BeginPlay()
 	
 	// ...
 	QuickSlots.SetNum(Size);
+	Cast<APlayerCharacter>(GetOwner())->GetInventory()->OnSlotChanged.AddDynamic(this, &UQuickSlotSystem::UpdateLink);
 }
 
 // Called every frame
@@ -43,33 +45,30 @@ void UQuickSlotSystem::Press(EQuickSlotKey QuickSlotKey)
 	
 	auto OwnigPawn = Cast<APawn>(GetOwner());
 	QuickSlots[Index].SourceInventory->ConsumeItemByIndex(QuickSlots[Index].LinkedIndex);
+	
 	/* check bUsed ? */
-	UpdateQuickSlot();
+	BroadCastQuickSlotChange(Index, QuickSlots[Index]);
 	
 	// Do Anything , Slot Type == Skill
 }
 
-void UQuickSlotSystem::UpdateQuickSlot()
+// name Change
+void UQuickSlotSystem::BroadCastQuickSlotChange(int32 Index, FQuickSlot QuickSlot)
 {
-	if(OnQuickSlotChanged.IsBound())
+	if(OnChangedQuickSlot.IsBound())
 	{
-		OnQuickSlotChanged.Broadcast();
+		OnChangedQuickSlot.Broadcast(Index, QuickSlot);
 	}
 }
 
-void UQuickSlotSystem::UpdateQuickSlotInfoByIndex(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource)
+void UQuickSlotSystem::UpdateQuickSlot(int32 IndexToSet, class UInventorySystem* Ref_Inventory, int32 IndexToSource)
 {
 	QuickSlots[IndexToSet].SlotType = ESlotType::Item;
 	QuickSlots[IndexToSet].LinkedIndex = IndexToSource;
 	QuickSlots[IndexToSet].SourceInventory = Ref_Inventory;
-	//QuickSlots[IndexToSet].ItemID = Ref_Inventory->GetContent(IndexToSource).GetID();
-	UpdateQuickSlot(); // index /
-}
-
-void UQuickSlotSystem::ChangeLinkedIndex(int32 TargetIndex, int32 IndexToChange)
-{
-	if (QuickSlots[TargetIndex].IsEmpty()) return;
-	QuickSlots[TargetIndex].LinkedIndex = IndexToChange;
+	QuickSlots[IndexToSet].Name = Ref_Inventory->GetItemByIndex(IndexToSource).GetName();
+	
+	BroadCastQuickSlotChange(IndexToSet, QuickSlots[IndexToSet]); // index /
 }
 
 void UQuickSlotSystem::SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex)
@@ -78,32 +77,26 @@ void UQuickSlotSystem::SwapQuickSlot(int32 SourceIndex, int32 DestinationIndex)
 	QuickSlots[SourceIndex] = QuickSlots[DestinationIndex];
 	QuickSlots[DestinationIndex] = temp;
 
-	if (QuickSlots[SourceIndex].SlotType == ESlotType::Item)
-	{
-		QuickSlots[SourceIndex].SourceInventory->ChangedLinkedIndex(QuickSlots[SourceIndex].LinkedIndex, SourceIndex);		
-	}
-	if (QuickSlots[DestinationIndex].SlotType == ESlotType::Item)
-	{
-		QuickSlots[DestinationIndex].SourceInventory->ChangedLinkedIndex(QuickSlots[DestinationIndex].LinkedIndex, DestinationIndex);
-	}	
-	UpdateQuickSlot();
+	BroadCastQuickSlotChange(SourceIndex, QuickSlots[SourceIndex]);
+	BroadCastQuickSlotChange(DestinationIndex, QuickSlots[DestinationIndex]);
 }
 
 void UQuickSlotSystem::ClearQuickSlotByIndex(int32 index)
 {	
-	QuickSlots[index].SourceInventory->DeleteRegistedID(QuickSlots[index].ItemID);
 	QuickSlots[index].Clear();
-	UpdateQuickSlot();
+	BroadCastQuickSlotChange(index, QuickSlots[index]);
 }
 
-int32 UQuickSlotSystem::GetQuickSlotIndexByItemID(int32 ID)
+void UQuickSlotSystem::UpdateLink(int32 Index, FItemSlot Item)
 {
 	for (int i = 0; i < QuickSlots.Num(); ++i)
 	{
-		if (QuickSlots[i].SlotType == ESlotType::Item && QuickSlots[i].ItemID == ID)
+		if (QuickSlots[i].SlotType != ESlotType::Item) continue;
+
+		if (Item.GetName() == QuickSlots[i].GetName())
 		{
-			return i;
+			QuickSlots[i].LinkedIndex = Index;
+			BroadCastQuickSlotChange(i, QuickSlots[i]);
 		}
 	}
-	return -1;
 }

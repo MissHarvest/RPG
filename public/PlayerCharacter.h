@@ -161,6 +161,9 @@ public:
 	UFUNCTION()
 	void EnemyDeath(FName Name);
 
+	/*  */
+	void ApplyEffect(FItem Item);
+
 private:
 	UFUNCTION(BlueprintCallable)
 	void SpawnArrow();
@@ -192,6 +195,4 @@ private:
 	void PressKey9();
 
 	void PressKey0();
-
-	
 };

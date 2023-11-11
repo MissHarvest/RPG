@@ -16,17 +16,14 @@ void UQuickSlotCollectionWidget::NativeOnInitialized()
 	QuickSlotModel = Cast<APlayerCharacter>(GetOwningPlayerPawn())->GetQuickSlotSystem();
 	if (nullptr == QuickSlotModel) return;
 
-	QuickSlotModel->OnQuickSlotChanged.AddDynamic(this, &UQuickSlotCollectionWidget::UpdateQuickSlots);
+	QuickSlotModel->OnChangedQuickSlot.AddDynamic(this, &UQuickSlotCollectionWidget::UpdateQuickSlots);
 	
 	CreateQuickSlots();
 }
 
-void UQuickSlotCollectionWidget::UpdateQuickSlots()
+void UQuickSlotCollectionWidget::UpdateQuickSlots(int32 Index, FQuickSlot QuickSlot)
 {
-	for (int i = 0; i < QuickSlotWidgets.Num(); ++i)
-	{
-		QuickSlotWidgets[i]->SetQuickSlot(QuickSlotModel->QuickSlots[i]);
-	}
+	QuickSlotWidgets[Index]->SetQuickSlot(QuickSlot);
 }
 
 void UQuickSlotCollectionWidget::CreateQuickSlots()

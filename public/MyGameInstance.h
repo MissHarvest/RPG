@@ -30,6 +30,10 @@ class RPG_API UMyGameInstance : public UGameInstance
 	UPROPERTY(VisibleAnywhere)
 	class UDataTable* MonsterTable;
 
+public:
+	UPROPERTY()
+	TArray<EQuestState> PlayerQuestState;
+
 private:
 	/*  */
 	TArray<FItemSlot> GetItemListFromString(FString String);
@@ -42,7 +46,7 @@ public:
 
 public:
 	/*  */
-	TArray<EQuestState> GetPlayerQuestState(FName PID);
+	void LoadPlayerQuestState(FName PID);
 
 	/*  */
 	FItemSlot GetItem(FName IID);
@@ -50,9 +54,12 @@ public:
 	/*  */
 	TArray<FQuest> GetNPCQuest(FName NID);
 
-	/*  */
+	/* Change in Runtime */
 	TArray<FQuest> GetNoneClearQuest(TArray<FQuest> NPCQuest, FName PID);
 
 	/*  */
 	FQuest GetQuest(FName QID);
+
+	/*  */
+	FMonsterData* GetMonsterData(FName MID);
 };

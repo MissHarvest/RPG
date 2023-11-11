@@ -51,3 +51,19 @@ enum class EQuestState : uint8
 	CompleteStay,
 	Complete,
 };
+
+UENUM(BlueprintType)
+enum class EItemType : uint8
+{
+	Equipment,
+	Consumable,
+	Etc,
+};
+
+UENUM(BlueprintType)
+enum class EItemEffect : uint8
+{
+	None,
+	RecoveryHP,
+	RecoveryMP,
+};
